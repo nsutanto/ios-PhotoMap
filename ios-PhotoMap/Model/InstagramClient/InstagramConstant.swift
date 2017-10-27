@@ -8,7 +8,7 @@
 
 import Foundation
 
-class InstagramClient {
+extension InstagramClient {
     // MARK: Constants
     struct Constants {
         
@@ -18,6 +18,7 @@ class InstagramClient {
         // MARK: URLs
         static let API_SCHEME = "https"
         static let API_HOST = "api.instagram.com"
+        static let API_PATH = ""
     
         //static let INSTAGRAM_AUTHURL = "https://api.instagram.com/oauth/authorize/"
         //static let INSTAGRAM_APIURl  = "https://api.instagram.com/v1/users/"

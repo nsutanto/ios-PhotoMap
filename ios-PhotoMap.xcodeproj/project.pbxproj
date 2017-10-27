@@ -13,6 +13,7 @@
 		6BE4B3971FA295A800662403 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BE4B3961FA295A800662403 /* Assets.xcassets */; };
 		6BE4B39A1FA295A800662403 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BE4B3981FA295A800662403 /* LaunchScreen.storyboard */; };
 		6BE4B3A51FA2C4CD00662403 /* InstagramConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3A41FA2C4CD00662403 /* InstagramConstant.swift */; };
+		6BE4B3A71FA2CC5100662403 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3A61FA2CC5100662403 /* InstagramClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		6BE4B3991FA295A800662403 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6BE4B39B1FA295A800662403 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6BE4B3A41FA2C4CD00662403 /* InstagramConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramConstant.swift; sourceTree = "<group>"; };
+		6BE4B3A61FA2CC5100662403 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				6BE4B3A41FA2C4CD00662403 /* InstagramConstant.swift */,
+				6BE4B3A61FA2CC5100662403 /* InstagramClient.swift */,
 			);
 			path = InstagramClient;
 			sourceTree = "<group>";
@@ -163,6 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BE4B3A71FA2CC5100662403 /* InstagramClient.swift in Sources */,
 				6BE4B3A51FA2C4CD00662403 /* InstagramConstant.swift in Sources */,
 				6BE4B3921FA295A800662403 /* InitViewController.swift in Sources */,
 				6BE4B3901FA295A800662403 /* AppDelegate.swift in Sources */,
