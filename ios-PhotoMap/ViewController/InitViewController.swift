@@ -9,7 +9,7 @@
 import UIKit
 
 class InitViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -20,6 +20,9 @@ class InitViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
+    @IBAction func performLogin(_ sender: Any) {
+        let url = InstagramClient.sharedInstance().getLoginURL()
+        
+    }
 }
 
