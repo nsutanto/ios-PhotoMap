@@ -60,7 +60,7 @@ class ClientUtil {
                     return
                 }
                 
-                //print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
+                print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
                 self.convertDataWithCompletionHandler(data, completionHandlerConvertData: completionHandlerRequest)
             }
             
@@ -86,7 +86,7 @@ class ClientUtil {
     func parseURLFromParameters(_ apiScheme: String,
                                 _ apiHost: String,
                                 _ apiPath: String,
-        _ parameters: [String:AnyObject]?, withPathExtension: String? = nil) -> URL {
+        _ parameters: [String:AnyObject]? = nil, withPathExtension: String? = nil) -> URL {
         
         var components = URLComponents()
         components.scheme = apiScheme
