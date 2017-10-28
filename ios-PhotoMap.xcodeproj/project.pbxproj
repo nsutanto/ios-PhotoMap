@@ -15,6 +15,7 @@
 		6BE4B3A51FA2C4CD00662403 /* InstagramConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3A41FA2C4CD00662403 /* InstagramConstant.swift */; };
 		6BE4B3A71FA2CC5100662403 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3A61FA2CC5100662403 /* InstagramClient.swift */; };
 		6BE4B3A91FA2CFB300662403 /* ClientUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3A81FA2CFB300662403 /* ClientUtil.swift */; };
+		6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		6BE4B3A41FA2C4CD00662403 /* InstagramConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramConstant.swift; sourceTree = "<group>"; };
 		6BE4B3A61FA2CC5100662403 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
 		6BE4B3A81FA2CFB300662403 /* ClientUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientUtil.swift; sourceTree = "<group>"; };
+		6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				6BE4B3911FA295A800662403 /* InitViewController.swift */,
+				6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 				6BE4B3A71FA2CC5100662403 /* InstagramClient.swift in Sources */,
 				6BE4B3A51FA2C4CD00662403 /* InstagramConstant.swift in Sources */,
 				6BE4B3A91FA2CFB300662403 /* ClientUtil.swift in Sources */,
+				6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */,
 				6BE4B3921FA295A800662403 /* InitViewController.swift in Sources */,
 				6BE4B3901FA295A800662403 /* AppDelegate.swift in Sources */,
 			);

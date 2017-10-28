@@ -19,6 +19,8 @@ extension InstagramClient {
         static let API_SCHEME = "https"
         static let API_HOST = "api.instagram.com"
         
+        static let RESPONSE_TYPE = "token"
+        //static let RESPONSE_TYPE = "code"
         static let INSTAGRAM_SCOPE = "basic"
     }
 
@@ -30,6 +32,7 @@ extension InstagramClient {
     struct AuthorizationKeys {
         static let CLIENT_ID  = "client_id"
         static let REDIRECT_URI = "redirect_uri"
+        static let RESPONSE_TYPE = "response_type"
     }
     
     struct AuthorizationResponse {

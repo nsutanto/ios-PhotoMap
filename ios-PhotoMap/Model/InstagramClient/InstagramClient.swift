@@ -22,11 +22,13 @@ class InstagramClient {
     func getLoginURL() -> URL {
         let methodParameters = [
             AuthorizationKeys.CLIENT_ID: Constants.CLIENT_ID,
-            AuthorizationKeys.REDIRECT_URI: Constants.REDIRECT_URI
+            AuthorizationKeys.REDIRECT_URI: Constants.REDIRECT_URI,
+            AuthorizationKeys.RESPONSE_TYPE: Constants.RESPONSE_TYPE
         ]
         return clientUtil.parseURLFromParameters(Constants.API_SCHEME,
                                          Constants.API_HOST,
                                          Paths.AUTHORIZE,
                                          methodParameters as [String : AnyObject])
     }
+    
 }

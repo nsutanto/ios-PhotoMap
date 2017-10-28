@@ -22,7 +22,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Login"/>
                                 <connections>
-                                    <action selector="performLogin:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qm3-IW-W9y"/>
+                                    <segue destination="Ph4-Cd-ZVd" kind="presentation" id="9AT-sZ-R5I"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -32,6 +32,53 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Instagram Login View Controller-->
+        <scene sceneID="kzQ-kX-RQ9">
+            <objects>
+                <viewController id="Ph4-Cd-ZVd" customClass="InstagramLoginViewController" customModule="ios_PhotoMap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zeM-eo-xQd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8XF-9t-l4I">
+                                <rect key="frame" x="0.0" y="20" width="375" height="607"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AwT-iy-VM3">
+                                <rect key="frame" x="0.0" y="627" width="375" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="zma-fI-m93"/>
+                                </constraints>
+                                <state key="normal" title="Logout"/>
+                                <connections>
+                                    <action selector="performLogout:" destination="Ph4-Cd-ZVd" eventType="touchUpInside" id="gKW-Bs-uWt"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="H8v-TP-4e9" firstAttribute="bottom" secondItem="AwT-iy-VM3" secondAttribute="bottom" id="Kdh-mG-W12"/>
+                            <constraint firstItem="8XF-9t-l4I" firstAttribute="leading" secondItem="H8v-TP-4e9" secondAttribute="leading" id="TvK-6A-6UQ"/>
+                            <constraint firstItem="H8v-TP-4e9" firstAttribute="trailing" secondItem="AwT-iy-VM3" secondAttribute="trailing" id="gB8-1K-Fd9"/>
+                            <constraint firstItem="AwT-iy-VM3" firstAttribute="top" secondItem="8XF-9t-l4I" secondAttribute="bottom" id="k6V-4B-Yn4"/>
+                            <constraint firstItem="AwT-iy-VM3" firstAttribute="leading" secondItem="H8v-TP-4e9" secondAttribute="leading" id="s8Y-hO-2vY"/>
+                            <constraint firstItem="8XF-9t-l4I" firstAttribute="top" secondItem="H8v-TP-4e9" secondAttribute="top" id="vd0-YD-VK3"/>
+                            <constraint firstItem="H8v-TP-4e9" firstAttribute="trailing" secondItem="8XF-9t-l4I" secondAttribute="trailing" id="wbC-et-O4X"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="H8v-TP-4e9"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="8XF-9t-l4I" id="xKk-kp-Igf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OsB-1B-J6b" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="877.60000000000002" y="122.78860569715144"/>
         </scene>
     </scenes>
 </document>
