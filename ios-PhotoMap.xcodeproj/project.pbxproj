@@ -16,6 +16,8 @@
 		6BE4B3A71FA2CC5100662403 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3A61FA2CC5100662403 /* InstagramClient.swift */; };
 		6BE4B3A91FA2CFB300662403 /* ClientUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3A81FA2CFB300662403 /* ClientUtil.swift */; };
 		6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */; };
+		6BE4B3AD1FA4266700662403 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AC1FA4266700662403 /* MapViewController.swift */; };
+		6BE4B3AF1FA4292500662403 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AE1FA4292500662403 /* AboutViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		6BE4B3A61FA2CC5100662403 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
 		6BE4B3A81FA2CFB300662403 /* ClientUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientUtil.swift; sourceTree = "<group>"; };
 		6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLoginViewController.swift; sourceTree = "<group>"; };
+		6BE4B3AC1FA4266700662403 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		6BE4B3AE1FA4292500662403 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,8 @@
 			children = (
 				6BE4B3911FA295A800662403 /* InitViewController.swift */,
 				6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */,
+				6BE4B3AC1FA4266700662403 /* MapViewController.swift */,
+				6BE4B3AE1FA4292500662403 /* AboutViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -178,6 +184,8 @@
 				6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */,
 				6BE4B3921FA295A800662403 /* InitViewController.swift in Sources */,
 				6BE4B3901FA295A800662403 /* AppDelegate.swift in Sources */,
+				6BE4B3AF1FA4292500662403 /* AboutViewController.swift in Sources */,
+				6BE4B3AD1FA4266700662403 /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
