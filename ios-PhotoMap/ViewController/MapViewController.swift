@@ -12,7 +12,5 @@ class MapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("**** Map View Controller view did load")
-        // Do any additional setup after loading the view.
     }
 }
