@@ -58,6 +58,7 @@
                     </view>
                     <connections>
                         <outlet property="webView" destination="VV0-Fa-GGQ" id="lpX-oJ-0HV"/>
+                        <segue destination="FRK-wu-q4M" kind="show" identifier="ShowMainTabSegue" id="GZs-Aj-grO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OsB-1B-J6b" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -73,9 +74,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bfJ-Vw-9ow">
-                                <rect key="frame" x="164" y="318" width="46" height="30"/>
+                                <rect key="frame" x="164" y="318" width="60" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Logout"/>
+                                <connections>
+                                    <action selector="performLogout:" destination="jMN-7I-Z80" eventType="touchUpInside" id="q7M-tz-d2F"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -85,7 +89,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ebQ-l9-tkM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2614" y="403"/>
+            <point key="canvasLocation" x="2613.5999999999999" y="402.54872563718146"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="ADp-k2-TTk">
@@ -118,7 +122,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="IDh-Kd-F8y">
             <objects>
-                <tabBarController storyboardIdentifier="MainTabBarCtrlID" id="FRK-wu-q4M" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MainTabBarController" id="FRK-wu-q4M" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MFa-xf-Y2T">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
