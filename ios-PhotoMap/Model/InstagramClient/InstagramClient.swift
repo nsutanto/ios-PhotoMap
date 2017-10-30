@@ -11,6 +11,7 @@ import Foundation
 class InstagramClient {
     
     let clientUtil = ClientUtil()
+    var accessToken: String?
     
     class func sharedInstance() -> InstagramClient {
         struct Singleton {
