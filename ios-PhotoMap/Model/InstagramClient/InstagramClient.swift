@@ -56,45 +56,33 @@ class InstagramClient {
             if let error = error {
                 sendError("\(error)")
             } else {
-                /*
-                /* GUARD: Is the "photos" key in our result? */
-                guard let photosDictionary = parsedResult?[FlickrResponseKeys.Photos] as? [String:AnyObject] else {
-                    sendError("Error when parsing result: photos")
+                
+                /* GUARD: Is the "data" key in our result? */
+                guard let dataDictionary = parsedResult?[SelfResponses.DATA] as? [String:AnyObject] else {
+                    sendError("Error when parsing result: data")
                     return
                 }
                 
-                /* Guard: Is the "pages" key in our result? */
-                guard let pageNumberOut = photosDictionary[FlickrResponseKeys.Pages] as? Int else {
-                    sendError("Error when parsing result: pages")
+                /* Guard: Is the "username" key in our result? */
+                guard let userName = dataDictionary[SelfResponses.USERNAME] as? String else {
+                    sendError("Error when parsing result: username")
                     return
                 }
                 
-                /* GUARD: Is the "photo" key in photosDictionary? */
-                guard let photosArray = photosDictionary[FlickrResponseKeys.Photo] as? [[String: AnyObject]] else {
-                    sendError("Error when parsing result: photo")
+                /* Guard: Is the "full_name" key in our result? */
+                guard let fullName = dataDictionary[SelfResponses.FULL_NAME] as? String else {
+                    sendError("Error when parsing result: full_name")
                     return
                 }
                 
-                var urlArray = [String]()
-                
-                for photo in photosArray {
-                    let photoDictionary = photo as [String:Any]
-                    
-                    /* GUARD: Does our photo have a key for 'url_q'? */
-                    guard let imageUrlString = photoDictionary[FlickrResponseKeys.SquareURL] as? String else {
-                        sendError("Error when parsing result: url_q")
-                        return
-                    }
-                    
-                    urlArray.append(imageUrlString)
+                /* Guard: Is the "profile_picture" key in our result? */
+                guard let profilePicture = dataDictionary[SelfResponses.PROFILE_PICTURE] as? String else {
+                    sendError("Error when parsing result: profile_picture")
+                    return
                 }
-                
-                completionHandlerSearchPhotos(urlArray, pageNumberOut, nil)
-                */
+
+                print("****** \(userName) \(fullName) \(profilePicture)")
             }
         }
-        
-        
     }
-    
 }

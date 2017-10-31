@@ -39,4 +39,11 @@ extension InstagramClient {
     struct Parameters {
         static let ACCESS_TOKEN =  "access_token"
     }
+    
+    struct SelfResponses {
+        static let DATA = "data"
+        static let USERNAME = "username"
+        static let FULL_NAME = "full_name"
+        static let PROFILE_PICTURE = "profile_picture"
+    }
 }
