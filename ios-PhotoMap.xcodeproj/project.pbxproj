@@ -18,6 +18,8 @@
 		6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */; };
 		6BE4B3AD1FA4266700662403 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AC1FA4266700662403 /* MapViewController.swift */; };
 		6BE4B3AF1FA4292500662403 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AE1FA4292500662403 /* AboutViewController.swift */; };
+		6BE4B3B41FA80D6800662403 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3B31FA80D6800662403 /* CoreDataStack.swift */; };
+		6BE4B3B71FA80DAE00662403 /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3B61FA80DAE00662403 /* GCDBlackBox.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLoginViewController.swift; sourceTree = "<group>"; };
 		6BE4B3AC1FA4266700662403 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		6BE4B3AE1FA4292500662403 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		6BE4B3B31FA80D6800662403 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataStack.swift; path = "ios-PhotoMap/Model/CoreData/CoreDataStack.swift"; sourceTree = SOURCE_ROOT; };
+		6BE4B3B61FA80DAE00662403 /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDBlackBox.swift; path = "ios-PhotoMap/Utility/GCDBlackBox.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,7 @@
 				6BE4B3961FA295A800662403 /* Assets.xcassets */,
 				6BE4B3981FA295A800662403 /* LaunchScreen.storyboard */,
 				6BE4B39B1FA295A800662403 /* Info.plist */,
+				6BE4B3B51FA80D7800662403 /* Utility */,
 				6BE4B3A21FA2C47400662403 /* Model */,
 				6BE4B3A11FA2C44100662403 /* ViewController */,
 			);
@@ -91,6 +96,7 @@
 		6BE4B3A21FA2C47400662403 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6BE4B3B21FA80D4B00662403 /* CoreData */,
 				6BE4B3A31FA2C48D00662403 /* InstagramClient */,
 			);
 			path = Model;
@@ -104,6 +110,24 @@
 				6BE4B3A81FA2CFB300662403 /* ClientUtil.swift */,
 			);
 			path = InstagramClient;
+			sourceTree = "<group>";
+		};
+		6BE4B3B21FA80D4B00662403 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				6BE4B3B31FA80D6800662403 /* CoreDataStack.swift */,
+			);
+			name = CoreData;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		6BE4B3B51FA80D7800662403 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				6BE4B3B61FA80DAE00662403 /* GCDBlackBox.swift */,
+			);
+			name = Utility;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,6 +205,8 @@
 				6BE4B3A71FA2CC5100662403 /* InstagramClient.swift in Sources */,
 				6BE4B3A51FA2C4CD00662403 /* InstagramConstant.swift in Sources */,
 				6BE4B3A91FA2CFB300662403 /* ClientUtil.swift in Sources */,
+				6BE4B3B41FA80D6800662403 /* CoreDataStack.swift in Sources */,
+				6BE4B3B71FA80DAE00662403 /* GCDBlackBox.swift in Sources */,
 				6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */,
 				6BE4B3921FA295A800662403 /* InitViewController.swift in Sources */,
 				6BE4B3901FA295A800662403 /* AppDelegate.swift in Sources */,
