@@ -65,7 +65,12 @@ class InstagramLoginViewController: UIViewController {
         let upperIndex = range!.upperBound
         // Get the access token, it starts from the upper index to the end of string
         let accessToken = String(requestURLString[upperIndex...])
+        
+        // Assign client access token
         InstagramClient.sharedInstance().accessToken = accessToken
+        
+        // Get user info
+        InstagramClient.sharedInstance().getUserInfo()
     }
     
     private func showMainTabController() {
