@@ -20,13 +20,14 @@ extension InstagramClient {
         static let API_HOST = "api.instagram.com"
         
         static let RESPONSE_TYPE = "token"
-        //static let RESPONSE_TYPE = "code"
         static let INSTAGRAM_SCOPE = "basic"
     }
 
     // MARK: Paths
     struct Paths {
         static let AUTHORIZE = "/oauth/authorize/"
+        static let USER_SELF = "/v1/users/self/"
+        static let USER_MEDIA = "/v1/users/self/media/recent/"
     }
     
     struct AuthorizationKeys {
@@ -35,7 +36,7 @@ extension InstagramClient {
         static let RESPONSE_TYPE = "response_type"
     }
     
-    struct AuthorizationResponse {
+    struct Parameters {
         static let ACCESS_TOKEN =  "access_token"
     }
 }
