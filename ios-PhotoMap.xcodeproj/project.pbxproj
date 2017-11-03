@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B6B0F821FAA8F6A0036757A /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6B0F811FAA8F6A0036757A /* GCDBlackBox.swift */; };
+		6B6B0F841FAA8F730036757A /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6B0F831FAA8F730036757A /* CoreDataStack.swift */; };
 		6BE4B3901FA295A800662403 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B38F1FA295A800662403 /* AppDelegate.swift */; };
 		6BE4B3921FA295A800662403 /* InitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3911FA295A800662403 /* InitViewController.swift */; };
 		6BE4B3951FA295A800662403 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BE4B3931FA295A800662403 /* Main.storyboard */; };
@@ -18,11 +20,14 @@
 		6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */; };
 		6BE4B3AD1FA4266700662403 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AC1FA4266700662403 /* MapViewController.swift */; };
 		6BE4B3AF1FA4292500662403 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3AE1FA4292500662403 /* AboutViewController.swift */; };
-		6BE4B3B41FA80D6800662403 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3B31FA80D6800662403 /* CoreDataStack.swift */; };
-		6BE4B3B71FA80DAE00662403 /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3B61FA80DAE00662403 /* GCDBlackBox.swift */; };
+		6BF7FBF11FAD369300C3CA41 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6BF7FBEF1FAD369300C3CA41 /* Model.xcdatamodeld */; };
+		6BF7FBF91FAD38AE00C3CA41 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF7FBF71FAD38AE00C3CA41 /* User+CoreDataClass.swift */; };
+		6BF7FBFA1FAD38AE00C3CA41 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF7FBF81FAD38AE00C3CA41 /* User+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B6B0F811FAA8F6A0036757A /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		6B6B0F831FAA8F730036757A /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		6BE4B38C1FA295A800662403 /* ios-PhotoMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-PhotoMap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BE4B38F1FA295A800662403 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BE4B3911FA295A800662403 /* InitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitViewController.swift; sourceTree = "<group>"; };
@@ -36,8 +41,10 @@
 		6BE4B3AA1FA3EDBF00662403 /* InstagramLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLoginViewController.swift; sourceTree = "<group>"; };
 		6BE4B3AC1FA4266700662403 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		6BE4B3AE1FA4292500662403 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
-		6BE4B3B31FA80D6800662403 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataStack.swift; path = "ios-PhotoMap/Model/CoreData/CoreDataStack.swift"; sourceTree = SOURCE_ROOT; };
-		6BE4B3B61FA80DAE00662403 /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDBlackBox.swift; path = "ios-PhotoMap/Utility/GCDBlackBox.swift"; sourceTree = SOURCE_ROOT; };
+		6BF7FBF01FAD369300C3CA41 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		6BF7FBF61FAD378100C3CA41 /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
+		6BF7FBF71FAD38AE00C3CA41 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6BF7FBF81FAD38AE00C3CA41 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +58,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B6B0F7F1FAA8F3F0036757A /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				6B6B0F811FAA8F6A0036757A /* GCDBlackBox.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		6B6B0F801FAA8F530036757A /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				6BF7FBF71FAD38AE00C3CA41 /* User+CoreDataClass.swift */,
+				6BF7FBF81FAD38AE00C3CA41 /* User+CoreDataProperties.swift */,
+				6B6B0F831FAA8F730036757A /* CoreDataStack.swift */,
+				6BF7FBEF1FAD369300C3CA41 /* Model.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		6BE4B3831FA295A800662403 = {
 			isa = PBXGroup;
 			children = (
@@ -75,9 +101,9 @@
 				6BE4B3961FA295A800662403 /* Assets.xcassets */,
 				6BE4B3981FA295A800662403 /* LaunchScreen.storyboard */,
 				6BE4B39B1FA295A800662403 /* Info.plist */,
-				6BE4B3B51FA80D7800662403 /* Utility */,
 				6BE4B3A21FA2C47400662403 /* Model */,
 				6BE4B3A11FA2C44100662403 /* ViewController */,
+				6B6B0F7F1FAA8F3F0036757A /* Utility */,
 			);
 			path = "ios-PhotoMap";
 			sourceTree = "<group>";
@@ -96,7 +122,7 @@
 		6BE4B3A21FA2C47400662403 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6BE4B3B21FA80D4B00662403 /* CoreData */,
+				6B6B0F801FAA8F530036757A /* CoreData */,
 				6BE4B3A31FA2C48D00662403 /* InstagramClient */,
 			);
 			path = Model;
@@ -110,24 +136,6 @@
 				6BE4B3A81FA2CFB300662403 /* ClientUtil.swift */,
 			);
 			path = InstagramClient;
-			sourceTree = "<group>";
-		};
-		6BE4B3B21FA80D4B00662403 /* CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				6BE4B3B31FA80D6800662403 /* CoreDataStack.swift */,
-			);
-			name = CoreData;
-			path = "New Group";
-			sourceTree = "<group>";
-		};
-		6BE4B3B51FA80D7800662403 /* Utility */ = {
-			isa = PBXGroup;
-			children = (
-				6BE4B3B61FA80DAE00662403 /* GCDBlackBox.swift */,
-			);
-			name = Utility;
-			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,13 +212,16 @@
 			files = (
 				6BE4B3A71FA2CC5100662403 /* InstagramClient.swift in Sources */,
 				6BE4B3A51FA2C4CD00662403 /* InstagramConstant.swift in Sources */,
+				6BF7FBF91FAD38AE00C3CA41 /* User+CoreDataClass.swift in Sources */,
 				6BE4B3A91FA2CFB300662403 /* ClientUtil.swift in Sources */,
-				6BE4B3B41FA80D6800662403 /* CoreDataStack.swift in Sources */,
-				6BE4B3B71FA80DAE00662403 /* GCDBlackBox.swift in Sources */,
 				6BE4B3AB1FA3EDBF00662403 /* InstagramLoginViewController.swift in Sources */,
 				6BE4B3921FA295A800662403 /* InitViewController.swift in Sources */,
+				6B6B0F841FAA8F730036757A /* CoreDataStack.swift in Sources */,
 				6BE4B3901FA295A800662403 /* AppDelegate.swift in Sources */,
 				6BE4B3AF1FA4292500662403 /* AboutViewController.swift in Sources */,
+				6B6B0F821FAA8F6A0036757A /* GCDBlackBox.swift in Sources */,
+				6BF7FBFA1FAD38AE00C3CA41 /* User+CoreDataProperties.swift in Sources */,
+				6BF7FBF11FAD369300C3CA41 /* Model.xcdatamodeld in Sources */,
 				6BE4B3AD1FA4266700662403 /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -396,6 +407,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		6BF7FBEF1FAD369300C3CA41 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				6BF7FBF61FAD378100C3CA41 /* Model 2.xcdatamodel */,
+				6BF7FBF01FAD369300C3CA41 /* Model.xcdatamodel */,
+			);
+			currentVersion = 6BF7FBF61FAD378100C3CA41 /* Model 2.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6BE4B3841FA295A800662403 /* Project object */;
 }
