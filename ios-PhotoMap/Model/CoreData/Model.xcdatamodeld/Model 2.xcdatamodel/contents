@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13241" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="Model">
-    <entity name="CityEntity" representedClassName="CityEntity" syncable="YES" codeGenerationType="class">
+    <entity name="CityEntity" representedClassName=".CityEntity" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="cityToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToCity" inverseEntity="Image" syncable="YES"/>
         <relationship name="cityToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToCity" inverseEntity="UserInfo" syncable="YES"/>
     </entity>
-    <entity name="CountryEntity" representedClassName="CountryEntity" syncable="YES" codeGenerationType="class">
+    <entity name="CountryEntity" representedClassName=".CountryEntity" syncable="YES">
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="countryToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToCountry" inverseEntity="Image" syncable="YES"/>
         <relationship name="countryToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToCountry" inverseEntity="UserInfo" syncable="YES"/>
@@ -31,7 +31,7 @@
     <elements>
         <element name="Image" positionX="367" positionY="27" width="128" height="165"/>
         <element name="UserInfo" positionX="-72" positionY="54" width="128" height="135"/>
-        <element name="CityEntity" positionX="108" positionY="36" width="128" height="90"/>
-        <element name="CountryEntity" positionX="108" positionY="144" width="128" height="90"/>
+        <element name="CityEntity" positionX="108" positionY="36" width="128" height="88"/>
+        <element name="CountryEntity" positionX="108" positionY="144" width="128" height="88"/>
     </elements>
 </model>

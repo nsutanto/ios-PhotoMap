@@ -21,23 +21,41 @@ extension UserInfo {
     @NSManaged public var profilePictureData: NSData?
     @NSManaged public var profilePictureURL: String?
     @NSManaged public var userName: String?
-    @NSManaged public var userInfoToImage: NSSet?
+    @NSManaged public var userInfoToCity: NSSet?
+    @NSManaged public var userInfoToCountry: NSSet?
 
 }
 
-// MARK: Generated accessors for userInfoToImage
+// MARK: Generated accessors for userInfoToCity
 extension UserInfo {
 
-    @objc(addUserInfoToImageObject:)
-    @NSManaged public func addToUserInfoToImage(_ value: Image)
+    @objc(addUserInfoToCityObject:)
+    @NSManaged public func addToUserInfoToCity(_ value: CityEntity)
 
-    @objc(removeUserInfoToImageObject:)
-    @NSManaged public func removeFromUserInfoToImage(_ value: Image)
+    @objc(removeUserInfoToCityObject:)
+    @NSManaged public func removeFromUserInfoToCity(_ value: CityEntity)
 
-    @objc(addUserInfoToImage:)
-    @NSManaged public func addToUserInfoToImage(_ values: NSSet)
+    @objc(addUserInfoToCity:)
+    @NSManaged public func addToUserInfoToCity(_ values: NSSet)
 
-    @objc(removeUserInfoToImage:)
-    @NSManaged public func removeFromUserInfoToImage(_ values: NSSet)
+    @objc(removeUserInfoToCity:)
+    @NSManaged public func removeFromUserInfoToCity(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for userInfoToCountry
+extension UserInfo {
+
+    @objc(addUserInfoToCountryObject:)
+    @NSManaged public func addToUserInfoToCountry(_ value: CountryEntity)
+
+    @objc(removeUserInfoToCountryObject:)
+    @NSManaged public func removeFromUserInfoToCountry(_ value: CountryEntity)
+
+    @objc(addUserInfoToCountry:)
+    @NSManaged public func addToUserInfoToCountry(_ values: NSSet)
+
+    @objc(removeUserInfoToCountry:)
+    @NSManaged public func removeFromUserInfoToCountry(_ values: NSSet)
 
 }
