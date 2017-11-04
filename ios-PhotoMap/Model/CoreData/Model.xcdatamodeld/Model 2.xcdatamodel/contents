@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13241" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="Model">
+    <entity name="Image" representedClassName=".Image" syncable="YES">
+        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="imageToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToImage" inverseEntity="UserInfo" syncable="YES"/>
+    </entity>
     <entity name="UserInfo" representedClassName=".UserInfo" syncable="YES">
         <attribute name="fullName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="profilePictureData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="profilePictureURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="userInfoToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToUserInfo" inverseEntity="Image" syncable="YES"/>
     </entity>
     <elements>
-        <element name="UserInfo" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Image" positionX="259" positionY="-7" width="128" height="180"/>
+        <element name="UserInfo" positionX="-72" positionY="54" width="128" height="118"/>
     </elements>
 </model>

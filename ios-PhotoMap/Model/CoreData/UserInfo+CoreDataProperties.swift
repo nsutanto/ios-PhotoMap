@@ -17,9 +17,27 @@ extension UserInfo {
         return NSFetchRequest<UserInfo>(entityName: "UserInfo")
     }
 
-    @NSManaged public var userName: String?
     @NSManaged public var fullName: String?
-    @NSManaged public var profilePictureURL: String?
     @NSManaged public var profilePictureData: NSData?
+    @NSManaged public var profilePictureURL: String?
+    @NSManaged public var userName: String?
+    @NSManaged public var userInfoToImage: NSSet?
+
+}
+
+// MARK: Generated accessors for userInfoToImage
+extension UserInfo {
+
+    @objc(addUserInfoToImageObject:)
+    @NSManaged public func addToUserInfoToImage(_ value: Image)
+
+    @objc(removeUserInfoToImageObject:)
+    @NSManaged public func removeFromUserInfoToImage(_ value: Image)
+
+    @objc(addUserInfoToImage:)
+    @NSManaged public func addToUserInfoToImage(_ values: NSSet)
+
+    @objc(removeUserInfoToImage:)
+    @NSManaged public func removeFromUserInfoToImage(_ values: NSSet)
 
 }
