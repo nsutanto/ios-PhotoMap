@@ -112,16 +112,18 @@ class InstagramClient {
             } else {
                 
                 /* GUARD: Is the "data" key in our result? */
-                guard let dataDictionary = parsedResult?[MediaResponses.DATA] as? [String:[AnyObject]] else {
+                guard let dataDictionary = parsedResult?[MediaResponses.DATA] as? [[String:AnyObject]] else {
                     sendError("Error when parsing result: data")
                     return
                 }
                 
                 /* Guard: Is the "images" key in our result? */
+                /*
                 guard let imagesDictionary = dataDictionary[MediaResponses.IMAGES] as? [String:AnyObject] else {
                     sendError("Error when parsing result: username")
                     return
                 }
+                */
                 
                 /*
                 /* Guard: Is the "full_name" key in our result? */
