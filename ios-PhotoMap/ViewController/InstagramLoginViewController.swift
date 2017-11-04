@@ -71,6 +71,9 @@ class InstagramLoginViewController: UIViewController {
         
         // Get user info
         InstagramClient.sharedInstance().getUserInfo()
+        
+        // Get user images
+        InstagramClient.sharedInstance().getImages()
     }
     
     private func showMainTabController() {

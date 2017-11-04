@@ -46,4 +46,16 @@ extension InstagramClient {
         static let FULL_NAME = "full_name"
         static let PROFILE_PICTURE = "profile_picture"
     }
+    
+    struct MediaResponses {
+        static let DATA = "data"
+        static let CAPTION = "caption"
+        static let TEXT = "text"
+        static let IMAGES = "images"
+        static let STANDARD_RESOLUTION = "standard_resolution"
+        static let ID = "id"
+        static let LOCATION = "location"
+        static let LATITUDE = "latitude"
+        static let LONGITUDE = "longitude"
+    }
 }
