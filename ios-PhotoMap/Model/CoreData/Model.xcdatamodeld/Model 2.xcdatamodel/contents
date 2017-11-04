@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13241" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="Model">
-    <entity name="Image" representedClassName=".Image" syncable="YES">
+    <entity name="CityEntity" representedClassName="CityEntity" syncable="YES" codeGenerationType="class">
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="cityToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToCity" inverseEntity="Image" syncable="YES"/>
+        <relationship name="cityToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToCity" inverseEntity="UserInfo" syncable="YES"/>
+    </entity>
+    <entity name="CountryEntity" representedClassName="CountryEntity" syncable="YES" codeGenerationType="class">
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="countryToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToCountry" inverseEntity="Image" syncable="YES"/>
+        <relationship name="countryToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToCountry" inverseEntity="UserInfo" syncable="YES"/>
+    </entity>
+    <entity name="Image" representedClassName=".Image" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="imageToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToImage" inverseEntity="UserInfo" syncable="YES"/>
+        <relationship name="imageToCity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CityEntity" inverseName="cityToImage" inverseEntity="CityEntity" syncable="YES"/>
+        <relationship name="imageToCountry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CountryEntity" inverseName="countryToImage" inverseEntity="CountryEntity" syncable="YES"/>
     </entity>
     <entity name="UserInfo" representedClassName=".UserInfo" syncable="YES">
         <attribute name="fullName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="profilePictureData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="profilePictureURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="userInfoToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToUserInfo" inverseEntity="Image" syncable="YES"/>
+        <relationship name="userInfoToCity" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CityEntity" inverseName="cityToUserInfo" inverseEntity="CityEntity" syncable="YES"/>
+        <relationship name="userInfoToCountry" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CountryEntity" inverseName="countryToUserInfo" inverseEntity="CountryEntity" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Image" positionX="259" positionY="-7" width="128" height="180"/>
-        <element name="UserInfo" positionX="-72" positionY="54" width="128" height="118"/>
+        <element name="Image" positionX="367" positionY="27" width="128" height="165"/>
+        <element name="UserInfo" positionX="-72" positionY="54" width="128" height="135"/>
+        <element name="CityEntity" positionX="108" positionY="36" width="128" height="90"/>
+        <element name="CountryEntity" positionX="108" positionY="144" width="128" height="90"/>
     </elements>
 </model>
