@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // preload data from CoreData
-        //preloadData()
+        preloadData()
         // Start Autosaving
         //stack.autoSave(10)
         return true
