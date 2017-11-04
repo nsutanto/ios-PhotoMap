@@ -83,10 +83,10 @@
 			children = (
 				6BF7FC0D1FAD59C800C3CA41 /* UserInfo+CoreDataProperties.swift */,
 				6BF7FBFD1FAD3D3000C3CA41 /* UserInfo+CoreDataClass.swift */,
-				6BF7FC191FAD5B7400C3CA41 /* CityEntity+CoreDataClass.swift */,
 				6BF7FC1A1FAD5B7400C3CA41 /* CityEntity+CoreDataProperties.swift */,
-				6BF7FC0E1FAD59C800C3CA41 /* CountryEntity+CoreDataClass.swift */,
+				6BF7FC191FAD5B7400C3CA41 /* CityEntity+CoreDataClass.swift */,
 				6BF7FC0F1FAD59C800C3CA41 /* CountryEntity+CoreDataProperties.swift */,
+				6BF7FC0E1FAD59C800C3CA41 /* CountryEntity+CoreDataClass.swift */,
 				6BF7FC101FAD59C800C3CA41 /* Image+CoreDataProperties.swift */,
 				6BF7FC081FAD48E700C3CA41 /* Image+CoreDataClass.swift */,
 				6B6B0F831FAA8F730036757A /* CoreDataStack.swift */,
