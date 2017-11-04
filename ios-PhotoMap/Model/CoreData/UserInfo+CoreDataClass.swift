@@ -1,5 +1,5 @@
 //
-//  User+CoreDataClass.swift
+//  UserInfo+CoreDataClass.swift
 //  ios-PhotoMap
 //
 //  Created by Nicholas Sutanto on 11/3/17.
@@ -11,6 +11,6 @@ import Foundation
 import CoreData
 
 
-public class User: NSManagedObject {
+public class UserInfo: NSManagedObject {
 
 }
