@@ -53,6 +53,7 @@ extension InstagramClient {
         static let TEXT = "text"
         static let IMAGES = "images"
         static let STANDARD_RESOLUTION = "standard_resolution"
+        static let URL = "url"
         static let ID = "id"
         static let LOCATION = "location"
         static let LATITUDE = "latitude"
