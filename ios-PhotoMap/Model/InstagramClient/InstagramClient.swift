@@ -13,6 +13,7 @@ class InstagramClient {
     
     let clientUtil = ClientUtil()
     var accessToken: String?
+    var coreDataStack: CoreDataStack?
     
     class func sharedInstance() -> InstagramClient {
         struct Singleton {
@@ -87,7 +88,9 @@ class InstagramClient {
         }
     }
     
-    func getImages() {
+    func getImages(completionHandlerGetImages: @escaping (_ images: [Image]?, _ error: NSError?) -> Void) {
+        
+        var imageArray = [Image]()
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
         let methodParameters = [
             Parameters.ACCESS_TOKEN: self.accessToken
@@ -104,7 +107,7 @@ class InstagramClient {
             
             func sendError(_ error: String) {
                 let errorInfo = [NSLocalizedDescriptionKey : error]
-                //completionHandlerSearchPhotos(nil, nil, NSError(domain: "searchPhotos", code: 1, userInfo: errorInfo))
+                completionHandlerGetImages(nil, NSError(domain: "getImages", code: 1, userInfo: errorInfo))
             }
             
             /* 3. Send the desired value(s) to completion handler */
@@ -139,50 +142,56 @@ class InstagramClient {
                     }
                     
                     /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
-                    guard let url = standardResolution[MediaResponses.URL] as? String else {
+                    guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
                         sendError("Error when parsing result: url")
                         return
                     }
                     
                     /* Guard: Is the "caption" key in our result? Caption is optional, some pictures might not have captions */
+                    var text : String = ""
                     if let caption = data[MediaResponses.CAPTION] as? [String:AnyObject]  {
                         /* Guard: Is the "text" key in our result? */
-                        guard let text = caption[MediaResponses.TEXT] as? String else {
+                        if let textTemp = caption[MediaResponses.TEXT] as? String {
+                            text = textTemp
+                        } else {
                             sendError("Error when parsing result: text")
                             return
                         }
-                        print("***** Text : \(text)")
                     }
                     else {
-                        print("***** NO CAPTION")
+                        // Do nothing. No caption.
                     }
                     
                     /* Guard: Is the "location" key in our result? Geo location is optional, some picture might not have geo location*/
+                    var longitude: Double? = nil
+                    var latitude: Double? = nil
                     if let location = data[MediaResponses.LOCATION] as? [String:AnyObject]  {
                         /* Guard: Is the "longitude" key in our result? */
-                        guard let longitude = location[MediaResponses.LONGITUDE] as? Double else {
+                        if let longitudeTemp = location[MediaResponses.LONGITUDE] as? Double {
+                            longitude = longitudeTemp
+                        } else {
                             sendError("Error when parsing result: longitude")
                             return
                         }
                         
                         /* Guard: Is the "latitude" key in our result? */
-                        guard let latitude = location[MediaResponses.LATITUDE] as? Double else {
+                        if let latitudeTemp = location[MediaResponses.LATITUDE] as? Double {
+                            latitude = latitudeTemp
+                        } else {
                             sendError("Error when parsing result: latitude")
                             return
                         }
-                        
-                        self.getCityAndCountry(longitude: longitude, latitude: latitude)
-                        print("***** Longitude : \(String(describing: longitude))")
-                        print("***** Latitude : \(String(describing: latitude))")
                     } else {
-                        print("***** NO LOCATION")
+                        // Do nothing. No location data.
                     }
                     
-                    print("***** Image ID : \(id)")
-                    print("***** Image URL : \(url)")
-                    
-                  
+                    if (longitude != nil && latitude != nil) {
+                        // let's create the image object only if there is location data. That's the purpose of the app.
+                        let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                        imageArray.append(image)
+                    }
                 }
+                completionHandlerGetImages(imageArray, nil)
             }
         }
     }

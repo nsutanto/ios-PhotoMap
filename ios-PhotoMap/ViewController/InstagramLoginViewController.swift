@@ -17,7 +17,15 @@ extension InstagramLoginViewController: UIWebViewDelegate {
         
         if requestURLString.hasPrefix(InstagramClient.Constants.REDIRECT_URI) {
             
+            // Get User Token
             assignToken(requestURLString)
+            
+            // Get User Info
+            getUserInfo()
+            
+            // Get User Images
+            getUserImages()
+            
             showMainTabController()
             // return false, we do not want to show the web. We just need to get the token
             return false;
@@ -68,12 +76,6 @@ class InstagramLoginViewController: UIViewController {
         
         // Assign client access token
         InstagramClient.sharedInstance().accessToken = accessToken
-        
-        // Get user info
-        getUserInfo()
-        
-        // Get user images
-        InstagramClient.sharedInstance().getImages()
     }
     
     private func showMainTabController() {
@@ -89,6 +91,19 @@ class InstagramLoginViewController: UIViewController {
             }
             else {
                 self.alertError("Fail to get user info")
+            }
+        })
+    }
+    
+    private func getUserImages() {
+        
+        // Get user images
+        InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
+            if (error == nil) {
+                
+            }
+            else {
+                self.alertError("Fail to get user images")
             }
         })
     }
