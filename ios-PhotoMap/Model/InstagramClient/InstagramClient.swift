@@ -33,7 +33,7 @@ class InstagramClient {
                                          methodParameters as [String : AnyObject])
     }
     
-    func getUserInfo() {
+    func getUserInfo(completionHandlerUserInfo: @escaping (_ userName: String?, _ fullName: String?, _ profilePictureURL: String?, _ error: NSError?) -> Void) {
          /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
         let methodParameters = [
             Parameters.ACCESS_TOKEN: self.accessToken
@@ -49,8 +49,8 @@ class InstagramClient {
         let _ = clientUtil.performRequest(request: request as! NSMutableURLRequest) { (parsedResult, error) in
             
             func sendError(_ error: String) {
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                //completionHandlerSearchPhotos(nil, nil, NSError(domain: "searchPhotos", code: 1, userInfo: userInfo))
+                let errorInfo = [NSLocalizedDescriptionKey : error]
+                completionHandlerUserInfo(nil, nil, nil, NSError(domain: "getUserInfo", code: 1, userInfo: errorInfo))
             }
             
             /* 3. Send the desired value(s) to completion handler */
@@ -77,12 +77,12 @@ class InstagramClient {
                 }
                 
                 /* Guard: Is the "profile_picture" key in our result? */
-                guard let profilePicture = dataDictionary[SelfResponses.PROFILE_PICTURE] as? String else {
+                guard let profilePictureURL = dataDictionary[SelfResponses.PROFILE_PICTURE] as? String else {
                     sendError("Error when parsing result: profile_picture")
                     return
                 }
 
-                print("****** \(userName) \(fullName) \(profilePicture)")
+                completionHandlerUserInfo(userName, fullName, profilePictureURL, nil)
             }
         }
     }
@@ -103,8 +103,8 @@ class InstagramClient {
         let _ = clientUtil.performRequest(request: request as! NSMutableURLRequest) { (parsedResult, error) in
             
             func sendError(_ error: String) {
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                //completionHandlerSearchPhotos(nil, nil, NSError(domain: "searchPhotos", code: 1, userInfo: userInfo))
+                let errorInfo = [NSLocalizedDescriptionKey : error]
+                //completionHandlerSearchPhotos(nil, nil, NSError(domain: "searchPhotos", code: 1, userInfo: errorInfo))
             }
             
             /* 3. Send the desired value(s) to completion handler */

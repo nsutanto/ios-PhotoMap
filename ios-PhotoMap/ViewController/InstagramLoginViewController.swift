@@ -70,7 +70,7 @@ class InstagramLoginViewController: UIViewController {
         InstagramClient.sharedInstance().accessToken = accessToken
         
         // Get user info
-        InstagramClient.sharedInstance().getUserInfo()
+        getUserInfo()
         
         // Get user images
         InstagramClient.sharedInstance().getImages()
@@ -80,6 +80,25 @@ class InstagramLoginViewController: UIViewController {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
         
         self.present(controller, animated: true, completion: nil)
+    }
+    
+    private func getUserInfo() {
+        InstagramClient.sharedInstance().getUserInfo(completionHandlerUserInfo: { (userName, fullName, profilePictureURL, error ) in
+            if (error == nil) {
+                
+            }
+            else {
+                self.alertError("Fail to get user info")
+            }
+        })
+    }
+    
+    private func alertError(_ alertMessage: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     
