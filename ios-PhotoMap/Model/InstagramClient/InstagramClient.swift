@@ -143,40 +143,44 @@ class InstagramClient {
                         return
                     }
                     
-                    /* Guard: Is the "location" key in our result? */
-                    guard let location = data[MediaResponses.LOCATION] as? [String:AnyObject] else {
-                        sendError("Error when parsing result: location")
-                        return
+                    /* Guard: Is the "caption" key in our result? Caption is optional, some pictures might not have captions */
+                    if let caption = data[MediaResponses.CAPTION] as? [String:AnyObject]  {
+                        /* Guard: Is the "text" key in our result? */
+                        guard let text = caption[MediaResponses.TEXT] as? String else {
+                            sendError("Error when parsing result: text")
+                            return
+                        }
+                        print("***** Text : \(text)")
+                    }
+                    else {
+                        print("***** NO CAPTION")
                     }
                     
-                    /* Guard: Is the "longitude" key in our result? Geo location is optional. */
-                    let longitude = location[MediaResponses.LONGITUDE] as? Double
+                    /* Guard: Is the "location" key in our result? Geo location is optional, some picture might not have geo location*/
+                    if let location = data[MediaResponses.LOCATION] as? [String:AnyObject]  {
+                        /* Guard: Is the "longitude" key in our result? */
+                        guard let longitude = location[MediaResponses.LONGITUDE] as? Double else {
+                            sendError("Error when parsing result: longitude")
+                            return
+                        }
+                        
+                        /* Guard: Is the "latitude" key in our result? */
+                        guard let latitude = location[MediaResponses.LATITUDE] as? Double else {
+                            sendError("Error when parsing result: latitude")
+                            return
+                        }
+                        
+                        print("***** Longitude : \(String(describing: longitude))")
+                        print("***** Latitude : \(String(describing: latitude))")
+                    } else {
+                        print("***** NO LOCATION")
+                    }
                     
-                    /* Guard: Is the "latitude" key in our result? Geo location is optional. */
-                    let latitude = location[MediaResponses.LATITUDE] as? Double
- 
                     print("***** Image ID : \(id)")
                     print("***** Image URL : \(url)")
-                    print("***** Longitude : \(String(describing: longitude))")
-                    print("***** Latitude : \(String(describing: latitude))")
+                    
+                  
                 }
-        
-                
-                /*
-                /* Guard: Is the "full_name" key in our result? */
-                guard let fullName = dataDictionary[SelfResponses.FULL_NAME] as? String else {
-                    sendError("Error when parsing result: full_name")
-                    return
-                }
-                
-                /* Guard: Is the "profile_picture" key in our result? */
-                guard let profilePicture = dataDictionary[SelfResponses.PROFILE_PICTURE] as? String else {
-                    sendError("Error when parsing result: profile_picture")
-                    return
-                }
-                
-                print("****** \(userName) \(fullName) \(profilePicture)")
-                 */
             }
         }
     }
