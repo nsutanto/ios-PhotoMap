@@ -13,13 +13,20 @@ class InstagramClient {
     
     let clientUtil = ClientUtil()
     var accessToken: String?
-    var coreDataStack: CoreDataStack?
+   
+    // Initialize core data stack
+    let coreDataStack: CoreDataStack?
     
     class func sharedInstance() -> InstagramClient {
         struct Singleton {
             static var sharedInstance = InstagramClient()
         }
         return Singleton.sharedInstance
+    }
+    
+    init() {
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        coreDataStack = delegate.stack
     }
     
     func getLoginURL() -> URL {
@@ -34,7 +41,7 @@ class InstagramClient {
                                          methodParameters as [String : AnyObject])
     }
     
-    func getUserInfo(completionHandlerUserInfo: @escaping (_ userName: String?, _ fullName: String?, _ profilePictureURL: String?, _ error: NSError?) -> Void) {
+    func getUserInfo(completionHandlerUserInfo: @escaping (_ userInfo: UserInfo?, _ error: NSError?) -> Void) {
          /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
         let methodParameters = [
             Parameters.ACCESS_TOKEN: self.accessToken
@@ -51,7 +58,7 @@ class InstagramClient {
             
             func sendError(_ error: String) {
                 let errorInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerUserInfo(nil, nil, nil, NSError(domain: "getUserInfo", code: 1, userInfo: errorInfo))
+                completionHandlerUserInfo(nil, NSError(domain: "getUserInfo", code: 1, userInfo: errorInfo))
             }
             
             /* 3. Send the desired value(s) to completion handler */
@@ -82,8 +89,10 @@ class InstagramClient {
                     sendError("Error when parsing result: profile_picture")
                     return
                 }
-
-                completionHandlerUserInfo(userName, fullName, profilePictureURL, nil)
+                
+                let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, context: (self.coreDataStack?.context)!)
+            
+                completionHandlerUserInfo(userInfo, nil)
             }
         }
     }

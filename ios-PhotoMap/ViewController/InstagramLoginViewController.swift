@@ -85,9 +85,9 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func getUserInfo() {
-        InstagramClient.sharedInstance().getUserInfo(completionHandlerUserInfo: { (userName, fullName, profilePictureURL, error ) in
+        InstagramClient.sharedInstance().getUserInfo(completionHandlerUserInfo: { (userInfo, error ) in
             if (error == nil) {
-                
+                print("***** Success get user Info")
             }
             else {
                 self.alertError("Fail to get user info")
@@ -96,11 +96,9 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func getUserImages() {
-        
-        // Get user images
         InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
             if (error == nil) {
-                
+                print("***** Success get Images")
             }
             else {
                 self.alertError("Fail to get user images")
