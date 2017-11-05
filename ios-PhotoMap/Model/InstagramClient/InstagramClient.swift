@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 class InstagramClient {
     
@@ -170,6 +171,7 @@ class InstagramClient {
                             return
                         }
                         
+                        self.getCityAndCountry(longitude: longitude, latitude: latitude)
                         print("***** Longitude : \(String(describing: longitude))")
                         print("***** Latitude : \(String(describing: latitude))")
                     } else {
@@ -183,5 +185,26 @@ class InstagramClient {
                 }
             }
         }
+    }
+    
+    func getCityAndCountry(longitude: Double, latitude: Double) {
+        let location = CLLocation(latitude: latitude, longitude: longitude) //changed!!!
+        
+        CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+            
+            if error != nil {
+                print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                return
+            }
+            
+            if placemarks!.count > 0 {
+                let pm = placemarks![0]
+                print("***** Country : \(String(describing: pm.country))")
+                print("***** City : \(String(describing: pm.locality))")
+            }
+            else {
+                //println("Problem with the data received from geocoder")
+            }
+        })
     }
 }
