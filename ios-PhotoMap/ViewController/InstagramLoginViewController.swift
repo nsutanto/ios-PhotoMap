@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import WebKit
+import MapKit
 
 extension InstagramLoginViewController: UIWebViewDelegate {
     
@@ -20,11 +21,8 @@ extension InstagramLoginViewController: UIWebViewDelegate {
             // Get User Token
             assignToken(requestURLString)
             
-            // Get User Info
+            // Get User Info, and images
             getUserInfo()
-            
-            // Get User Images
-            getUserImages()
             
             showMainTabController()
             // return false, we do not want to show the web. We just need to get the token
@@ -39,6 +37,8 @@ class InstagramLoginViewController: UIViewController {
     @IBOutlet weak var webView: UIWebView!
     
     var isLoggedIn = false
+    var images = [Image]()
+    var userInfo = UserInfo()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,7 +87,8 @@ class InstagramLoginViewController: UIViewController {
     private func getUserInfo() {
         InstagramClient.sharedInstance().getUserInfo(completionHandlerUserInfo: { (userInfo, error ) in
             if (error == nil) {
-                print("***** Success get user Info")
+                self.userInfo = userInfo!
+                self.getUserImages()
             }
             else {
                 self.alertError("Fail to get user info")
@@ -98,12 +99,65 @@ class InstagramLoginViewController: UIViewController {
     private func getUserImages() {
         InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
             if (error == nil) {
-                print("***** Success get Images")
+                self.images = images!
+                self.getImageLocation()
             }
             else {
                 self.alertError("Fail to get user images")
             }
         })
+    }
+    
+    private func getImageLocation() {
+        
+        performReverseGeoLocation(completionHandlerLocations: { (cities, countries) in
+            for city in cities {
+                print(city)
+            }
+            
+            for country in countries {
+                print(country)
+            }
+        })
+    }
+    
+    private func performReverseGeoLocation(completionHandlerLocations: @escaping (_ cities: [String], _ countries: [String]) -> Void) {
+        
+        var cities = [String]()
+        var countries = [String]()
+        
+        for image in images {
+            let longitude = image.longitude
+            let latitude = image.latitude
+        
+            let location = CLLocation(latitude: latitude, longitude: longitude) //changed!!!
+            
+            CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+                
+                if error != nil {
+                    print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                    return
+                }
+                
+                if placemarks!.count > 0 {
+                    let pm = placemarks![0]
+                    
+                    let country = pm.country
+                    let city = pm.locality
+                    
+                    if (!cities.contains(city!)) {
+                        cities.append(city!)
+                    }
+                    
+                    if (!countries.contains(country!)) {
+                        countries.append(country!)
+                    }
+                }
+                else {
+                    self.alertError("Fail to perform reverse geo location")
+                }
+            })
+        }
     }
     
     private func alertError(_ alertMessage: String) {
