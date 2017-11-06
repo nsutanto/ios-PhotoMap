@@ -97,6 +97,7 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func getUserImages() {
+        print("***** get user images")
         InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
             if (error == nil) {
                 self.images = images!
@@ -109,7 +110,6 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func getImageLocation() {
-        
         performReverseGeoLocation(completionHandlerLocations: { (cities, countries) in
             for city in cities {
                 print(city)
@@ -121,24 +121,24 @@ class InstagramLoginViewController: UIViewController {
         })
     }
     
-    private func performReverseGeoLocation(completionHandlerLocations: @escaping (_ cities: [String], _ countries: [String]) -> Void) {
-        
+    private func performReverseGeoLocation(completionHandlerLocations: @escaping(_ cities: [String], _ countries: [String]) -> Void) {
+        // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
+        let dispatchGroup = DispatchGroup()
         var cities = [String]()
         var countries = [String]()
         
-        for image in images {
+        self.images.forEach { (image) in
+            dispatchGroup.enter()
             let longitude = image.longitude
             let latitude = image.latitude
-        
-            let location = CLLocation(latitude: latitude, longitude: longitude) //changed!!!
+            
+            let location = CLLocation(latitude: latitude, longitude: longitude)
             
             CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
-                
                 if error != nil {
-                    print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                    self.alertError("Reverse geocoder failed with error" + (error?.localizedDescription)!)
                     return
                 }
-                
                 if placemarks!.count > 0 {
                     let pm = placemarks![0]
                     
@@ -152,12 +152,18 @@ class InstagramLoginViewController: UIViewController {
                     if (!countries.contains(country!)) {
                         countries.append(country!)
                     }
+                    dispatchGroup.leave()
                 }
                 else {
                     self.alertError("Fail to perform reverse geo location")
                 }
             })
         }
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) {
+            completionHandlerLocations(cities, countries)
+        }
+        
     }
     
     private func alertError(_ alertMessage: String) {
