@@ -157,6 +157,7 @@ class MapViewController: UIViewController {
             //var annotationsArray = [MKPointAnnotation]()
             for cityEntity in result! {
                 print(cityEntity.city!)
+                updateMapView(cityEntity.city!)
                 /*
                 let annotation = MKPointAnnotation()
                 annotation.coordinate.latitude = location.latitude
@@ -173,4 +174,50 @@ class MapViewController: UIViewController {
             
         }
     }
+    
+    func updateMapView(_ location: String) {
+        //loadingIndicator.startAnimating()
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(location) { (placeMarks, error) in
+            
+            if (error == nil) {
+                // placeMarks can be multiple places.. so how about try the first one?
+                //
+                if ((placeMarks?.count)! == 1) {
+                    let placeMark = placeMarks![0]
+                    
+                    let longitude = placeMark.location?.coordinate.longitude
+                    let latitude = placeMark.location?.coordinate.latitude
+                    
+                    
+                    // The lat and long are used to create a CLLocationCoordinates2D instance.
+                    let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                    
+                    // Set the coordinate span and map region
+                    //let coordinateSpan = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
+                    //let coordinateRegion = MKCoordinateRegion(center: coordinate, span: coordinateSpan)
+                    
+                    // Set the annotation
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate
+                    
+                    performUIUpdatesOnMain {
+                        //self.mapView.region = coordinateRegion
+                        self.mapView.addAnnotation(annotation)
+                    }
+                }
+                else if ((placeMarks?.count)! == 0) {
+                    //self.alertMapError("Location is not found.")
+                }
+                else {
+                    //self.alertMapError("Multiple locations found.")
+                }
+            }
+            else {
+                print(error.debugDescription)
+                //self.alertMapError("Error getting location.")
+            }
+        }
+    }
+    
 }
