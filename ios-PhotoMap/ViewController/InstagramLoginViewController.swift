@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import WebKit
+import MapKit
 
 extension InstagramLoginViewController: UIWebViewDelegate {
     
@@ -17,7 +18,12 @@ extension InstagramLoginViewController: UIWebViewDelegate {
         
         if requestURLString.hasPrefix(InstagramClient.Constants.REDIRECT_URI) {
             
+            // Get User Token
             assignToken(requestURLString)
+            
+            // Get User Info, and images
+            getUserInfo()
+            
             showMainTabController()
             // return false, we do not want to show the web. We just need to get the token
             return false;
@@ -31,9 +37,17 @@ class InstagramLoginViewController: UIViewController {
     @IBOutlet weak var webView: UIWebView!
     
     var isLoggedIn = false
+    var images = [Image]()
+    var userInfo = UserInfo()
+    // Initialize core data stack
+    var coreDataStack: CoreDataStack?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Initialize core data stack
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        coreDataStack = delegate.stack
+        
         webView.delegate = self
     }
     
@@ -68,18 +82,108 @@ class InstagramLoginViewController: UIViewController {
         
         // Assign client access token
         InstagramClient.sharedInstance().accessToken = accessToken
-        
-        // Get user info
-        InstagramClient.sharedInstance().getUserInfo()
-        
-        // Get user images
-        InstagramClient.sharedInstance().getImages()
     }
     
     private func showMainTabController() {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
         
         self.present(controller, animated: true, completion: nil)
+    }
+    
+    private func getUserInfo() {
+        InstagramClient.sharedInstance().getUserInfo(completionHandlerUserInfo: { (userInfo, error ) in
+            if (error == nil) {
+                self.userInfo = userInfo!
+                self.getUserImages()
+            }
+            else {
+                self.alertError("Fail to get user info")
+            }
+        })
+    }
+    
+    private func getUserImages() {
+        print("***** get user images")
+        InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
+            if (error == nil) {
+                self.images = images!
+                self.getImageLocation()
+            }
+            else {
+                self.alertError("Fail to get user images")
+            }
+        })
+    }
+    
+    private func getImageLocation() {
+        performReverseGeoLocation(completionHandlerLocations: { (cities, countries) in
+            for city in cities {
+                print(city)
+            }
+            
+            for country in countries {
+                print(country)
+            }
+            self.coreDataStack?.save()
+        })
+    }
+    
+    private func performReverseGeoLocation(completionHandlerLocations: @escaping(_ cities: [String], _ countries: [String]) -> Void) {
+        // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
+        let dispatchGroup = DispatchGroup()
+        var cities = [String]()
+        var countries = [String]()
+        
+        self.images.forEach { (image) in
+            dispatchGroup.enter()
+            let longitude = image.longitude
+            let latitude = image.latitude
+            
+            let location = CLLocation(latitude: latitude, longitude: longitude)
+            
+            CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+                if error != nil {
+                    self.alertError("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                    return
+                }
+                if placemarks!.count > 0 {
+                    let pm = placemarks![0]
+                    
+                    let country = pm.country
+                    let city = pm.locality
+                    
+                    if (!cities.contains(city!)) {
+                        cities.append(city!)
+                        let cityEntity = CityEntity(city: city!, context: (self.coreDataStack?.context)!)
+                        self.userInfo.addToUserInfoToCity(cityEntity)
+                        cityEntity.addToCityToImage(image)
+                    }
+                    
+                    if (!countries.contains(country!)) {
+                        countries.append(country!)
+                        let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
+                        self.userInfo.addToUserInfoToCountry(countryEntity)
+                        countryEntity.addToCountryToImage(image)
+                    }
+                    dispatchGroup.leave()
+                }
+                else {
+                    self.alertError("Fail to perform reverse geo location")
+                }
+            })
+        }
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) {
+            completionHandlerLocations(cities, countries)
+        }
+    }
+    
+    private func alertError(_ alertMessage: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     
