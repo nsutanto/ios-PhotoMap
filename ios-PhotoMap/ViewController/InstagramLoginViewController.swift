@@ -41,6 +41,7 @@ class InstagramLoginViewController: UIViewController {
     var userInfo = UserInfo()
     // Initialize core data stack
     var coreDataStack: CoreDataStack?
+    var mapViewController: MapViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +88,9 @@ class InstagramLoginViewController: UIViewController {
     private func showMainTabController() {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
         
+        let itemVC = controller.viewControllers
+        mapViewController = itemVC?.first as? MapViewController
+        
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -103,7 +107,6 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func getUserImages() {
-        print("***** get user images")
         InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
             if (error == nil) {
                 self.images = images!
@@ -117,17 +120,8 @@ class InstagramLoginViewController: UIViewController {
     
     private func getImageLocation() {
         performReverseGeoLocation(completionHandlerLocations: { (cities, countries) in
-            for city in cities {
-                print(city)
-            }
-            
-            for country in countries {
-                print(country)
-            }
             self.coreDataStack?.save()
-            let mapViewController = self.storyboard!.instantiateViewController(withIdentifier: "MapViewControllerID") as! MapViewController
-            mapViewController.loadMap()
-            
+            //self.mapViewController?.loadMap()
         })
     }
     

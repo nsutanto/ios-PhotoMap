@@ -137,7 +137,6 @@ extension CoreDataStack {
                 // now we save in the background
                 self.persistingContext.perform() {
                     do {
-                        print("**** Trying to save")
                         try self.persistingContext.save()
                     } catch {
                         fatalError("Error while saving persisting context: \(error)")

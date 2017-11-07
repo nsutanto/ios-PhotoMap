@@ -73,27 +73,8 @@ extension MapViewController: MKMapViewDelegate {
 }
 
 extension MapViewController: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("**** Will Change Content")
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        // Assigned all the indexes so that we can update the cell accordingly
-        
-        /*
-        switch (type) {
-        case .insert:
-        case .delete:
-        case .update:
-        default:
-            break
-        }
-        */
-        print("**** controller did change 1")
-    }
-    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("**** controller did change 2")
+        loadMap()
     }
 }
 
@@ -103,22 +84,22 @@ class MapViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
     
-    lazy var fetchedResultsController: NSFetchedResultsController<Image> = {
+    lazy var fetchedResultsControllerCity: NSFetchedResultsController<CityEntity> = {
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CountryEntity")
-        request.sortDescriptors = [NSSortDescriptor(key: "country", ascending: true)]
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CityEntity")
+        request.sortDescriptors = [NSSortDescriptor(key: "city", ascending: true)]
         
         let moc = coreDataStack?.context
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<Image>,
+        let fetchedResultsControllerCity = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<CityEntity>,
                                                                   managedObjectContext: moc!,
                                                                   sectionNameKeyPath: nil,
                                                                   cacheName: nil)
-        return fetchedResultsController
+        return fetchedResultsControllerCity
     }()
     
-    func performFetch() {
+    func performFetchCity() {
         do {
-            try fetchedResultsController.performFetch()
+            try fetchedResultsControllerCity.performFetch()
         } catch {
             fatalError("Failed to initialize FetchedResultsController: \(error)")
         }
@@ -132,19 +113,16 @@ class MapViewController: UIViewController {
         
         mapView.delegate = self
         
-        fetchedResultsController.delegate = self
+        fetchedResultsControllerCity.delegate = self
         
-        performFetch()
-        print("***** Map did load done")
+        performFetchCity()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("***** Map view will appear")
     }
     
     func loadMap() {
-        print("***** Load Countries")
         loadCountries()
         loadCities()
     }
@@ -153,12 +131,9 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
             
-            if (result == nil) {
-                print("***** Country is nil")
-            }
-            
             //var annotationsArray = [MKPointAnnotation]()
-            //for location in result! {
+            for countryEntity in result! {
+                print(countryEntity.country!)
                 /*
                 let annotation = MKPointAnnotation()
                 annotation.coordinate.latitude = location.latitude
@@ -166,7 +141,7 @@ class MapViewController: UIViewController {
                 annotationsArray.append(annotation)
                 locations.append(location)
                 */
-            //}
+            }
             
             //performUIUpdatesOnMain {
             //    self.mapView.addAnnotations(annotationsArray)
@@ -179,20 +154,18 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
             
-            if (result == nil) {
-                print("***** City is nil")
-            }
-            
             //var annotationsArray = [MKPointAnnotation]()
-            //for location in result! {
-            /*
-             let annotation = MKPointAnnotation()
-             annotation.coordinate.latitude = location.latitude
-             annotation.coordinate.longitude = location.longitude
-             annotationsArray.append(annotation)
-             locations.append(location)
-             */
-            //}
+            for cityEntity in result! {
+                print(cityEntity.city!)
+                /*
+                let annotation = MKPointAnnotation()
+                annotation.coordinate.latitude = location.latitude
+                annotation.coordinate.longitude = location.longitude
+                annotationsArray.append(annotation)
+                locations.append(location)
+ */
+             
+            }
             
             //performUIUpdatesOnMain {
             //    self.mapView.addAnnotations(annotationsArray)
@@ -200,5 +173,4 @@ class MapViewController: UIViewController {
             
         }
     }
-
 }
