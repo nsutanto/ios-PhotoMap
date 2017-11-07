@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import WebKit
 import MapKit
-
+import CoreData
 extension InstagramLoginViewController: UIWebViewDelegate {
     
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
@@ -125,6 +125,9 @@ class InstagramLoginViewController: UIViewController {
                 print(country)
             }
             self.coreDataStack?.save()
+            let mapViewController = self.storyboard!.instantiateViewController(withIdentifier: "MapViewControllerID") as! MapViewController
+            mapViewController.loadMap()
+            
         })
     }
     
@@ -157,6 +160,16 @@ class InstagramLoginViewController: UIViewController {
                         let cityEntity = CityEntity(city: city!, context: (self.coreDataStack?.context)!)
                         self.userInfo.addToUserInfoToCity(cityEntity)
                         cityEntity.addToCityToImage(image)
+                    } else {
+                        let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+                        if let result = try? self.coreDataStack?.context.fetch(request) {
+                            for cityEntity in result! {
+                                if (cityEntity.city == city) {
+                                    cityEntity.addToCityToImage(image)
+                                    break
+                                }
+                            }
+                        }
                     }
                     
                     if (!countries.contains(country!)) {
@@ -164,6 +177,16 @@ class InstagramLoginViewController: UIViewController {
                         let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
                         self.userInfo.addToUserInfoToCountry(countryEntity)
                         countryEntity.addToCountryToImage(image)
+                    } else {
+                        let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+                        if let result = try? self.coreDataStack?.context.fetch(request) {
+                            for countryEntity in result! {
+                                if (countryEntity.country == country) {
+                                    countryEntity.addToCountryToImage(image)
+                                    break
+                                }
+                            }
+                        }
                     }
                     dispatchGroup.leave()
                 }
