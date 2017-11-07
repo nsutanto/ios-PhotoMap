@@ -39,9 +39,15 @@ class InstagramLoginViewController: UIViewController {
     var isLoggedIn = false
     var images = [Image]()
     var userInfo = UserInfo()
+    // Initialize core data stack
+    var coreDataStack: CoreDataStack?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Initialize core data stack
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        coreDataStack = delegate.stack
+        
         webView.delegate = self
     }
     
@@ -118,6 +124,7 @@ class InstagramLoginViewController: UIViewController {
             for country in countries {
                 print(country)
             }
+            self.coreDataStack?.save()
         })
     }
     
@@ -147,10 +154,16 @@ class InstagramLoginViewController: UIViewController {
                     
                     if (!cities.contains(city!)) {
                         cities.append(city!)
+                        let cityEntity = CityEntity(city: city!, context: (self.coreDataStack?.context)!)
+                        self.userInfo.addToUserInfoToCity(cityEntity)
+                        cityEntity.addToCityToImage(image)
                     }
                     
                     if (!countries.contains(country!)) {
                         countries.append(country!)
+                        let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
+                        self.userInfo.addToUserInfoToCountry(countryEntity)
+                        countryEntity.addToCountryToImage(image)
                     }
                     dispatchGroup.leave()
                 }
@@ -163,7 +176,6 @@ class InstagramLoginViewController: UIViewController {
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completionHandlerLocations(cities, countries)
         }
-        
     }
     
     private func alertError(_ alertMessage: String) {
