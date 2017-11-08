@@ -1,5 +1,5 @@
 //
-//  MediaViewController.swift
+//  DetailViewController.swift
 //  ios-PhotoMap
 //
 //  Created by Nicholas Sutanto on 11/7/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MediaViewController: UIViewController {
+class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,13 +21,7 @@ class MediaViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func performSegue(_ sender: Any) {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewControllerID") as! DetailViewController
-        
-        // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
-        self.navigationController?.pushViewController(vc, animated: false)
-    }
-    
+
     /*
     // MARK: - Navigation
 
