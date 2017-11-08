@@ -148,10 +148,11 @@ class InstagramLoginViewController: UIViewController {
                     
                     let country = pm.country
                     let city = pm.locality
+                    let state = pm.administrativeArea
                     
                     if (!cities.contains(city!)) {
                         cities.append(city!)
-                        let cityEntity = CityEntity(city: city!, context: (self.coreDataStack?.context)!)
+                        let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
                         self.userInfo.addToUserInfoToCity(cityEntity)
                         cityEntity.addToCityToImage(image)
                     } else {
