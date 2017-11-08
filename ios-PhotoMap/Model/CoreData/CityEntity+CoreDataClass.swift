@@ -13,7 +13,7 @@ import CoreData
 
 public class CityEntity: NSManagedObject {
 
-    convenience init(city: String, context: NSManagedObjectContext) {
+    convenience init(city: String, state: String, context: NSManagedObjectContext) {
         
         // An EntityDescription is an object that has access to all
         // the information you provided in the Entity part of the model
@@ -21,6 +21,7 @@ public class CityEntity: NSManagedObject {
         if let ent = NSEntityDescription.entity(forEntityName: "CityEntity", in: context) {
             self.init(entity: ent, insertInto: context)
             self.city = city
+            self.state = state
         } else {
             fatalError("Unable to find City entity name!")
         }
