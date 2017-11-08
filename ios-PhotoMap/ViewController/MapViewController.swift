@@ -159,8 +159,8 @@ class MapViewController: UIViewController {
             
             //var annotationsArray = [MKPointAnnotation]()
             for cityEntity in result! {
-                print(cityEntity.city!)
-                updateMapView(cityEntity.city!)
+                let location = cityEntity.city! + "," + cityEntity.state!
+                updateMapView(location)
                 /*
                 let annotation = MKPointAnnotation()
                 annotation.coordinate.latitude = location.latitude
