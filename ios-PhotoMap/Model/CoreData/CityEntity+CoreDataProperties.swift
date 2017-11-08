@@ -2,7 +2,7 @@
 //  CityEntity+CoreDataProperties.swift
 //  ios-PhotoMap
 //
-//  Created by Nicholas Sutanto on 11/3/17.
+//  Created by Nicholas Sutanto on 11/7/17.
 //  Copyright © 2017 Nicholas Sutanto. All rights reserved.
 //
 //
@@ -18,8 +18,9 @@ extension CityEntity {
     }
 
     @NSManaged public var city: String?
-    @NSManaged public var cityToUserInfo: UserInfo?
+    @NSManaged public var state: String?
     @NSManaged public var cityToImage: NSSet?
+    @NSManaged public var cityToUserInfo: UserInfo?
 
 }
 

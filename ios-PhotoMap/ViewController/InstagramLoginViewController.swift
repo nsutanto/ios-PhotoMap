@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import WebKit
 import MapKit
-
+import CoreData
 extension InstagramLoginViewController: UIWebViewDelegate {
     
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
@@ -41,6 +41,7 @@ class InstagramLoginViewController: UIViewController {
     var userInfo = UserInfo()
     // Initialize core data stack
     var coreDataStack: CoreDataStack?
+    var mapViewController: MapViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +88,9 @@ class InstagramLoginViewController: UIViewController {
     private func showMainTabController() {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
         
+        let itemVC = controller.viewControllers
+        mapViewController = itemVC?.first as? MapViewController
+        
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -103,7 +107,6 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func getUserImages() {
-        print("***** get user images")
         InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
             if (error == nil) {
                 self.images = images!
@@ -117,14 +120,8 @@ class InstagramLoginViewController: UIViewController {
     
     private func getImageLocation() {
         performReverseGeoLocation(completionHandlerLocations: { (cities, countries) in
-            for city in cities {
-                print(city)
-            }
-            
-            for country in countries {
-                print(country)
-            }
             self.coreDataStack?.save()
+            //self.mapViewController?.loadMap()
         })
     }
     
@@ -151,12 +148,22 @@ class InstagramLoginViewController: UIViewController {
                     
                     let country = pm.country
                     let city = pm.locality
+                    let state = pm.administrativeArea
                     
                     if (!cities.contains(city!)) {
                         cities.append(city!)
-                        let cityEntity = CityEntity(city: city!, context: (self.coreDataStack?.context)!)
+                        let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
                         self.userInfo.addToUserInfoToCity(cityEntity)
                         cityEntity.addToCityToImage(image)
+                    } else {
+                        let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+                        let predicateCity = NSPredicate(format: "city == %@", city!)
+                        let predicateState = NSPredicate(format: "state == %@", state!)
+                        let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+                        
+                        request.predicate = predicateCompound
+                        let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                        cityEntity??.first?.addToCityToImage(image)
                     }
                     
                     if (!countries.contains(country!)) {
@@ -164,6 +171,11 @@ class InstagramLoginViewController: UIViewController {
                         let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
                         self.userInfo.addToUserInfoToCountry(countryEntity)
                         countryEntity.addToCountryToImage(image)
+                    } else {
+                        let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+                        request.predicate = NSPredicate(format: "country == %@", country!)
+                        let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                        countryEntity??.first?.addToCountryToImage(image)
                     }
                     dispatchGroup.leave()
                 }
