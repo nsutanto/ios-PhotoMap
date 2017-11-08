@@ -86,10 +86,10 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func showMainTabController() {
-        let controller = self.storyboard!.instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationControllerID") as! UINavigationController
         
-        let itemVC = controller.viewControllers
-        mapViewController = itemVC?.first as? MapViewController
+        //let itemVC = controller.viewControllers
+        //mapViewController = itemVC?.first as? MapViewController
         
         self.present(controller, animated: true, completion: nil)
     }

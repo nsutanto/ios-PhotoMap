@@ -189,4 +189,11 @@ class MapViewController: UIViewController {
         }
     }
     
+    @IBAction func performLoadPhotos(_ sender: Any) {
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: "MediaViewControllerID") as! MediaViewController
+        
+        // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
+        self.navigationController?.pushViewController(vc, animated: false)
+    }
+    
 }
