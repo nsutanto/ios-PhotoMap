@@ -123,6 +123,9 @@ class MapViewController: UIViewController {
     }
     
     func loadMap() {
+        performUIUpdatesOnMain {
+            self.mapView.removeAnnotations(self.mapView.annotations)
+        }
         loadCountries()
         loadCities()
     }
@@ -182,41 +185,40 @@ class MapViewController: UIViewController {
             
             if (error == nil) {
                 // placeMarks can be multiple places.. so how about try the first one?
-                //
                 if ((placeMarks?.count)! == 1) {
                     let placeMark = placeMarks![0]
-                    
                     let longitude = placeMark.location?.coordinate.longitude
                     let latitude = placeMark.location?.coordinate.latitude
                     
-                    
                     // The lat and long are used to create a CLLocationCoordinates2D instance.
                     let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
-                    
-                    // Set the coordinate span and map region
-                    //let coordinateSpan = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-                    //let coordinateRegion = MKCoordinateRegion(center: coordinate, span: coordinateSpan)
                     
                     // Set the annotation
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = coordinate
                     
                     performUIUpdatesOnMain {
-                        //self.mapView.region = coordinateRegion
                         self.mapView.addAnnotation(annotation)
                     }
                 }
                 else if ((placeMarks?.count)! == 0) {
-                    //self.alertMapError("Location is not found.")
+                    self.alertError("Location is not found.")
                 }
                 else {
-                    //self.alertMapError("Multiple locations found.")
+                    self.alertError("Multiple locations found.")
                 }
             }
             else {
-                print(error.debugDescription)
-                //self.alertMapError("Error getting location.")
+                self.alertError("Error getting location.")
             }
+        }
+    }
+    
+    private func alertError(_ alertMessage: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
