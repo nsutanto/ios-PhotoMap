@@ -157,14 +157,13 @@ class InstagramLoginViewController: UIViewController {
                         cityEntity.addToCityToImage(image)
                     } else {
                         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-                        if let result = try? self.coreDataStack?.context.fetch(request) {
-                            for cityEntity in result! {
-                                if (cityEntity.city == city) {
-                                    cityEntity.addToCityToImage(image)
-                                    break
-                                }
-                            }
-                        }
+                        let predicateCity = NSPredicate(format: "city == %@", city!)
+                        let predicateState = NSPredicate(format: "state == %@", state!)
+                        let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+                        
+                        request.predicate = predicateCompound
+                        let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                        cityEntity??.first?.addToCityToImage(image)
                     }
                     
                     if (!countries.contains(country!)) {
@@ -174,14 +173,9 @@ class InstagramLoginViewController: UIViewController {
                         countryEntity.addToCountryToImage(image)
                     } else {
                         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
-                        if let result = try? self.coreDataStack?.context.fetch(request) {
-                            for countryEntity in result! {
-                                if (countryEntity.country == country) {
-                                    countryEntity.addToCountryToImage(image)
-                                    break
-                                }
-                            }
-                        }
+                        request.predicate = NSPredicate(format: "country == %@", country!)
+                        let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                        countryEntity??.first?.addToCountryToImage(image)
                     }
                     dispatchGroup.leave()
                 }
