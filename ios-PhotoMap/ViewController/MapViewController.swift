@@ -126,7 +126,7 @@ class MapViewController: UIViewController {
         performUIUpdatesOnMain {
             self.mapView.removeAnnotations(self.mapView.annotations)
         }
-        loadCountries()
+        //loadCountries()
         loadCities()
     }
     
@@ -134,22 +134,12 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
             
-            //var annotationsArray = [MKPointAnnotation]()
             for countryEntity in result! {
                 print(countryEntity.country!)
-                /*
-                let annotation = MKPointAnnotation()
-                annotation.coordinate.latitude = location.latitude
-                annotation.coordinate.longitude = location.longitude
-                annotationsArray.append(annotation)
-                locations.append(location)
-                */
+                for countryEntity in result! {
+                    updateMapView(countryEntity.country!)
+                }
             }
-            
-            //performUIUpdatesOnMain {
-            //    self.mapView.addAnnotations(annotationsArray)
-            //}
-            
         }
     }
     
@@ -157,24 +147,10 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
             
-            //var annotationsArray = [MKPointAnnotation]()
             for cityEntity in result! {
                 let location = cityEntity.city! + "," + cityEntity.state!
                 updateMapView(location)
-                /*
-                let annotation = MKPointAnnotation()
-                annotation.coordinate.latitude = location.latitude
-                annotation.coordinate.longitude = location.longitude
-                annotationsArray.append(annotation)
-                locations.append(location)
- */
-             
             }
-            
-            //performUIUpdatesOnMain {
-            //    self.mapView.addAnnotations(annotationsArray)
-            //}
-            
         }
     }
     
