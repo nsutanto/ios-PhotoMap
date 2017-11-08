@@ -20,8 +20,9 @@ extension MapViewController: MKMapViewDelegate {
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = false
+            pinView!.canShowCallout = true
             pinView!.pinTintColor = .red
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {
             pinView!.annotation = annotation
@@ -43,32 +44,21 @@ extension MapViewController: MKMapViewDelegate {
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView){
+        
+        //let coordinate = view.annotation?.coordinate
+     
         /*
-        let coordinate = view.annotation?.coordinate
-        if (onEdit) {
-            // Delete
-            for location in locations {
-                if location.latitude == (coordinate!.latitude) && location.longitude == (coordinate!.longitude) {
-                    
-                    let annotationToRemove = view.annotation
-                    self.mapView.removeAnnotation(annotationToRemove!)
-                    coreDataStack?.context.delete(location)
-                    coreDataStack?.save()
-                    
-                    break
-                }
-            }
-        } else {
-            let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewControllerID") as! PictureViewController
-            
-            // Grab the location object from Core Data
-            let location = self.getLocation(longitude: coordinate!.longitude, latitude: coordinate!.latitude)
-            
-            vc.selectedLocation = location
-            vc.totalPageNumber = location?.value(forKey: "totalFlickrPages") as! Int
-            
-            self.navigationController?.pushViewController(vc, animated: false)
-        }*/
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewControllerID") as! PictureViewController
+        
+        // Grab the location object from Core Data
+        let location = self.getLocation(longitude: coordinate!.longitude, latitude: coordinate!.latitude)
+        
+        vc.selectedLocation = location
+        vc.totalPageNumber = location?.value(forKey: "totalFlickrPages") as! Int
+        
+        self.navigationController?.pushViewController(vc, animated: false)
+        */
+        
     }
 }
 
@@ -148,7 +138,7 @@ class MapViewController: UIViewController {
         if let result = try? self.coreDataStack?.context.fetch(request) {
             
             for cityEntity in result! {
-                let location = cityEntity.city! + "," + cityEntity.state!
+                let location = cityEntity.city! + ", " + cityEntity.state!
                 updateMapView(location)
             }
         }
@@ -172,6 +162,7 @@ class MapViewController: UIViewController {
                     // Set the annotation
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = coordinate
+                    annotation.title = location
                     
                     performUIUpdatesOnMain {
                         self.mapView.addAnnotation(annotation)
