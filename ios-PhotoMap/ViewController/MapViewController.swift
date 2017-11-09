@@ -42,23 +42,17 @@ extension MapViewController: MKMapViewDelegate {
         */
     }
     
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView){
-        
-        //let coordinate = view.annotation?.coordinate
-     
-        /*
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewControllerID") as! PictureViewController
-        
-        // Grab the location object from Core Data
-        let location = self.getLocation(longitude: coordinate!.longitude, latitude: coordinate!.latitude)
-        
-        vc.selectedLocation = location
-        vc.totalPageNumber = location?.value(forKey: "totalFlickrPages") as! Int
-        
-        self.navigationController?.pushViewController(vc, animated: false)
-        */
-        
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if control == view.rightCalloutAccessoryView {
+            let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewController") as! PictureViewController
+            
+            let coordinate = view.annotation?.coordinate
+            
+            getCityEntity(latitude: (coordinate?.latitude)!, longitude: (coordinate?.longitude)!, completionHandlerLocations: { (cityEntity) in
+                vc.selectedCity = cityEntity
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+        }
     }
 }
 
@@ -189,11 +183,33 @@ class MapViewController: UIViewController {
         }
     }
     
-    @IBAction func performLoadPhotos(_ sender: Any) {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewController") as! PictureViewController
+    private func getCityEntity(latitude: Double, longitude: Double, completionHandlerLocations: @escaping(_ cityEntity: CityEntity?) -> Void) {
+        let location = CLLocation(latitude: latitude, longitude: longitude)
         
-        // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
-        self.navigationController?.pushViewController(vc, animated: false)
+        CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+            if error != nil {
+                self.alertError("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                return
+            }
+            if placemarks!.count > 0 {
+                let pm = placemarks![0]
+                
+                let city = pm.locality
+                let state = pm.administrativeArea
+                print("***** City Entity : \(city)")
+                
+                let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+                let predicateCity = NSPredicate(format: "city == %@", city!)
+                let predicateState = NSPredicate(format: "state == %@", state!)
+                let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+                
+                request.predicate = predicateCompound
+                let cityEntityResult = try? self.coreDataStack?.context.fetch(request)
+                completionHandlerLocations(cityEntityResult??.first)
+            }
+            else {
+                completionHandlerLocations(nil)
+            }
+        })
     }
-    
 }
