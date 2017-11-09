@@ -32,47 +32,36 @@ extension PictureViewController: UICollectionViewDataSource {
         let image = fetchedResultsController.object(at: indexPath)
         
         // This should be triggered after download image anyway that the fetchresultscontroller will fire event to update the UI
-        /*
-        if let imageData = image.imageBinary {
-            
+        if let imageData = image.imageData {
+            print("**** get image data")
             performUIUpdatesOnMain {
                 cell.imageView.image = UIImage(data: imageData as Data)
                 cell.activityIndicator.stopAnimating()
-                
-                if (self.downloadCounter > 0) {
-                    self.downloadCounter = self.downloadCounter - 1
-                }
-                if self.downloadCounter == 0 {
-                    self.buttonPictureAction.isEnabled = true
-                }
-                
             }
         }
         else {
+            print("***** Download Image")
             // Download image
-            self.downloadCounter = self.downloadCounter + 1
-            let task = FlickrClient.sharedInstance().downloadImage(imageURL: image.imageURL!, completionHandler: { (imageData, error) in
+            let task = clientUtil.downloadImage(imageURL: image.imageURL!, completionHandler: { (imageData, error) in
                 if (error == nil) {
                     
                     performUIUpdatesOnMain {
                         // Note : No need to assign the cell image here. The core data save will trigger
                         // the event to update this cell anyway later.
                         cell.activityIndicator.stopAnimating()
-                        if (self.downloadCounter > 0) {
-                            self.buttonPictureAction.isEnabled = false
-                        }
                     }
                     
                     self.coreDataStack?.context.perform {
-                        image.imageBinary = imageData as NSData?
+                        image.imageData = imageData as NSData?
                     }
                 } else {
                     print("***** Download error")
                 }
             })
             cell.taskToCancelifCellIsReused = task
+            
         }
-        */
+        
         return cell
     }
 }
@@ -134,7 +123,6 @@ extension PictureViewController: UICollectionViewDelegate {
 
 class PictureViewController: UIViewController {
     
-    @IBOutlet weak var buttonPictureAction: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     // Selected Location from previous navigation controller
@@ -144,24 +132,22 @@ class PictureViewController: UIViewController {
     var insertIndexes = [IndexPath]()
     var deleteIndexes = [IndexPath]()
     var updateIndexes = [IndexPath]()
-    // Selected Index is used to delete the pictures
     var selectedIndexes = [IndexPath]()
-    // Total page number for flickr. Init to 1 for default. Once we get the first request, we will generate random number.
-    var totalPageNumber : Int = 1
-    var currentPageNumber = 1
-    var downloadCounter = 0
+    var selectedCity: CityEntity?
+    let clientUtil = ClientUtil()
     
     lazy var fetchedResultsController: NSFetchedResultsController<Image> = {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Image")
-        request.sortDescriptors = [NSSortDescriptor(key: "imageURL", ascending: true)]
-        //request.predicate = NSPredicate(format: "imageToLocation == %@", self.selectedLocation)
+        request.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
+        request.predicate = NSPredicate(format: "imageToCity == %@", self.selectedCity!)
         
         let moc = coreDataStack?.context
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<Image>,
                                                                   managedObjectContext: moc!,
                                                                   sectionNameKeyPath: nil,
                                                                   cacheName: nil)
+        print("**** Get fetched results controller")
         return fetchedResultsController
     }()
     
@@ -190,9 +176,6 @@ class PictureViewController: UIViewController {
         performFetch()
         // Init Photos
         initPhotos()
-        
-        // Disable refresh button
-        self.buttonPictureAction.isEnabled = false
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
