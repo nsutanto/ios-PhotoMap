@@ -86,7 +86,7 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func showMainTabController() {
-        let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationControllerID") as! UINavigationController
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
         
         //let itemVC = controller.viewControllers
         //mapViewController = itemVC?.first as? MapViewController

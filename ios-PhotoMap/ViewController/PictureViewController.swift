@@ -1,24 +1,26 @@
 //
-//  AboutViewController.swift
+//  MediaViewController.swift
 //  ios-PhotoMap
 //
-//  Created by Nicholas Sutanto on 10/27/17.
+//  Created by Nicholas Sutanto on 11/7/17.
 //  Copyright © 2017 Nicholas Sutanto. All rights reserved.
 //
 
 import UIKit
 
-class AboutViewController: UIViewController {
+class PictureViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
     }
     
-    @IBAction func performLogout(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
+    
+
+
     @IBAction func performSegue(_ sender: Any) {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewController") as! PictureViewController
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
         
         // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
         self.navigationController?.pushViewController(vc, animated: false)
