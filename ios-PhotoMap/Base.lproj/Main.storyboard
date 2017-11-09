@@ -129,14 +129,6 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="FSu-HV-qeE">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EqN-6y-hem">
-                                <rect key="frame" x="164" y="506" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="performLoadPhotos:" destination="zoI-kn-CGq" eventType="touchUpInside" id="Rpx-D3-ajs"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -186,15 +178,24 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1e4-kj-O1i">
                                                     <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                                 </imageView>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9XY-CS-Oza">
+                                                    <rect key="frame" x="90" y="90" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                         </view>
                                         <rect key="contentStretch" x="1" y="1" width="1" height="1"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="1e4-kj-O1i" secondAttribute="trailing" id="8NV-Oe-rRK"/>
+                                            <constraint firstItem="9XY-CS-Oza" firstAttribute="centerY" secondItem="1e4-kj-O1i" secondAttribute="centerY" id="Cxh-Ss-gLw"/>
                                             <constraint firstAttribute="bottom" secondItem="1e4-kj-O1i" secondAttribute="bottom" id="cPR-fZ-SuT"/>
                                             <constraint firstItem="1e4-kj-O1i" firstAttribute="top" secondItem="0OR-rW-Qah" secondAttribute="top" id="dvR-BI-JY5"/>
                                             <constraint firstItem="1e4-kj-O1i" firstAttribute="leading" secondItem="0OR-rW-Qah" secondAttribute="leading" id="kFu-Km-BRs"/>
+                                            <constraint firstItem="9XY-CS-Oza" firstAttribute="centerX" secondItem="1e4-kj-O1i" secondAttribute="centerX" id="kVn-g9-u51"/>
                                         </constraints>
+                                        <connections>
+                                            <outlet property="activityIndicator" destination="9XY-CS-Oza" id="e7K-6s-1rl"/>
+                                            <outlet property="imageView" destination="1e4-kj-O1i" id="Ja5-jv-1YF"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -210,6 +211,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="Location" id="y18-cq-uGD"/>
                     <connections>
+                        <outlet property="collectionView" destination="qDt-2d-Baw" id="tBo-WN-THw"/>
+                        <outlet property="flowLayout" destination="A1y-bd-fFB" id="hEz-82-xJy"/>
                         <segue destination="UfJ-d4-QMf" kind="show" identifier="segueDetailViewController" id="Ji8-kR-z0V"/>
                     </connections>
                 </viewController>
@@ -253,6 +256,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="qD1-9Q-vKp"/>
+        <segue reference="721-Ge-zX4"/>
     </inferredMetricsTieBreakers>
 </document>
