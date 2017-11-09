@@ -168,7 +168,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="collectionViewCellID" reuseIdentifier="mediaCell" id="0OR-rW-Qah" customClass="PictureCollectionViewCell" customModule="ios_PhotoMap" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="collectionViewCell" reuseIdentifier="collectionViewCell" id="0OR-rW-Qah" customClass="PictureCollectionViewCell" customModule="ios_PhotoMap" customModuleProvider="target">
                                         <rect key="frame" x="87.5" y="0.0" width="200" height="200"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -198,6 +198,10 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="37d-mv-0z4" id="YWf-a6-d5T"/>
+                                    <outlet property="delegate" destination="37d-mv-0z4" id="mpC-3P-aoF"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -213,6 +217,7 @@
                     <connections>
                         <outlet property="collectionView" destination="qDt-2d-Baw" id="tBo-WN-THw"/>
                         <outlet property="flowLayout" destination="A1y-bd-fFB" id="hEz-82-xJy"/>
+                        <outlet property="locationTitle" destination="y18-cq-uGD" id="8hx-3L-tyM"/>
                         <segue destination="UfJ-d4-QMf" kind="show" identifier="segueDetailViewController" id="Ji8-kR-z0V"/>
                     </connections>
                 </viewController>

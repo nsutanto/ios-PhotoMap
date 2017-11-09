@@ -33,14 +33,12 @@ extension PictureViewController: UICollectionViewDataSource {
         
         // This should be triggered after download image anyway that the fetchresultscontroller will fire event to update the UI
         if let imageData = image.imageData {
-            print("**** get image data")
             performUIUpdatesOnMain {
                 cell.imageView.image = UIImage(data: imageData as Data)
                 cell.activityIndicator.stopAnimating()
             }
         }
         else {
-            print("***** Download Image")
             // Download image
             let task = clientUtil.downloadImage(imageURL: image.imageURL!, completionHandler: { (imageData, error) in
                 if (error == nil) {
@@ -103,26 +101,23 @@ extension PictureViewController: UICollectionViewDelegate {
     // When user select one of the cell
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        /*
         // Get the specific cell
         let cell = collectionView.cellForItem(at: indexPath as IndexPath)
-        if (!selectedIndexes.contains(indexPath)) {
-            // Add to selected index
-            selectedIndexes.append(indexPath)
-            // Change selected cell color
-            cell?.alpha = 0.5
-        } else {
-            // Remove index from selected indexes
-            let index = selectedIndexes.index(of: indexPath)
-            selectedIndexes.remove(at: index!)
-            // Change selected cell color
-            cell?.alpha = 1
-        }
+    
+        
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        
+        // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
+        self.navigationController?.pushViewController(vc, animated: false)
+        */
     }
 }
 
 
 class PictureViewController: UIViewController {
     
+    @IBOutlet weak var locationTitle: UINavigationItem!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     // Selected Location from previous navigation controller
@@ -147,7 +142,6 @@ class PictureViewController: UIViewController {
                                                                   managedObjectContext: moc!,
                                                                   sectionNameKeyPath: nil,
                                                                   cacheName: nil)
-        print("**** Get fetched results controller")
         return fetchedResultsController
     }()
     
@@ -174,8 +168,8 @@ class PictureViewController: UIViewController {
         initLayout(size: view.frame.size)
         // Initialize fetched results controller from core data stack
         performFetch()
-        // Init Photos
-        initPhotos()
+        // Set title
+        locationTitle.title = (selectedCity?.city)! + ", " + (selectedCity?.state)!
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -193,34 +187,6 @@ class PictureViewController: UIViewController {
         flowLayout?.minimumInteritemSpacing = space
         flowLayout?.minimumLineSpacing = space
         flowLayout?.itemSize = CGSize(width: dimension, height: dimension)
-    }
-    
-    // Mark: Init Photos
-    private func initPhotos() {
-        if (fetchedResultsController.fetchedObjects?.count == 0) {
-        }
-    }
-    
-    
-    
-    private func downloadImages() {
-        /*
-        coreDataStack?.performBackgroundBatchOperation { (workerContext) in
-            for image in self.fetchedResultsController.fetchedObjects! {
-                if image.imageBinary == nil {
-                    _ = FlickrClient.sharedInstance().downloadImage(imageURL: image.imageURL!, completionHandler: { (imageData, error) in
-                        
-                        if (error == nil) {
-                            image.imageBinary = imageData as NSData?
-                        }
-                        else {
-                            print("***** Download error")
-                        }
-                    })
-                }
-            }
-        }
-        */
     }
     
     private func alertError(_ alertMessage: String) {
