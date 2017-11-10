@@ -7,8 +7,6 @@
 //
 
 import UIKit
-
-import UIKit
 import CoreData
 
 extension PictureViewController: UICollectionViewDataSource {
