@@ -32,6 +32,17 @@ extension TableViewController: UITableViewDataSource {
     }
 }
 
+extension TableViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let cityEntity = fetchedResultsController.object(at: indexPath)
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewController") as! PictureViewController
+        
+        vc.selectedCity = cityEntity
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
 extension TableViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
@@ -68,32 +79,11 @@ extension TableViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-/*
-extension PictureViewController: UICollectionViewDelegate {
-    
-    // When user select one of the cell
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        /*
-         // Get the specific cell
-         let cell = collectionView.cellForItem(at: indexPath as IndexPath)
-         
-         
-         let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-         
-         // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
-         self.navigationController?.pushViewController(vc, animated: false)
-         */
-    }
-}
-*/
-
 class TableViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     // Selected Location from previous navigation controller
     var coreDataStack: CoreDataStack?
-    let clientUtil = ClientUtil()
     
     lazy var fetchedResultsController: NSFetchedResultsController<CityEntity> = {
         
@@ -126,25 +116,7 @@ class TableViewController: UIViewController {
         // Initialize delegate
         fetchedResultsController.delegate = self
         
-        // Init Layout
         // Initialize fetched results controller from core data stack
         performFetch()
-    }
-    
-    
-    private func alertError(_ alertMessage: String) {
-        performUIUpdatesOnMain {
-            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    
-    @IBAction func performSegue(_ sender: Any) {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        
-        // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
-        self.navigationController?.pushViewController(vc, animated: false)
     }
 }
