@@ -48,10 +48,23 @@ extension MapViewController: MKMapViewDelegate {
             
             let coordinate = view.annotation?.coordinate
             
-            getCityEntity(latitude: (coordinate?.latitude)!, longitude: (coordinate?.longitude)!, completionHandlerLocations: { (cityEntity) in
-                vc.selectedCity = cityEntity
-                self.navigationController?.pushViewController(vc, animated: true)
-            })
+            switch segmentationControl.selectedSegmentIndex
+            {
+            case 0:
+                getCountryEntity(latitude: (coordinate?.latitude)!, longitude: (coordinate?.longitude)!, completionHandlerLocations: { (countryEntity) in
+                    vc.selectedCountry = countryEntity
+                    self.navigationController?.pushViewController(vc, animated: true)
+                })
+            case 1:
+                getCityEntity(latitude: (coordinate?.latitude)!, longitude: (coordinate?.longitude)!, completionHandlerLocations: { (cityEntity) in
+                    vc.selectedCity = cityEntity
+                    self.navigationController?.pushViewController(vc, animated: true)
+                })
+            default:
+                break
+            }
+            
+            
         }
     }
 }
@@ -66,6 +79,7 @@ class MapViewController: UIViewController {
 
     var coreDataStack: CoreDataStack?
     
+    @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
     
     lazy var fetchedResultsControllerCity: NSFetchedResultsController<CityEntity> = {
@@ -89,6 +103,7 @@ class MapViewController: UIViewController {
         }
     }
     
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Initialize core data stack
@@ -96,10 +111,10 @@ class MapViewController: UIViewController {
         coreDataStack = delegate.stack
         
         mapView.delegate = self
-        
         fetchedResultsControllerCity.delegate = self
         
         performFetchCity()
+        loadMap()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,8 +125,17 @@ class MapViewController: UIViewController {
         performUIUpdatesOnMain {
             self.mapView.removeAnnotations(self.mapView.annotations)
         }
-        //loadCountries()
-        loadCities()
+        
+        switch segmentationControl.selectedSegmentIndex
+        {
+        case 0:
+            loadCountries()
+        case 1:
+            loadCities()
+        default:
+            print("***** Load default")
+            break
+        }
     }
     
     private func loadCountries() {
@@ -139,7 +163,6 @@ class MapViewController: UIViewController {
     }
     
     func updateMapView(_ location: String) {
-        //loadingIndicator.startAnimating()
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(location) { (placeMarks, error) in
             
@@ -183,6 +206,10 @@ class MapViewController: UIViewController {
         }
     }
     
+    @IBAction func onSegControlValueChanged(_ sender: Any) {
+        loadMap();
+    }
+
     private func getCityEntity(latitude: Double, longitude: Double, completionHandlerLocations: @escaping(_ cityEntity: CityEntity?) -> Void) {
         let location = CLLocation(latitude: latitude, longitude: longitude)
         
@@ -205,6 +232,31 @@ class MapViewController: UIViewController {
                 request.predicate = predicateCompound
                 let cityEntityResult = try? self.coreDataStack?.context.fetch(request)
                 completionHandlerLocations(cityEntityResult??.first)
+            }
+            else {
+                completionHandlerLocations(nil)
+            }
+        })
+    }
+    
+    private func getCountryEntity(latitude: Double, longitude: Double, completionHandlerLocations: @escaping(_ countryEntity: CountryEntity?) -> Void) {
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        
+        CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+            if error != nil {
+                self.alertError("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                return
+            }
+            if placemarks!.count > 0 {
+                let pm = placemarks![0]
+                
+                let country = pm.country
+                
+                let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+                request.predicate = NSPredicate(format: "country == %@", country!)
+                
+                let countryEntityResult = try? self.coreDataStack?.context.fetch(request)
+                completionHandlerLocations(countryEntityResult??.first)
             }
             else {
                 completionHandlerLocations(nil)

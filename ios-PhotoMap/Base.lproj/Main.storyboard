@@ -191,11 +191,14 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                             </mapView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="asL-TU-UKI">
-                                <rect key="frame" x="124" y="64" width="127" height="29"/>
+                                <rect key="frame" x="124" y="72" width="127" height="29"/>
                                 <segments>
                                     <segment title="Country"/>
                                     <segment title="City"/>
                                 </segments>
+                                <connections>
+                                    <action selector="onSegControlValueChanged:" destination="zoI-kn-CGq" eventType="valueChanged" id="1Bt-5T-BZm"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -204,7 +207,7 @@
                             <constraint firstItem="asL-TU-UKI" firstAttribute="centerX" secondItem="Jcc-EH-OMx" secondAttribute="centerX" id="bXn-rb-fCt"/>
                             <constraint firstItem="FSu-HV-qeE" firstAttribute="top" secondItem="Jcc-EH-OMx" secondAttribute="top" id="dN7-qL-cpk"/>
                             <constraint firstItem="Jcc-EH-OMx" firstAttribute="trailing" secondItem="FSu-HV-qeE" secondAttribute="trailing" id="kfF-n9-Ni2"/>
-                            <constraint firstItem="asL-TU-UKI" firstAttribute="top" secondItem="Jcc-EH-OMx" secondAttribute="top" id="nHg-BD-3zT"/>
+                            <constraint firstItem="asL-TU-UKI" firstAttribute="top" secondItem="Jcc-EH-OMx" secondAttribute="top" constant="8" id="nHg-BD-3zT"/>
                             <constraint firstItem="FSu-HV-qeE" firstAttribute="leading" secondItem="Jcc-EH-OMx" secondAttribute="leading" id="plL-oa-RGZ"/>
                             <constraint firstItem="Jcc-EH-OMx" firstAttribute="bottom" secondItem="FSu-HV-qeE" secondAttribute="bottom" id="rNK-2a-aTq"/>
                         </constraints>
@@ -213,6 +216,7 @@
                     <tabBarItem key="tabBarItem" title="Map" id="DsU-tx-Jf6"/>
                     <connections>
                         <outlet property="mapView" destination="FSu-HV-qeE" id="WwB-th-TeJ"/>
+                        <outlet property="segmentationControl" destination="asL-TU-UKI" id="6AJ-xy-VT7"/>
                         <segue destination="37d-mv-0z4" kind="show" identifier="segueMapToMedia" id="721-Ge-zX4"/>
                     </connections>
                 </viewController>
