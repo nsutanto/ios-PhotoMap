@@ -90,7 +90,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Pw-f3-aGg">
-                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <rect key="frame" x="0.0" y="100" width="375" height="518"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tableViewCell" textLabel="0Up-9K-8HS" style="IBUITableViewCellStyleDefault" id="mWD-Ks-1Lz">
@@ -116,13 +116,22 @@
                                     <outlet property="delegate" destination="iaf-KZ-mcn" id="SnO-th-PMh"/>
                                 </connections>
                             </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="S7N-QR-2E7">
+                                <rect key="frame" x="124" y="72" width="127" height="29"/>
+                                <segments>
+                                    <segment title="Country"/>
+                                    <segment title="City"/>
+                                </segments>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Imf-Oi-nK9" firstAttribute="bottom" secondItem="2Pw-f3-aGg" secondAttribute="bottom" id="G6t-Pu-5yJ"/>
+                            <constraint firstItem="2Pw-f3-aGg" firstAttribute="top" secondItem="S7N-QR-2E7" secondAttribute="bottom" id="T4e-QF-SKl"/>
                             <constraint firstItem="Imf-Oi-nK9" firstAttribute="trailing" secondItem="2Pw-f3-aGg" secondAttribute="trailing" id="TYx-ao-QH3"/>
                             <constraint firstItem="2Pw-f3-aGg" firstAttribute="leading" secondItem="Imf-Oi-nK9" secondAttribute="leading" id="hjT-cL-euw"/>
-                            <constraint firstItem="2Pw-f3-aGg" firstAttribute="top" secondItem="Imf-Oi-nK9" secondAttribute="top" id="rxB-MC-48v"/>
+                            <constraint firstItem="S7N-QR-2E7" firstAttribute="top" secondItem="Imf-Oi-nK9" secondAttribute="top" constant="8" id="lhL-PI-4Jt"/>
+                            <constraint firstItem="S7N-QR-2E7" firstAttribute="centerX" secondItem="Imf-Oi-nK9" secondAttribute="centerX" id="n4t-2L-1yS"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Imf-Oi-nK9"/>
                     </view>
@@ -181,12 +190,24 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="FSu-HV-qeE">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                             </mapView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="asL-TU-UKI">
+                                <rect key="frame" x="124" y="72" width="127" height="29"/>
+                                <segments>
+                                    <segment title="Country"/>
+                                    <segment title="City"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onSegControlValueChanged:" destination="zoI-kn-CGq" eventType="valueChanged" id="1Bt-5T-BZm"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="FSu-HV-qeE" firstAttribute="centerY" secondItem="Jcc-EH-OMx" secondAttribute="centerY" id="67I-Tu-lIA"/>
+                            <constraint firstItem="asL-TU-UKI" firstAttribute="centerX" secondItem="Jcc-EH-OMx" secondAttribute="centerX" id="bXn-rb-fCt"/>
                             <constraint firstItem="FSu-HV-qeE" firstAttribute="top" secondItem="Jcc-EH-OMx" secondAttribute="top" id="dN7-qL-cpk"/>
                             <constraint firstItem="Jcc-EH-OMx" firstAttribute="trailing" secondItem="FSu-HV-qeE" secondAttribute="trailing" id="kfF-n9-Ni2"/>
+                            <constraint firstItem="asL-TU-UKI" firstAttribute="top" secondItem="Jcc-EH-OMx" secondAttribute="top" constant="8" id="nHg-BD-3zT"/>
                             <constraint firstItem="FSu-HV-qeE" firstAttribute="leading" secondItem="Jcc-EH-OMx" secondAttribute="leading" id="plL-oa-RGZ"/>
                             <constraint firstItem="Jcc-EH-OMx" firstAttribute="bottom" secondItem="FSu-HV-qeE" secondAttribute="bottom" id="rNK-2a-aTq"/>
                         </constraints>
@@ -195,6 +216,7 @@
                     <tabBarItem key="tabBarItem" title="Map" id="DsU-tx-Jf6"/>
                     <connections>
                         <outlet property="mapView" destination="FSu-HV-qeE" id="WwB-th-TeJ"/>
+                        <outlet property="segmentationControl" destination="asL-TU-UKI" id="6AJ-xy-VT7"/>
                         <segue destination="37d-mv-0z4" kind="show" identifier="segueMapToMedia" id="721-Ge-zX4"/>
                     </connections>
                 </viewController>
@@ -296,7 +318,9 @@
         <scene sceneID="IDh-Kd-F8y">
             <objects>
                 <tabBarController storyboardIdentifier="MainTabBarController" id="FRK-wu-q4M" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="lrX-V5-T5p"/>
+                    <navigationItem key="navigationItem" id="lrX-V5-T5p">
+                        <nil key="title"/>
+                    </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MFa-xf-Y2T">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

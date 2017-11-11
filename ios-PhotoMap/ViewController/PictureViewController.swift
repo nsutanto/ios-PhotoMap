@@ -127,13 +127,20 @@ class PictureViewController: UIViewController {
     var updateIndexes = [IndexPath]()
     var selectedIndexes = [IndexPath]()
     var selectedCity: CityEntity?
+    var selectedCountry: CountryEntity?
     let clientUtil = ClientUtil()
     
     lazy var fetchedResultsController: NSFetchedResultsController<Image> = {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Image")
         request.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
-        request.predicate = NSPredicate(format: "imageToCity == %@", self.selectedCity!)
+        
+        if (selectedCity != nil) {
+            request.predicate = NSPredicate(format: "imageToCity == %@", self.selectedCity!)
+        }
+        else {
+            request.predicate = NSPredicate(format: "imageToCountry == %@", self.selectedCountry!)
+        }
         
         let moc = coreDataStack?.context
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<Image>,
@@ -167,7 +174,17 @@ class PictureViewController: UIViewController {
         // Initialize fetched results controller from core data stack
         performFetch()
         // Set title
-        locationTitle.title = (selectedCity?.city)! + ", " + (selectedCity?.state)!
+        if (selectedCity != nil) {
+            locationTitle.title = (selectedCity?.city)! + ", " + (selectedCity?.state)!
+        }
+        else {
+            locationTitle.title = (selectedCountry?.country)!
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        selectedCity = nil
+        selectedCountry = nil
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
