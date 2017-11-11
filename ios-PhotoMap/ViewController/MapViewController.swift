@@ -196,7 +196,6 @@ class MapViewController: UIViewController {
                 
                 let city = pm.locality
                 let state = pm.administrativeArea
-                print("***** City Entity : \(city)")
                 
                 let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
                 let predicateCity = NSPredicate(format: "city == %@", city!)
