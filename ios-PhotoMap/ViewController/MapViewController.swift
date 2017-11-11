@@ -103,6 +103,27 @@ class MapViewController: UIViewController {
         }
     }
     
+    lazy var fetchedResultsControllerCountry: NSFetchedResultsController<CountryEntity> = {
+        
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CountryEntity")
+        request.sortDescriptors = [NSSortDescriptor(key: "country", ascending: true)]
+        
+        let moc = coreDataStack?.context
+        let fetchedResultsControllerCountry = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<CountryEntity>,
+                                                                      managedObjectContext: moc!,
+                                                                      sectionNameKeyPath: nil,
+                                                                      cacheName: nil)
+        return fetchedResultsControllerCountry
+    }()
+    
+    func performFetchCountry() {
+        do {
+            try fetchedResultsControllerCountry.performFetch()
+        } catch {
+            fatalError("Failed to initialize FetchedResultsController: \(error)")
+        }
+    }
+    
  
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,9 +133,17 @@ class MapViewController: UIViewController {
         
         mapView.delegate = self
         fetchedResultsControllerCity.delegate = self
+        fetchedResultsControllerCountry.delegate = self
         
-        performFetchCity()
-        loadMap()
+        switch segmentationControl.selectedSegmentIndex
+        {
+        case 0:
+            performFetchCountry()
+        case 1:
+            performFetchCity()
+        default:
+            break
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -133,7 +162,6 @@ class MapViewController: UIViewController {
         case 1:
             loadCities()
         default:
-            print("***** Load default")
             break
         }
     }
@@ -141,12 +169,8 @@ class MapViewController: UIViewController {
     private func loadCountries() {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
-            
             for countryEntity in result! {
-                print(countryEntity.country!)
-                for countryEntity in result! {
-                    updateMapView(countryEntity.country!)
-                }
+                updateMapView(countryEntity.country!)
             }
         }
     }

@@ -90,7 +90,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Pw-f3-aGg">
-                                <rect key="frame" x="0.0" y="92" width="375" height="526"/>
+                                <rect key="frame" x="0.0" y="100" width="375" height="518"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tableViewCell" textLabel="0Up-9K-8HS" style="IBUITableViewCellStyleDefault" id="mWD-Ks-1Lz">
@@ -117,7 +117,7 @@
                                 </connections>
                             </tableView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="S7N-QR-2E7">
-                                <rect key="frame" x="124" y="64" width="127" height="29"/>
+                                <rect key="frame" x="124" y="72" width="127" height="29"/>
                                 <segments>
                                     <segment title="Country"/>
                                     <segment title="City"/>
@@ -130,7 +130,7 @@
                             <constraint firstItem="2Pw-f3-aGg" firstAttribute="top" secondItem="S7N-QR-2E7" secondAttribute="bottom" id="T4e-QF-SKl"/>
                             <constraint firstItem="Imf-Oi-nK9" firstAttribute="trailing" secondItem="2Pw-f3-aGg" secondAttribute="trailing" id="TYx-ao-QH3"/>
                             <constraint firstItem="2Pw-f3-aGg" firstAttribute="leading" secondItem="Imf-Oi-nK9" secondAttribute="leading" id="hjT-cL-euw"/>
-                            <constraint firstItem="S7N-QR-2E7" firstAttribute="top" secondItem="Imf-Oi-nK9" secondAttribute="top" id="lhL-PI-4Jt"/>
+                            <constraint firstItem="S7N-QR-2E7" firstAttribute="top" secondItem="Imf-Oi-nK9" secondAttribute="top" constant="8" id="lhL-PI-4Jt"/>
                             <constraint firstItem="S7N-QR-2E7" firstAttribute="centerX" secondItem="Imf-Oi-nK9" secondAttribute="centerX" id="n4t-2L-1yS"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Imf-Oi-nK9"/>
@@ -338,6 +338,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="721-Ge-zX4"/>
+        <segue reference="nWr-r6-3DK"/>
     </inferredMetricsTieBreakers>
 </document>
