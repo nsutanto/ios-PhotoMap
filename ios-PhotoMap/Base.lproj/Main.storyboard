@@ -90,7 +90,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Pw-f3-aGg">
-                                <rect key="frame" x="0.0" y="100" width="375" height="518"/>
+                                <rect key="frame" x="0.0" y="108" width="375" height="510"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tableViewCell" textLabel="0Up-9K-8HS" style="IBUITableViewCellStyleDefault" id="mWD-Ks-1Lz">
@@ -122,12 +122,15 @@
                                     <segment title="Country"/>
                                     <segment title="City"/>
                                 </segments>
+                                <connections>
+                                    <action selector="onSegControlValueChanged:" destination="iaf-KZ-mcn" eventType="valueChanged" id="jdd-6c-iB4"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Imf-Oi-nK9" firstAttribute="bottom" secondItem="2Pw-f3-aGg" secondAttribute="bottom" id="G6t-Pu-5yJ"/>
-                            <constraint firstItem="2Pw-f3-aGg" firstAttribute="top" secondItem="S7N-QR-2E7" secondAttribute="bottom" id="T4e-QF-SKl"/>
+                            <constraint firstItem="2Pw-f3-aGg" firstAttribute="top" secondItem="S7N-QR-2E7" secondAttribute="bottom" constant="8" id="T4e-QF-SKl"/>
                             <constraint firstItem="Imf-Oi-nK9" firstAttribute="trailing" secondItem="2Pw-f3-aGg" secondAttribute="trailing" id="TYx-ao-QH3"/>
                             <constraint firstItem="2Pw-f3-aGg" firstAttribute="leading" secondItem="Imf-Oi-nK9" secondAttribute="leading" id="hjT-cL-euw"/>
                             <constraint firstItem="S7N-QR-2E7" firstAttribute="top" secondItem="Imf-Oi-nK9" secondAttribute="top" constant="8" id="lhL-PI-4Jt"/>
@@ -137,6 +140,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Location" id="nOf-BE-6zf"/>
                     <connections>
+                        <outlet property="segmentationControl" destination="S7N-QR-2E7" id="ZPW-yt-zWq"/>
                         <outlet property="tableView" destination="2Pw-f3-aGg" id="bU3-LT-CXL"/>
                         <segue destination="37d-mv-0z4" kind="show" identifier="segueTableToMedia" id="nWr-r6-3DK"/>
                     </connections>
