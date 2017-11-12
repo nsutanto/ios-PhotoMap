@@ -11,35 +11,71 @@ import CoreData
 
 extension TableViewController: UITableViewDataSource {
     
+}
+
+extension TableViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        switch segmentationControl.selectedSegmentIndex
+        {
+        case 0:
+            let countryEntity = fetchedResultsControllerCountry.object(at: indexPath)
+            let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewController") as! PictureViewController
+            
+            vc.selectedCountry = countryEntity
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 1:
+            let cityEntity = fetchedResultsControllerCity.object(at: indexPath)
+            let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewController") as! PictureViewController
+            
+            vc.selectedCity = cityEntity
+            self.navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
         
-        let cityEntity = fetchedResultsController.object(at: indexPath)
         
-        // Configure Cell
-        cell.textLabel?.text = cityEntity.city
+        switch segmentationControl.selectedSegmentIndex
+        {
+        case 0:
+            let countryEntity = fetchedResultsControllerCountry.object(at: indexPath)
+            
+            // Configure Cell
+            cell.textLabel?.text = countryEntity.country
+        case 1:
+            
+            let cityEntity = fetchedResultsControllerCity.object(at: indexPath)
+            
+            // Configure Cell
+            cell.textLabel?.text = cityEntity.city! + ", " + cityEntity.state!
+        default:
+            break
+        }
         
         //Populate the cell from the object
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let sections = fetchedResultsController.sections else {
-            fatalError("No sections in fetchedResultsController")
+        
+        switch segmentationControl.selectedSegmentIndex
+        {
+        case 0:
+            let sections = fetchedResultsControllerCountry.sections
+            let sectionInfo = sections![section]
+            return sectionInfo.numberOfObjects
+        case 1:
+            let sections = fetchedResultsControllerCity.sections
+            let sectionInfo = sections![section]
+            return sectionInfo.numberOfObjects
+        default:
+            break
         }
-        let sectionInfo = sections[section]
-        return sectionInfo.numberOfObjects
-    }
-}
-
-extension TableViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let cityEntity = fetchedResultsController.object(at: indexPath)
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "PictureViewController") as! PictureViewController
-        
-        vc.selectedCity = cityEntity
-        self.navigationController?.pushViewController(vc, animated: true)
+        return 0
     }
 }
 
@@ -81,26 +117,48 @@ extension TableViewController: NSFetchedResultsControllerDelegate {
 
 class TableViewController: UIViewController {
 
+    @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     // Selected Location from previous navigation controller
     var coreDataStack: CoreDataStack?
     
-    lazy var fetchedResultsController: NSFetchedResultsController<CityEntity> = {
+    lazy var fetchedResultsControllerCity: NSFetchedResultsController<CityEntity> = {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CityEntity")
         request.sortDescriptors = [NSSortDescriptor(key: "city", ascending: true)]
         
         let moc = coreDataStack?.context
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<CityEntity>,
+        let fetchedResultsControllerCity = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<CityEntity>,
                                                                   managedObjectContext: moc!,
                                                                   sectionNameKeyPath: nil,
                                                                   cacheName: nil)
-        return fetchedResultsController
+        return fetchedResultsControllerCity
     }()
     
-    func performFetch() {
+    lazy var fetchedResultsControllerCountry: NSFetchedResultsController<CountryEntity> = {
+        
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CountryEntity")
+        request.sortDescriptors = [NSSortDescriptor(key: "country", ascending: true)]
+        
+        let moc = coreDataStack?.context
+        let fetchedResultsControllerCountry = NSFetchedResultsController(fetchRequest: request as! NSFetchRequest<CountryEntity>,
+                                                                  managedObjectContext: moc!,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
+        return fetchedResultsControllerCountry
+    }()
+    
+    func performFetchCity() {
         do {
-            try fetchedResultsController.performFetch()
+            try fetchedResultsControllerCity.performFetch()
+        } catch {
+            fatalError("Failed to initialize FetchedResultsController: \(error)")
+        }
+    }
+    
+    func performFetchCountry() {
+        do {
+            try fetchedResultsControllerCountry.performFetch()
         } catch {
             fatalError("Failed to initialize FetchedResultsController: \(error)")
         }
@@ -114,9 +172,30 @@ class TableViewController: UIViewController {
         coreDataStack = delegate.stack
         
         // Initialize delegate
-        fetchedResultsController.delegate = self
+        fetchedResultsControllerCity.delegate = self
+        fetchedResultsControllerCountry.delegate = self
         
-        // Initialize fetched results controller from core data stack
-        performFetch()
+        loadTable()
+    }
+    
+    func loadTable() {
+        
+        //tableView.reloadData()
+        switch segmentationControl.selectedSegmentIndex
+        {
+        case 0:
+            performFetchCountry()
+        case 1:
+            performFetchCity()
+        default:
+            break
+        }
+    }
+    
+    
+    
+    @IBAction func onSegControlValueChanged(_ sender: Any) {
+        loadTable()
+        tableView.reloadData()
     }
 }
