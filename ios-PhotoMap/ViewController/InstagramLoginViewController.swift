@@ -61,6 +61,11 @@ class InstagramLoginViewController: UIViewController {
         else {
             let logoutRequest = URLRequest(url: URL(string: "https://instagram.com/accounts/logout")! as URL)
             webView.loadRequest(logoutRequest)
+            do {
+                try coreDataStack?.dropAllData()
+            } catch {
+                print("Error droping all objects in DB")
+            }
             InstagramClient.sharedInstance().accessToken = nil
             self.dismiss(animated: true, completion: nil)
         }

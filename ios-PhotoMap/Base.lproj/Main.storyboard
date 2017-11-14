@@ -310,13 +310,49 @@
                     <view key="view" contentMode="scaleToFill" id="Hjy-EA-fed">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Wfj-8J-6yb">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Rmf-Jf-G45">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="553"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DRs-ke-NsA">
+                                        <rect key="frame" x="0.0" y="553" width="375" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="EQL-iq-780"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Rmf-Jf-G45" secondAttribute="trailing" id="Rih-Oz-a2c"/>
+                                    <constraint firstItem="Rmf-Jf-G45" firstAttribute="leading" secondItem="Wfj-8J-6yb" secondAttribute="leading" id="udN-J3-aAW"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="V1k-D4-VZZ" firstAttribute="bottom" secondItem="Wfj-8J-6yb" secondAttribute="bottom" id="5G2-2b-iTT"/>
+                            <constraint firstItem="V1k-D4-VZZ" firstAttribute="trailing" secondItem="Wfj-8J-6yb" secondAttribute="trailing" id="VwW-dm-jtT"/>
+                            <constraint firstItem="Wfj-8J-6yb" firstAttribute="top" secondItem="V1k-D4-VZZ" secondAttribute="top" id="jfQ-X0-rBf"/>
+                            <constraint firstItem="Wfj-8J-6yb" firstAttribute="leading" secondItem="V1k-D4-VZZ" secondAttribute="leading" id="zFp-c6-M0h"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="V1k-D4-VZZ"/>
                     </view>
+                    <connections>
+                        <outlet property="imageText" destination="DRs-ke-NsA" id="jbW-eK-hjy"/>
+                        <outlet property="imageView" destination="Rmf-Jf-G45" id="0Tp-Fx-Es1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0sr-i4-7mi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4272" y="0.0"/>
+            <point key="canvasLocation" x="4398" y="54"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="IDh-Kd-F8y">

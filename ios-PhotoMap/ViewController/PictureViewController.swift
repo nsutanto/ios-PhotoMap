@@ -99,16 +99,13 @@ extension PictureViewController: UICollectionViewDelegate {
     // When user select one of the cell
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        /*
-        // Get the specific cell
-        let cell = collectionView.cellForItem(at: indexPath as IndexPath)
-    
-        
+        let image = fetchedResultsController.object(at: indexPath)
+
         let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
         
-        // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
+        vc.imageEntity = image
+        
         self.navigationController?.pushViewController(vc, animated: false)
-        */
     }
 }
 
@@ -210,13 +207,5 @@ class PictureViewController: UIViewController {
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
-    }
-    
-
-    @IBAction func performSegue(_ sender: Any) {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        
-        // Nick : Need to do this for navigation controller. otherwise it will not display the navigation bar
-        self.navigationController?.pushViewController(vc, animated: false)
     }
 }
