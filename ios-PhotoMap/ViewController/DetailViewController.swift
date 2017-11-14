@@ -18,7 +18,8 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        imageText.numberOfLines = 0
         imageView.image = UIImage(data: imageEntity.imageData! as Data)
         imageText.text = imageEntity.text
     }
