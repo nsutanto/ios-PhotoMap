@@ -22,7 +22,7 @@ class AboutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        styleButton()
+        performUIStyle()
         
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
@@ -30,9 +30,15 @@ class AboutViewController: UIViewController {
         loadUserInfo()
     }
     
-    private func styleButton() {
+    private func performUIStyle() {
         logoutButton.layer.cornerRadius = 10
         logoutButton.clipsToBounds = true
+        
+        profilePicture.layer.borderWidth = 1
+        profilePicture.layer.masksToBounds = false
+        profilePicture.layer.borderColor = UIColor.black.cgColor
+        profilePicture.layer.cornerRadius = profilePicture.frame.height/2
+        profilePicture.clipsToBounds = true
     }
     
     private func loadUserInfo() {
