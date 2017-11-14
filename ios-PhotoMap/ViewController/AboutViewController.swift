@@ -14,16 +14,25 @@ class AboutViewController: UIViewController {
     @IBOutlet weak var profilePicture: UIImageView!
     @IBOutlet weak var labelFullName: UILabel!
     @IBOutlet weak var labelUserName: UILabel!
+    @IBOutlet weak var logoutButton: UIButton!
     
     var coreDataStack: CoreDataStack?
     let clientUtil = ClientUtil()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        styleButton()
+        
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
         
         loadUserInfo()
+    }
+    
+    private func styleButton() {
+        logoutButton.layer.cornerRadius = 10
+        logoutButton.clipsToBounds = true
     }
     
     private func loadUserInfo() {
