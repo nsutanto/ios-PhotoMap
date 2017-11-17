@@ -2,7 +2,7 @@
 //  UserInfo+CoreDataProperties.swift
 //  ios-PhotoMap
 //
-//  Created by Nicholas Sutanto on 11/3/17.
+//  Created by Nicholas Sutanto on 11/14/17.
 //  Copyright © 2017 Nicholas Sutanto. All rights reserved.
 //
 //
@@ -21,6 +21,7 @@ extension UserInfo {
     @NSManaged public var profilePictureData: NSData?
     @NSManaged public var profilePictureURL: String?
     @NSManaged public var userName: String?
+    @NSManaged public var token: String?
     @NSManaged public var userInfoToCity: NSSet?
     @NSManaged public var userInfoToCountry: NSSet?
 

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class InstagramClient {
     
@@ -90,9 +91,22 @@ class InstagramClient {
                     return
                 }
                 
-                let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, context: (self.coreDataStack?.context)!)
+                let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
+                request.predicate = NSPredicate(format: "userName == %@", userName)
+                if let result = try? self.coreDataStack?.context.fetch(request) {
+                    if (result?.first) == nil {
+                        
+                        let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, token: self.accessToken, context: (self.coreDataStack?.context)!)
             
-                completionHandlerUserInfo(userInfo, nil)
+                        completionHandlerUserInfo(userInfo, nil)
+                    }
+                    else {
+                        sendError("User is already created")
+                    }
+                }
+                else {
+                    sendError("User is already created")
+                }
             }
         }
     }
@@ -196,8 +210,15 @@ class InstagramClient {
                     
                     if (longitude != nil && latitude != nil) {
                         // let's create the image object only if there is location data. That's the purpose of the app.
-                        let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                        imageArray.append(image)
+                        
+                        let request: NSFetchRequest<Image> = Image.fetchRequest()
+                        request.predicate = NSPredicate(format: "id == %@", id)
+                        if let result = try? self.coreDataStack?.context.fetch(request) {
+                            if (result?.first) == nil {
+                                let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                                imageArray.append(image)
+                            }
+                        }
                     }
                 }
                 completionHandlerGetImages(imageArray, nil)

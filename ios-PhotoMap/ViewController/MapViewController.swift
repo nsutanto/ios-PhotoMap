@@ -144,6 +144,8 @@ class MapViewController: UIViewController {
         default:
             break
         }
+        
+        loadMap()
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13533" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="Model">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13533" systemVersion="17B48" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="Model">
     <entity name="CityEntity" representedClassName=".CityEntity" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
@@ -25,6 +25,7 @@
         <attribute name="fullName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="profilePictureData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="profilePictureURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="token" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="userInfoToCity" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CityEntity" inverseName="cityToUserInfo" inverseEntity="CityEntity" syncable="YES"/>
         <relationship name="userInfoToCountry" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CountryEntity" inverseName="countryToUserInfo" inverseEntity="CountryEntity" syncable="YES"/>
@@ -33,6 +34,6 @@
         <element name="CityEntity" positionX="108" positionY="36" width="128" height="103"/>
         <element name="CountryEntity" positionX="108" positionY="144" width="128" height="88"/>
         <element name="Image" positionX="367" positionY="27" width="128" height="165"/>
-        <element name="UserInfo" positionX="-72" positionY="54" width="128" height="135"/>
+        <element name="UserInfo" positionX="-72" positionY="54" width="128" height="150"/>
     </elements>
 </model>

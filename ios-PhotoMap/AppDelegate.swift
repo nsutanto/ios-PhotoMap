@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(urls[urls.count-1] as URL)
         // Override point for customization after application launch.
         // preload data from CoreData
-        preloadData()
+        //preloadData()
         // Start Autosaving
         //stack.autoSave(10)
         return true

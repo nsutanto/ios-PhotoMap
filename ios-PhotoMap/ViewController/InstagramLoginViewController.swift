@@ -54,6 +54,8 @@ class InstagramLoginViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        
         if (!isLoggedIn) {
             showInstagramLogin()
             isLoggedIn = true
@@ -93,9 +95,6 @@ class InstagramLoginViewController: UIViewController {
     private func showMainTabController() {
         let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
         
-        //let itemVC = controller.viewControllers
-        //mapViewController = itemVC?.first as? MapViewController
-        
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -126,7 +125,6 @@ class InstagramLoginViewController: UIViewController {
     private func getImageLocation() {
         performReverseGeoLocation(completionHandlerLocations: { (cities, countries) in
             self.coreDataStack?.save()
-            //self.mapViewController?.loadMap()
         })
     }
     
