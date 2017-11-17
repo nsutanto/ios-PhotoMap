@@ -93,12 +93,16 @@ class InstagramClient {
                 
                 let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
                 request.predicate = NSPredicate(format: "userName == %@", userName)
-                let userInfoEntity = try? self.coreDataStack?.context.fetch(request)
-                if (userInfoEntity == nil) {
-                
-                    let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, token: self.accessToken, context: (self.coreDataStack?.context)!)
+                if let result = try? self.coreDataStack?.context.fetch(request) {
+                    if (result?.first) == nil {
+                        
+                        let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, token: self.accessToken, context: (self.coreDataStack?.context)!)
             
-                    completionHandlerUserInfo(userInfo, nil)
+                        completionHandlerUserInfo(userInfo, nil)
+                    }
+                    else {
+                        sendError("User is already created")
+                    }
                 }
                 else {
                     sendError("User is already created")
@@ -209,11 +213,11 @@ class InstagramClient {
                         
                         let request: NSFetchRequest<Image> = Image.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@", id)
-                        let imageEntity = try? self.coreDataStack?.context.fetch(request)
-                        if (imageEntity == nil) {
-                        
-                            let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                            imageArray.append(image)
+                        if let result = try? self.coreDataStack?.context.fetch(request) {
+                            if (result?.first) == nil {
+                                let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                                imageArray.append(image)
+                            }
                         }
                     }
                 }
