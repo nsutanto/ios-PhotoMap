@@ -21,7 +21,7 @@
                                 <rect key="frame" x="97" y="328.5" width="180" height="30"/>
                                 <color key="backgroundColor" red="0.50963816200000001" green="0.72336632010000002" blue="0.56253358050000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="WHA-it-dXd"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="WHA-it-dXd"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Login Using Instagram">
