@@ -54,6 +54,8 @@ class InstagramLoginViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        
         if (!isLoggedIn) {
             showInstagramLogin()
             isLoggedIn = true
