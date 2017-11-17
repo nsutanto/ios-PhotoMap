@@ -90,7 +90,7 @@ class InstagramClient {
                     return
                 }
                 
-                let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, context: (self.coreDataStack?.context)!)
+                let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, token: self.accessToken, context: (self.coreDataStack?.context)!)
             
                 completionHandlerUserInfo(userInfo, nil)
             }

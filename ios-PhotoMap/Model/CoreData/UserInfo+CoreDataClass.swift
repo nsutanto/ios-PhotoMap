@@ -13,7 +13,7 @@ import CoreData
 
 public class UserInfo: NSManagedObject {
     
-    convenience init(userName: String, fullName: String, profilePictureURL: String, profilePictureData: NSData?,  context: NSManagedObjectContext) {
+    convenience init(userName: String, fullName: String, profilePictureURL: String, profilePictureData: NSData?, token: String?, context: NSManagedObjectContext) {
         
         // An EntityDescription is an object that has access to all
         // the information you provided in the Entity part of the model
@@ -24,6 +24,7 @@ public class UserInfo: NSManagedObject {
             self.fullName = fullName
             self.profilePictureURL = profilePictureURL
             self.profilePictureData = profilePictureData
+            self.token = token
         } else {
             fatalError("Unable to find UserInfo entity name!")
         }
