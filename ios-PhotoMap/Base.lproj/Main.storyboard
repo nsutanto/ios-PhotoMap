@@ -37,7 +37,7 @@
         <!--Instagram Login View Controller-->
         <scene sceneID="kzQ-kX-RQ9">
             <objects>
-                <viewController id="Ph4-Cd-ZVd" customClass="InstagramLoginViewController" customModule="ios_PhotoMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InstagramLoginViewController" id="Ph4-Cd-ZVd" customClass="InstagramLoginViewController" customModule="ios_PhotoMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zeM-eo-xQd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
