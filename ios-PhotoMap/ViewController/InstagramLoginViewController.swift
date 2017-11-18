@@ -63,11 +63,10 @@ class InstagramLoginViewController: UIViewController {
         else {
             let logoutRequest = URLRequest(url: URL(string: "https://instagram.com/accounts/logout")! as URL)
             webView.loadRequest(logoutRequest)
-            do {
-                try coreDataStack?.dropAllData()
-            } catch {
-                print("Error droping all objects in DB")
-            }
+            
+            // Delete all data
+            deleteAllUserData()
+            
             InstagramClient.sharedInstance().accessToken = nil
             self.dismiss(animated: true, completion: nil)
         }
@@ -193,8 +192,40 @@ class InstagramLoginViewController: UIViewController {
         }
     }
     
+    private func deleteAllUserData() {
+        let requestImage: NSFetchRequest<Image> = Image.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestImage) {
+            for image in result! {
+                coreDataStack?.context.delete(image)
+            }
+        }
+        
+        let requestCityEntity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestCityEntity) {
+            for cityEntity in result! {
+                coreDataStack?.context.delete(cityEntity)
+            }
+        }
+        
+        let requestCountryEntity: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestCountryEntity) {
+            for countryEntity in result! {
+                coreDataStack?.context.delete(countryEntity)
+            }
+        }
+        
+        
+        let requestUserInfo: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestUserInfo) {
+            for userInfo in result! {
+                coreDataStack?.context.delete(userInfo)
+            }
+        }
+        
+        coreDataStack?.save()
+    }
+    
     private func alertError(_ alertMessage: String) {
-        print("****** ALERT ERROR INSTAGRAM LOGIN : \(alertMessage)")
         performUIUpdatesOnMain {
             let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
