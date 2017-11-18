@@ -38,7 +38,7 @@ class InstagramLoginViewController: UIViewController {
     
     var isLoggedIn = false
     var images = [Image]()
-    var userInfo = UserInfo()
+    var userInfo : UserInfo?
     // Initialize core data stack
     var coreDataStack: CoreDataStack?
     var mapViewController: MapViewController?
@@ -63,11 +63,10 @@ class InstagramLoginViewController: UIViewController {
         else {
             let logoutRequest = URLRequest(url: URL(string: "https://instagram.com/accounts/logout")! as URL)
             webView.loadRequest(logoutRequest)
-            do {
-                try coreDataStack?.dropAllData()
-            } catch {
-                print("Error droping all objects in DB")
-            }
+            
+            // Delete all data
+            deleteAllUserData()
+            
             InstagramClient.sharedInstance().accessToken = nil
             self.dismiss(animated: true, completion: nil)
         }
@@ -156,7 +155,7 @@ class InstagramLoginViewController: UIViewController {
                     if (!cities.contains(city!)) {
                         cities.append(city!)
                         let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
-                        self.userInfo.addToUserInfoToCity(cityEntity)
+                        self.userInfo?.addToUserInfoToCity(cityEntity)
                         cityEntity.addToCityToImage(image)
                     } else {
                         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
@@ -172,7 +171,7 @@ class InstagramLoginViewController: UIViewController {
                     if (!countries.contains(country!)) {
                         countries.append(country!)
                         let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
-                        self.userInfo.addToUserInfoToCountry(countryEntity)
+                        self.userInfo?.addToUserInfoToCountry(countryEntity)
                         countryEntity.addToCountryToImage(image)
                     } else {
                         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
@@ -191,6 +190,39 @@ class InstagramLoginViewController: UIViewController {
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completionHandlerLocations(cities, countries)
         }
+    }
+    
+    private func deleteAllUserData() {
+        let requestImage: NSFetchRequest<Image> = Image.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestImage) {
+            for image in result! {
+                coreDataStack?.context.delete(image)
+            }
+        }
+        
+        let requestCityEntity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestCityEntity) {
+            for cityEntity in result! {
+                coreDataStack?.context.delete(cityEntity)
+            }
+        }
+        
+        let requestCountryEntity: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestCountryEntity) {
+            for countryEntity in result! {
+                coreDataStack?.context.delete(countryEntity)
+            }
+        }
+        
+        
+        let requestUserInfo: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
+        if let result = try? coreDataStack?.context.fetch(requestUserInfo) {
+            for userInfo in result! {
+                coreDataStack?.context.delete(userInfo)
+            }
+        }
+        
+        coreDataStack?.save()
     }
     
     private func alertError(_ alertMessage: String) {

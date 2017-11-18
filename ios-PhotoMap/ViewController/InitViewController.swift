@@ -22,8 +22,7 @@ class InitViewController: UIViewController {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
         
-        // Check if user is already login
-        checkUserInfo()
+       
         
         performUIStyle()
     }
@@ -31,8 +30,13 @@ class InitViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Check if user is already login
+        checkUserInfo()
+        
         if userToken != nil {
             loginButton.isHidden = true
+        } else {
+            loginButton.isHidden = false
         }
     }
     
@@ -50,6 +54,12 @@ class InitViewController: UIViewController {
                 if userInfo.token != nil {
                     userToken = userInfo.token
                 }
+                else {
+                    userToken = nil
+                }
+            }
+            else {
+                userToken = nil
             }
         }
     }
@@ -57,6 +67,7 @@ class InitViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     
+        print("****** InitViewController view did appear")
         // Check if user has the token already. Then no need to show the web login.
         if userToken != nil {
                     
