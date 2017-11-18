@@ -100,9 +100,6 @@ class InstagramClient {
             
                         completionHandlerUserInfo(userInfo, nil)
                     }
-                    else {
-                        sendError("User is already created")
-                    }
                 }
                 else {
                     sendError("User is already created")

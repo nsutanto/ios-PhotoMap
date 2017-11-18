@@ -194,6 +194,7 @@ class InstagramLoginViewController: UIViewController {
     }
     
     private func alertError(_ alertMessage: String) {
+        print("****** ALERT ERROR INSTAGRAM LOGIN : \(alertMessage)")
         performUIUpdatesOnMain {
             let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
