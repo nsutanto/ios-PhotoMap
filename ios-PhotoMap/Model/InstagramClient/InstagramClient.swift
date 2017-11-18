@@ -152,23 +152,12 @@ class InstagramClient {
                         return
                     }
                     
-                    /* Guard: Is the "images" key in our result? */
-                    guard let images = data[MediaResponses.IMAGES] as? [String:AnyObject] else {
-                        sendError("Error when parsing result: images")
+                    /* Guard: Is the "type" key in our result? */
+                    guard let type = data[MediaResponses.TYPE] as? String else {
+                        sendError("Error when parsing result: type")
                         return
                     }
                     
-                    /* Guard: Is the "images - Standard Resolution" key in our result? */
-                    guard let standardResolution = images[MediaResponses.STANDARD_RESOLUTION] as? [String:AnyObject] else {
-                        sendError("Error when parsing result: standard resolution")
-                        return
-                    }
-                    
-                    /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
-                    guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
-                        sendError("Error when parsing result: url")
-                        return
-                    }
                     
                     /* Guard: Is the "caption" key in our result? Caption is optional, some pictures might not have captions */
                     var text : String = ""
@@ -208,15 +197,84 @@ class InstagramClient {
                         // Do nothing. No location data.
                     }
                     
-                    if (longitude != nil && latitude != nil) {
-                        // let's create the image object only if there is location data. That's the purpose of the app.
+                    
+                    if (type == "image") {
+                        /* Guard: Is the "images" key in our result? */
+                        guard let images = data[MediaResponses.IMAGES] as? [String:AnyObject] else {
+                            sendError("Error when parsing result: images")
+                            return
+                        }
                         
-                        let request: NSFetchRequest<Image> = Image.fetchRequest()
-                        request.predicate = NSPredicate(format: "id == %@", id)
-                        if let result = try? self.coreDataStack?.context.fetch(request) {
-                            if (result?.first) == nil {
-                                let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                                imageArray.append(image)
+                        /* Guard: Is the "images - Standard Resolution" key in our result? */
+                        guard let standardResolution = images[MediaResponses.STANDARD_RESOLUTION] as? [String:AnyObject] else {
+                            sendError("Error when parsing result: standard resolution")
+                            return
+                        }
+                        
+                        /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
+                        guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
+                            sendError("Error when parsing result: url")
+                            return
+                        }
+                        
+                        if (longitude != nil && latitude != nil) {
+                            // let's create the image object only if there is location data. That's the purpose of the app.
+                            
+                            //let request: NSFetchRequest<Image> = Image.fetchRequest()
+                            //request.predicate = NSPredicate(format: "id == %@", id)
+                            //if let result = try? self.coreDataStack?.context.fetch(request) {
+                            //    if (result?.first) == nil {
+                                    print("**** Add Regular Image")
+                                    let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                                    imageArray.append(image)
+                            //    }
+                            //    else {
+                            //        print("Image can not insert")
+                            //    }
+                            //}
+                        }
+                    }
+                    else if (type == "carousel") {
+                        /* Guard: Is the "carousel" key in our result? */
+                        guard let carousel_medias = data[MediaResponses.CAROUSEL_MEDIA] as? [[String:AnyObject]] else {
+                            sendError("Error when parsing result: carousel media")
+                            return
+                        }
+                        
+                        for imageEntry in carousel_medias {
+                            /* Guard: Is the "images" key in our result? */
+                            guard let images = imageEntry[MediaResponses.IMAGES] as? [String:AnyObject] else {
+                                sendError("Error when parsing result: images")
+                                return
+                            }
+                            
+                            /* Guard: Is the "images - Standard Resolution" key in our result? */
+                            guard let standardResolution = images[MediaResponses.STANDARD_RESOLUTION] as? [String:AnyObject] else {
+                                sendError("Error when parsing result: standard resolution")
+                                return
+                            }
+                            
+                            /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
+                            guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
+                                sendError("Error when parsing result: url")
+                                return
+                            }
+                            
+                            if (longitude != nil && latitude != nil) {
+                                // let's create the image object only if there is location data. That's the purpose of the app.
+                                
+                                //let request: NSFetchRequest<Image> = Image.fetchRequest()
+                                //request.predicate = NSPredicate(format: "id == %@", id)
+                                //if let result = try? self.coreDataStack?.context.fetch(request) {
+                                    //if (result) == nil {
+                                        print("**** Image Array add carousel")
+                                        let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                                        imageArray.append(image)
+                                    //}
+                                    //else {
+                                    //    print("***** Carousel can not insert")
+                                    //}
+                                //}
                             }
                         }
                     }

@@ -52,6 +52,8 @@ extension InstagramClient {
         static let CAPTION = "caption"
         static let TEXT = "text"
         static let IMAGES = "images"
+        static let TYPE = "type"
+        static let CAROUSEL_MEDIA = "carousel_media"
         static let STANDARD_RESOLUTION = "standard_resolution"
         static let URL = "url"
         static let ID = "id"
