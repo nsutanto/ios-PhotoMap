@@ -38,7 +38,7 @@ class InstagramLoginViewController: UIViewController {
     
     var isLoggedIn = false
     var images = [Image]()
-    var userInfo = UserInfo()
+    var userInfo : UserInfo?
     // Initialize core data stack
     var coreDataStack: CoreDataStack?
     var mapViewController: MapViewController?
@@ -156,7 +156,7 @@ class InstagramLoginViewController: UIViewController {
                     if (!cities.contains(city!)) {
                         cities.append(city!)
                         let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
-                        self.userInfo.addToUserInfoToCity(cityEntity)
+                        self.userInfo?.addToUserInfoToCity(cityEntity)
                         cityEntity.addToCityToImage(image)
                     } else {
                         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
@@ -172,7 +172,7 @@ class InstagramLoginViewController: UIViewController {
                     if (!countries.contains(country!)) {
                         countries.append(country!)
                         let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
-                        self.userInfo.addToUserInfoToCountry(countryEntity)
+                        self.userInfo?.addToUserInfoToCountry(countryEntity)
                         countryEntity.addToCountryToImage(image)
                     } else {
                         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
