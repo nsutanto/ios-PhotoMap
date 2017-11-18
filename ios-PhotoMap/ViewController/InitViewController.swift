@@ -35,6 +35,8 @@ class InitViewController: UIViewController {
         
         if userToken != nil {
             loginButton.isHidden = true
+        } else {
+            loginButton.isHidden = false
         }
     }
     

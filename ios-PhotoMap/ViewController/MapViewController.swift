@@ -130,7 +130,10 @@ class MapViewController: UIViewController {
         // Initialize core data stack
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         mapView.delegate = self
         fetchedResultsControllerCity.delegate = self
         fetchedResultsControllerCountry.delegate = self
@@ -146,10 +149,6 @@ class MapViewController: UIViewController {
         }
         
         loadMap()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
     }
     
     func loadMap() {
@@ -219,7 +218,8 @@ class MapViewController: UIViewController {
                 }
             }
             else {
-                self.alertError("Error getting location.")
+                // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
+                self.alertError("Error getting location. Please wait 1 minute before refreshing the map.")
             }
         }
     }
