@@ -219,19 +219,8 @@ class InstagramClient {
                         
                         if (longitude != nil && latitude != nil) {
                             // let's create the image object only if there is location data. That's the purpose of the app.
-                            
-                            //let request: NSFetchRequest<Image> = Image.fetchRequest()
-                            //request.predicate = NSPredicate(format: "id == %@", id)
-                            //if let result = try? self.coreDataStack?.context.fetch(request) {
-                            //    if (result?.first) == nil {
-                                    print("**** Add Regular Image")
-                                    let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                                    imageArray.append(image)
-                            //    }
-                            //    else {
-                            //        print("Image can not insert")
-                            //    }
-                            //}
+                            let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                            imageArray.append(image)
                         }
                     }
                     else if (type == "carousel") {
@@ -262,19 +251,8 @@ class InstagramClient {
                             
                             if (longitude != nil && latitude != nil) {
                                 // let's create the image object only if there is location data. That's the purpose of the app.
-                                
-                                //let request: NSFetchRequest<Image> = Image.fetchRequest()
-                                //request.predicate = NSPredicate(format: "id == %@", id)
-                                //if let result = try? self.coreDataStack?.context.fetch(request) {
-                                    //if (result) == nil {
-                                        print("**** Image Array add carousel")
-                                        let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                                        imageArray.append(image)
-                                    //}
-                                    //else {
-                                    //    print("***** Carousel can not insert")
-                                    //}
-                                //}
+                                let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                                imageArray.append(image)
                             }
                         }
                     }
