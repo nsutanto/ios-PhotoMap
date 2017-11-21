@@ -37,7 +37,6 @@ class InstagramLoginViewController: UIViewController {
     @IBOutlet weak var webView: UIWebView!
     
     var isLoggedIn = false
-    var images = [Image]()
     var userInfo : UserInfo?
     // Initialize core data stack
     var coreDataStack: CoreDataStack?
@@ -113,13 +112,9 @@ class InstagramLoginViewController: UIViewController {
     private func getUserImages(_ userInfo: UserInfo) {
         
         ImageLocationUtil.sharedInstance().getUserImages(userInfo, completionHandlerUserImages: {(images, error) in
-            if (error == nil) {
-                self.images = images!
-            }
-            else {
+            if (error != nil) {
                 self.alertError("Fail to get user images")
             }
-    
         })
     }
     
