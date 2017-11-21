@@ -67,7 +67,6 @@ class InitViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     
-        print("****** InitViewController view did appear")
         // Check if user has the token already. Then no need to show the web login.
         if userToken != nil {
                     
