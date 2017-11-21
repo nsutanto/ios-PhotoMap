@@ -33,13 +33,13 @@ extension MapViewController: MKMapViewDelegate {
     
     // Save the region everytime we change the map
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        /*
+        
         let defaults = UserDefaults.standard
         defaults.set(self.mapView.region.center.latitude, forKey: STRING_LATITUDE)
         defaults.set(self.mapView.region.center.longitude, forKey: STRING_LONGITUDE)
         defaults.set(self.mapView.region.span.latitudeDelta, forKey: STRING_LATITUDE_DELTA)
         defaults.set(self.mapView.region.span.longitudeDelta, forKey: STRING_LONGITUDE_DELTA)
-        */
+        
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
@@ -78,6 +78,14 @@ extension MapViewController: NSFetchedResultsControllerDelegate {
 class MapViewController: UIViewController {
 
     var coreDataStack: CoreDataStack?
+    let STRING_LATITUDE = "Latitude"
+    let STRING_LONGITUDE = "Longitude"
+    let STRING_LATITUDE_DELTA = "LatitudeDelta"
+    let STRING_LONGITUDE_DELTA = "LongitudeDelta"
+    let STRING_FIRST_LAUNCH = "FirstLaunch"
+    var images = [Image]()
+    var userInfo : UserInfo?
+    var annotatedLocations = [String]()
     
     @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
@@ -130,37 +138,38 @@ class MapViewController: UIViewController {
         // Initialize core data stack
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        
         mapView.delegate = self
         fetchedResultsControllerCity.delegate = self
         fetchedResultsControllerCountry.delegate = self
         
-        switch segmentationControl.selectedSegmentIndex
-        {
-        case 0:
-            performFetchCountry()
-        case 1:
-            performFetchCity()
-        default:
-            break
+        let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
+        
+        if let result = try? coreDataStack?.context.fetch(request) {
+            self.userInfo = result?.first
         }
         
         loadMap()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        initMapSetting()
     }
     
     func loadMap() {
         performUIUpdatesOnMain {
             self.mapView.removeAnnotations(self.mapView.annotations)
         }
-        
+        annotatedLocations.removeAll()
         switch segmentationControl.selectedSegmentIndex
         {
         case 0:
+            performFetchCountry()
             loadCountries()
         case 1:
+            performFetchCity()
             loadCities()
         default:
             break
@@ -171,7 +180,10 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
             for countryEntity in result! {
-                updateMapView(countryEntity.country!)
+                if (!annotatedLocations.contains(countryEntity.country!)) {
+                    updateMapView(countryEntity.country!)
+                    annotatedLocations.append(countryEntity.country!)
+                }
             }
         }
     }
@@ -182,44 +194,50 @@ class MapViewController: UIViewController {
             
             for cityEntity in result! {
                 let location = cityEntity.city! + ", " + cityEntity.state!
-                updateMapView(location)
+                if (!annotatedLocations.contains(location)) {
+                    updateMapView(location)
+                    annotatedLocations.append(location)
+                }
             }
         }
     }
     
     func updateMapView(_ location: String) {
-        let geoCoder = CLGeocoder()
-        geoCoder.geocodeAddressString(location) { (placeMarks, error) in
-            
-            if (error == nil) {
-                // placeMarks can be multiple places.. so how about try the first one?
-                if ((placeMarks?.count)! == 1) {
-                    let placeMark = placeMarks![0]
-                    let longitude = placeMark.location?.coordinate.longitude
-                    let latitude = placeMark.location?.coordinate.latitude
-                    
-                    // The lat and long are used to create a CLLocationCoordinates2D instance.
-                    let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
-                    
-                    // Set the annotation
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coordinate
-                    annotation.title = location
-                    
-                    performUIUpdatesOnMain {
-                        self.mapView.addAnnotation(annotation)
+        if (!annotatedLocations.contains(location)) {
+            print("***** update map view : \(location)")
+            let geoCoder = CLGeocoder()
+            geoCoder.geocodeAddressString(location) { (placeMarks, error) in
+                
+                if (error == nil) {
+                    // placeMarks can be multiple places.. so how about try the first one?
+                    if ((placeMarks?.count)! == 1) {
+                        let placeMark = placeMarks![0]
+                        let longitude = placeMark.location?.coordinate.longitude
+                        let latitude = placeMark.location?.coordinate.latitude
+                        
+                        // The lat and long are used to create a CLLocationCoordinates2D instance.
+                        let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                        
+                        // Set the annotation
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = coordinate
+                        annotation.title = location
+                        
+                        performUIUpdatesOnMain {
+                            self.mapView.addAnnotation(annotation)
+                        }
+                    }
+                    else if ((placeMarks?.count)! == 0) {
+                        self.alertError("Location is not found.")
+                    }
+                    else {
+                        self.alertError("Multiple locations found.")
                     }
                 }
-                else if ((placeMarks?.count)! == 0) {
-                    self.alertError("Location is not found.")
-                }
                 else {
-                    self.alertError("Multiple locations found.")
+                    // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
+                    self.alertError("Error getting location. Please wait 1 minute before refreshing the map.")
                 }
-            }
-            else {
-                // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
-                self.alertError("Error getting location. Please wait 1 minute before refreshing the map.")
             }
         }
     }
@@ -233,7 +251,7 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func onSegControlValueChanged(_ sender: Any) {
-        loadMap();
+        loadMap()
     }
 
     private func getCityEntity(latitude: Double, longitude: Double, completionHandlerLocations: @escaping(_ cityEntity: CityEntity?) -> Void) {
@@ -289,4 +307,24 @@ class MapViewController: UIViewController {
             }
         })
     }
-}
+
+    private func initMapSetting() {
+        
+        let defaults = UserDefaults.standard
+        if UserDefaults.standard.bool(forKey: STRING_FIRST_LAUNCH) {
+            let centerLatitude  = defaults.double(forKey: STRING_LATITUDE)
+            let centerLongitude = defaults.double(forKey: STRING_LONGITUDE)
+            let latitudeDelta   = defaults.double(forKey: STRING_LATITUDE_DELTA)
+            let longitudeDelta  = defaults.double(forKey: STRING_LONGITUDE_DELTA)
+            
+            let centerCoordinate = CLLocationCoordinate2D(latitude: centerLatitude, longitude: centerLongitude)
+            let spanCoordinate = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
+            let region = MKCoordinateRegion(center: centerCoordinate, span: spanCoordinate)
+            
+            performUIUpdatesOnMain {
+                self.mapView.setRegion(region, animated: true)
+            }
+        } else {
+            defaults.set(true, forKey: STRING_FIRST_LAUNCH)
+        }
+    }}
