@@ -12,11 +12,8 @@ import MapKit
 
 class ImageLocationUtil {
 
-    var images = [Image]()
-    var userInfo : UserInfo?
     // Initialize core data stack
     let coreDataStack: CoreDataStack?
-    
     
     class func sharedInstance() -> ImageLocationUtil {
         struct Singleton {
@@ -31,11 +28,9 @@ class ImageLocationUtil {
     }
     
     func getUserImages(_ userInfo: UserInfo, completionHandlerUserImages: @escaping (_ images : [Image]?, _ error: NSError?) -> Void ) {
-        self.userInfo = userInfo
         InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
-            self.images = images!
             if (error == nil) {
-                self.getImageLocation(completionHandlerImageLocation: { (error) in
+                self.getImageLocation(userInfo, images!, completionHandlerImageLocation: { (error) in
                     if (error == nil) {
                         completionHandlerUserImages(images, nil)
                     }
@@ -51,20 +46,20 @@ class ImageLocationUtil {
         })
     }
     
-    private func getImageLocation(completionHandlerImageLocation: @escaping (_ error: NSError?) -> Void ) {
-        performReverseGeoLocation(completionHandlerLocations: { (cities, countries, error) in
+    private func getImageLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerImageLocation: @escaping (_ error: NSError?) -> Void ) {
+        performReverseGeoLocation(userInfo, images, completionHandlerLocations: { (cities, countries, error) in
             self.coreDataStack?.save()
             completionHandlerImageLocation(error)
         })
     }
     
-    private func performReverseGeoLocation(completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
+    private func performReverseGeoLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
         // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
         let dispatchGroup = DispatchGroup()
         var cities = [String]()
         var countries = [String]()
         
-        self.images.forEach { (image) in
+        images.forEach { (image) in
             if (image.imageToCity == nil || image.imageToCountry == nil) {
                 
                 dispatchGroup.enter()
@@ -91,7 +86,7 @@ class ImageLocationUtil {
                         if (!cities.contains(city!)) {
                             cities.append(city!)
                             let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
-                            self.userInfo?.addToUserInfoToCity(cityEntity)
+                            userInfo.addToUserInfoToCity(cityEntity)
                             cityEntity.addToCityToImage(image)
                         } else {
                             let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
@@ -107,7 +102,7 @@ class ImageLocationUtil {
                         if (!countries.contains(country!)) {
                             countries.append(country!)
                             let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
-                            self.userInfo?.addToUserInfoToCountry(countryEntity)
+                            userInfo.addToUserInfoToCountry(countryEntity)
                             countryEntity.addToCountryToImage(image)
                         } else {
                             let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
