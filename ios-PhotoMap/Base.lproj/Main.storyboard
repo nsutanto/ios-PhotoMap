@@ -151,7 +151,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Imf-Oi-nK9"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Location" id="nOf-BE-6zf"/>
+                    <tabBarItem key="tabBarItem" title="Location" image="icons8-list-48" id="nOf-BE-6zf"/>
                     <connections>
                         <outlet property="segmentationControl" destination="S7N-QR-2E7" id="ZPW-yt-zWq"/>
                         <outlet property="tableView" destination="2Pw-f3-aGg" id="bU3-LT-CXL"/>
@@ -224,7 +224,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="W1B-Qc-OnW"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="About" id="a6B-XM-GUH"/>
+                    <tabBarItem key="tabBarItem" title="About" image="icons8-about-48" id="a6B-XM-GUH"/>
                     <connections>
                         <outlet property="labelFullName" destination="ihG-cZ-Rk3" id="KqS-sp-6Ra"/>
                         <outlet property="labelUserName" destination="p2N-nS-COt" id="HSr-cg-xzg"/>
@@ -270,7 +270,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Jcc-EH-OMx"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Map" id="DsU-tx-Jf6"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="icons8-map-pinpoint-40" id="DsU-tx-Jf6"/>
                     <connections>
                         <outlet property="mapView" destination="FSu-HV-qeE" id="WwB-th-TeJ"/>
                         <outlet property="segmentationControl" destination="asL-TU-UKI" id="6AJ-xy-VT7"/>
@@ -430,6 +430,11 @@
             <point key="canvasLocation" x="1588" y="54"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icons8-about-48" width="48" height="48"/>
+        <image name="icons8-list-48" width="48" height="48"/>
+        <image name="icons8-map-pinpoint-40" width="40" height="40"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="nWr-r6-3DK"/>
     </inferredMetricsTieBreakers>
