@@ -214,10 +214,10 @@ class InstagramClient {
                             return
                         }
                         
-                        if (longitude != nil && latitude != nil) {
-                            // let's create the image object only if there is location data. That's the purpose of the app.
-                            let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                            imageArray.append(image)
+                        let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
+                        
+                        if image != nil {
+                            imageArray.append(image!)
                         }
                     }
                     else if (type == "carousel") {
@@ -246,10 +246,10 @@ class InstagramClient {
                                 return
                             }
                             
-                            if (longitude != nil && latitude != nil) {
-                                // let's create the image object only if there is location data. That's the purpose of the app.
-                                let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                                imageArray.append(image)
+                            let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
+                            
+                            if image != nil {
+                                imageArray.append(image!)
                             }
                         }
                     }
@@ -257,5 +257,27 @@ class InstagramClient {
                 completionHandlerGetImages(imageArray, nil)
             }
         }
+    }
+    
+    private func addImageToCoreData(_ longitude: Double?, _ latitude: Double?, _ id: String, _ imageURL: String, _ text: String) -> Image? {
+        
+        // Add to core data. It is unique ID and image URL
+        let request: NSFetchRequest<Image> = Image.fetchRequest()
+        let predicateID = NSPredicate(format: "id == %@", id)
+        let predicateURL = NSPredicate(format: "imageURL == %@", imageURL)
+        
+        let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateID,predicateURL])
+        request.predicate = predicateCompound
+        
+        if let result = try? self.coreDataStack?.context.fetch(request) {
+            if (result?.first) == nil {
+                if (longitude != nil && latitude != nil) {
+                    // let's create the image object only if there is location data. That's the purpose of the app.
+                    let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                    return image
+                }
+            }
+        }
+        return nil
     }
 }
