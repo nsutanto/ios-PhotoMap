@@ -37,8 +37,6 @@ extension MapViewController: MKMapViewDelegate {
         let defaults = UserDefaults.standard
         defaults.set(self.mapView.region.center.latitude, forKey: STRING_LATITUDE)
         defaults.set(self.mapView.region.center.longitude, forKey: STRING_LONGITUDE)
-        print("***** Longitude Delta : \(self.mapView.region.span.longitudeDelta)")
-        print("***** Latitude Delta : \(self.mapView.region.span.latitudeDelta)")
         defaults.set(self.mapView.region.span.latitudeDelta, forKey: STRING_LATITUDE_DELTA)
         defaults.set(self.mapView.region.span.longitudeDelta, forKey: STRING_LONGITUDE_DELTA)
         
