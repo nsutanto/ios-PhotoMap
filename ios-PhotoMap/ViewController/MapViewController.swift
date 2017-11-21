@@ -37,6 +37,8 @@ extension MapViewController: MKMapViewDelegate {
         let defaults = UserDefaults.standard
         defaults.set(self.mapView.region.center.latitude, forKey: STRING_LATITUDE)
         defaults.set(self.mapView.region.center.longitude, forKey: STRING_LONGITUDE)
+        print("***** Longitude Delta : \(self.mapView.region.span.longitudeDelta)")
+        print("***** Latitude Delta : \(self.mapView.region.span.latitudeDelta)")
         defaults.set(self.mapView.region.span.latitudeDelta, forKey: STRING_LATITUDE_DELTA)
         defaults.set(self.mapView.region.span.longitudeDelta, forKey: STRING_LONGITUDE_DELTA)
         
@@ -52,13 +54,23 @@ extension MapViewController: MKMapViewDelegate {
             {
             case 0:
                 getCountryEntity(latitude: (coordinate?.latitude)!, longitude: (coordinate?.longitude)!, completionHandlerLocations: { (countryEntity) in
-                    vc.selectedCountry = countryEntity
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    if (countryEntity == nil) {
+                        self.alertError("Fail to get country")
+                    }
+                    else {
+                        vc.selectedCountry = countryEntity
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    }
                 })
             case 1:
                 getCityEntity(latitude: (coordinate?.latitude)!, longitude: (coordinate?.longitude)!, completionHandlerLocations: { (cityEntity) in
-                    vc.selectedCity = cityEntity
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    if (cityEntity == nil) {
+                        self.alertError("Fail to get city")
+                    }
+                    else {
+                        vc.selectedCity = cityEntity
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    }
                 })
             default:
                 break
@@ -85,7 +97,7 @@ class MapViewController: UIViewController {
     let STRING_FIRST_LAUNCH = "FirstLaunch"
     var images = [Image]()
     var userInfo : UserInfo?
-    var annotatedLocations = [String]()
+    var annotatedLocations = [String:MKPointAnnotation]()
     
     @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
@@ -162,7 +174,6 @@ class MapViewController: UIViewController {
         performUIUpdatesOnMain {
             self.mapView.removeAnnotations(self.mapView.annotations)
         }
-        annotatedLocations.removeAll()
         switch segmentationControl.selectedSegmentIndex
         {
         case 0:
@@ -180,9 +191,16 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
             for countryEntity in result! {
-                if (!annotatedLocations.contains(countryEntity.country!)) {
+                
+                let keyExists = annotatedLocations[countryEntity.country!] != nil
+                if (!keyExists) {
                     updateMapView(countryEntity.country!)
-                    annotatedLocations.append(countryEntity.country!)
+                }
+                else {
+                    let annotation = annotatedLocations[countryEntity.country!]
+                    performUIUpdatesOnMain {
+                        self.mapView.addAnnotation(annotation!)
+                    }
                 }
             }
         }
@@ -194,50 +212,55 @@ class MapViewController: UIViewController {
             
             for cityEntity in result! {
                 let location = cityEntity.city! + ", " + cityEntity.state!
-                if (!annotatedLocations.contains(location)) {
+                let keyExists = annotatedLocations[location] != nil
+                if (!keyExists) {
                     updateMapView(location)
-                    annotatedLocations.append(location)
+                }
+                else {
+                    let annotation = annotatedLocations[location]
+                    performUIUpdatesOnMain {
+                        self.mapView.addAnnotation(annotation!)
+                    }
                 }
             }
         }
     }
     
     func updateMapView(_ location: String) {
-        if (!annotatedLocations.contains(location)) {
-            print("***** update map view : \(location)")
-            let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(location) { (placeMarks, error) in
-                
-                if (error == nil) {
-                    // placeMarks can be multiple places.. so how about try the first one?
-                    if ((placeMarks?.count)! == 1) {
-                        let placeMark = placeMarks![0]
-                        let longitude = placeMark.location?.coordinate.longitude
-                        let latitude = placeMark.location?.coordinate.latitude
-                        
-                        // The lat and long are used to create a CLLocationCoordinates2D instance.
-                        let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
-                        
-                        // Set the annotation
-                        let annotation = MKPointAnnotation()
-                        annotation.coordinate = coordinate
-                        annotation.title = location
-                        
-                        performUIUpdatesOnMain {
-                            self.mapView.addAnnotation(annotation)
-                        }
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(location) { (placeMarks, error) in
+            
+            if (error == nil) {
+                // placeMarks can be multiple places.. so how about try the first one?
+                if ((placeMarks?.count)! == 1) {
+                    let placeMark = placeMarks![0]
+                    let longitude = placeMark.location?.coordinate.longitude
+                    let latitude = placeMark.location?.coordinate.latitude
+                    
+                    // The lat and long are used to create a CLLocationCoordinates2D instance.
+                    let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+                    
+                    // Set the annotation
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate
+                    annotation.title = location
+                    
+                    self.annotatedLocations[location] = annotation
+                    
+                    performUIUpdatesOnMain {
+                        self.mapView.addAnnotation(annotation)
                     }
-                    else if ((placeMarks?.count)! == 0) {
-                        self.alertError("Location is not found.")
-                    }
-                    else {
-                        self.alertError("Multiple locations found.")
-                    }
+                }
+                else if ((placeMarks?.count)! == 0) {
+                    self.alertError("Location is not found.")
                 }
                 else {
-                    // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
-                    self.alertError("Error getting location. Please wait 1 minute before refreshing the map.")
+                    self.alertError("Multiple locations found.")
                 }
+            }
+            else {
+                // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
+                self.alertError("Error getting location. Please wait 1 minute before refreshing the map.")
             }
         }
     }
@@ -274,7 +297,14 @@ class MapViewController: UIViewController {
                 let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
                 
                 request.predicate = predicateCompound
-                let cityEntityResult = try? self.coreDataStack?.context.fetch(request)
+                var cityEntityResult = try? self.coreDataStack?.context.fetch(request)
+                
+                if (cityEntityResult??.first == nil) {
+                    // let's try it again based on state only. It is geo location issue.
+                    request.predicate = predicateState
+                    cityEntityResult = try? self.coreDataStack?.context.fetch(request)
+                }
+                
                 completionHandlerLocations(cityEntityResult??.first)
             }
             else {
