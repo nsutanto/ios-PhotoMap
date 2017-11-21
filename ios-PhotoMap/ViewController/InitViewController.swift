@@ -13,6 +13,7 @@ class InitViewController: UIViewController {
     
     var coreDataStack: CoreDataStack?
     var userToken: String?
+    var userInfo: UserInfo?
     
     @IBOutlet weak var loginButton: UIButton!
     
@@ -21,9 +22,7 @@ class InitViewController: UIViewController {
         
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
-        
-       
-        
+    
         performUIStyle()
     }
     
@@ -50,7 +49,8 @@ class InitViewController: UIViewController {
         let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
         
         if let result = try? coreDataStack?.context.fetch(request) {
-            if let userInfo = result?.first {
+            userInfo = result?.first
+            if let userInfo = userInfo {
                 if userInfo.token != nil {
                     userToken = userInfo.token
                 }
@@ -67,13 +67,16 @@ class InitViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     
-        print("****** InitViewController view did appear")
         // Check if user has the token already. Then no need to show the web login.
         if userToken != nil {
                     
             let controller = self.storyboard!.instantiateViewController(withIdentifier: "InstagramLoginViewController") as! InstagramLoginViewController
             
-            self.present(controller, animated: true, completion: nil)
+            ImageLocationUtil.sharedInstance().getUserImages(userInfo!, completionHandlerUserImages: {(images, error) in
+                performUIUpdatesOnMain {
+                    self.present(controller, animated: true, completion: nil)
+                }
+            })
         }
     }
 }

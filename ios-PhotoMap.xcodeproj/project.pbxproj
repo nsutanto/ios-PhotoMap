@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6B6B0F821FAA8F6A0036757A /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6B0F811FAA8F6A0036757A /* GCDBlackBox.swift */; };
 		6B6B0F841FAA8F730036757A /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6B0F831FAA8F730036757A /* CoreDataStack.swift */; };
+		6B6EEC851FC459E100CB3B02 /* ImageLocationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6EEC841FC459E100CB3B02 /* ImageLocationUtil.swift */; };
 		6BA0789E1FB2B8050016CD58 /* PictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA0789D1FB2B8050016CD58 /* PictureViewController.swift */; };
 		6BA078A01FB2BAF70016CD58 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA0789F1FB2BAF70016CD58 /* DetailViewController.swift */; };
 		6BA078A21FB3D4280016CD58 /* PictureCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA078A11FB3D4280016CD58 /* PictureCollectionViewCell.swift */; };
@@ -39,6 +40,7 @@
 /* Begin PBXFileReference section */
 		6B6B0F811FAA8F6A0036757A /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 		6B6B0F831FAA8F730036757A /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		6B6EEC841FC459E100CB3B02 /* ImageLocationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLocationUtil.swift; sourceTree = "<group>"; };
 		6BA0789D1FB2B8050016CD58 /* PictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureViewController.swift; sourceTree = "<group>"; };
 		6BA0789F1FB2BAF70016CD58 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		6BA078A11FB3D4280016CD58 /* PictureCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			children = (
 				6B6B0F811FAA8F6A0036757A /* GCDBlackBox.swift */,
 				6BA078A31FB3D45F0016CD58 /* CellCancelTask.swift */,
+				6B6EEC841FC459E100CB3B02 /* ImageLocationUtil.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				6BF7FC0B1FAD48E700C3CA41 /* Image+CoreDataClass.swift in Sources */,
 				6BA0789E1FB2B8050016CD58 /* PictureViewController.swift in Sources */,
 				6BE4B3AF1FA4292500662403 /* AboutViewController.swift in Sources */,
+				6B6EEC851FC459E100CB3B02 /* ImageLocationUtil.swift in Sources */,
 				6B6B0F821FAA8F6A0036757A /* GCDBlackBox.swift in Sources */,
 				6BF7FC161FAD59C800C3CA41 /* Image+CoreDataProperties.swift in Sources */,
 				6BF7FBF11FAD369300C3CA41 /* Model.xcdatamodeld in Sources */,
