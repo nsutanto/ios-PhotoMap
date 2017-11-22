@@ -103,6 +103,9 @@ extension PictureViewController: UICollectionViewDelegate {
 
         let vc = self.storyboard!.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
         
+        let images = fetchedResultsController.fetchedObjects
+        vc.curentIndex = indexPath.row
+        vc.images = images
         vc.imageEntity = image
         
         self.navigationController?.pushViewController(vc, animated: false)
