@@ -36,7 +36,6 @@ class ClientUtil {
             let task = session.dataTask(with: request as URLRequest) { data, response, error in
                 
                 func sendError(_ error: String) {
-                    print(error)
                     let userInfo = [NSLocalizedDescriptionKey : error]
                     completionHandlerRequest(nil, NSError(domain: "performRequest", code: 1, userInfo: userInfo))
                 }

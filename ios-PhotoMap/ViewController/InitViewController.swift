@@ -15,6 +15,7 @@ class InitViewController: UIViewController {
     var userToken: String?
     var userInfo: UserInfo?
     
+    @IBOutlet weak var loginText: UILabel!
     @IBOutlet weak var loginButton: UIButton!
     
     override func viewDidLoad() {
@@ -34,8 +35,10 @@ class InitViewController: UIViewController {
         
         if userToken != nil {
             loginButton.isHidden = true
+            loginText.isHidden = true
         } else {
             loginButton.isHidden = false
+            loginText.isHidden = false
         }
     }
     
