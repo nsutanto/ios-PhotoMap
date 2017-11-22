@@ -23,4 +23,12 @@ class DetailViewController: UIViewController {
         imageView.image = UIImage(data: imageEntity.imageData! as Data)
         imageText.text = imageEntity.text
     }
+    @IBAction func performShare(_ sender: Any) {
+        let controller = UIActivityViewController(activityItems: [imageView.image!], applicationActivities: nil)
+        controller.popoverPresentationController?.sourceView = self.view
+        controller.completionWithItemsHandler = {(activity, completed, items, error) in
+            
+        }
+        self.present(controller, animated: true, completion: nil)
+    }
 }
