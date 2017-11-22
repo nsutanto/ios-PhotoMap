@@ -56,6 +56,7 @@ class InitViewController: UIViewController {
             if let userInfo = userInfo {
                 if userInfo.token != nil {
                     userToken = userInfo.token
+                    InstagramClient.sharedInstance().accessToken = userToken
                 }
                 else {
                     userToken = nil
