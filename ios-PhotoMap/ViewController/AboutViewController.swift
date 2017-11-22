@@ -68,7 +68,7 @@ class AboutViewController: UIViewController {
                             userInfo?.profilePictureData = imageData as NSData?
                         }
                     } else {
-                        print("***** Download error")
+                        self.alertError("Fail to download image")
                     }
                 })
             }
@@ -77,5 +77,13 @@ class AboutViewController: UIViewController {
     
     @IBAction func performLogout(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func alertError(_ alertMessage: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }

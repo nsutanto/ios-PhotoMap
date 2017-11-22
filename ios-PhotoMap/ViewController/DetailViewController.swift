@@ -75,9 +75,17 @@ class DetailViewController: UIViewController {
                     image.imageData = imageData as NSData?
                 }
             } else {
-                print("***** Download error")
+                self.alertError("Fail to download image")
             }
         })
+    }
+    
+    private func alertError(_ alertMessage: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @IBAction func performSwipeGesture(_ recognizer: UIGestureRecognizer) {

@@ -51,7 +51,7 @@ extension PictureViewController: UICollectionViewDataSource {
                         image.imageData = imageData as NSData?
                     }
                 } else {
-                    print("***** Download error")
+                    self.alertError("Fail to download image")
                 }
             })
             cell.taskToCancelifCellIsReused = task
