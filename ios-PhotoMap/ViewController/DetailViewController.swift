@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailViewController: UIViewController {
     
@@ -16,18 +17,32 @@ class DetailViewController: UIViewController {
     var imageEntity: Image!
     var images: [Image]!
     var curentIndex: Int!
+    let clientUtil = ClientUtil()
+    var coreDataStack: CoreDataStack?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Initialize core data stack
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        coreDataStack = delegate.stack
+        
         setImage(imageEntity)
         initSwipeGesture()
     }
     
     private func setImage(_ imageEntity: Image) {
         imageText.numberOfLines = 0
-        imageView.image = UIImage(data: imageEntity.imageData! as Data)
-        imageText.text = imageEntity.text
+        
+        if (imageEntity.imageData == nil) {
+            downloadImage(imageEntity)
+            imageText.text = imageEntity.text
+        }
+        else {
+            imageView.image = UIImage(data: imageEntity.imageData! as Data)
+            imageText.text = imageEntity.text
+        }
+        
     }
     
     private func initSwipeGesture() {
@@ -47,6 +62,22 @@ class DetailViewController: UIViewController {
             
         }
         self.present(controller, animated: true, completion: nil)
+    }
+    
+    private func downloadImage(_ image: Image) {
+        _ = clientUtil.downloadImage(imageURL: image.imageURL!, completionHandler: { (imageData, error) in
+            if (error == nil) {
+                performUIUpdatesOnMain {
+                    self.imageView.image = UIImage(data: imageData!)
+                }
+                
+                self.coreDataStack?.context.perform {
+                    image.imageData = imageData as NSData?
+                }
+            } else {
+                print("***** Download error")
+            }
+        })
     }
     
     @IBAction func performSwipeGesture(_ recognizer: UIGestureRecognizer) {
