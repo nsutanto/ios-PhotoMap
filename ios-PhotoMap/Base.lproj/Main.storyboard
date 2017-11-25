@@ -8,6 +8,11 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="BradleyHand-Bold.ttf">
+            <string>BradleyHandITCTT-Bold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Init View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -18,21 +23,31 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7gv-ds-Q6D">
-                                <rect key="frame" x="56" y="312.5" width="263.5" height="62.5"/>
+                                <rect key="frame" x="56" y="143.5" width="263.5" height="401"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login with your Instagram account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePd-z3-8gd">
-                                        <rect key="frame" x="0.0" y="0.0" width="263.5" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Photo Map" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MBt-tj-ooE">
+                                        <rect key="frame" x="21" y="0.0" width="221.5" height="62.5"/>
+                                        <fontDescription key="fontDescription" name="BradleyHandITCTT-Bold" family="Bradley Hand" pointSize="50"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_512" translatesAutoresizingMaskIntoConstraints="NO" id="PVi-Yb-AsB">
+                                        <rect key="frame" x="1.5" y="70.5" width="260.5" height="260"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="260" id="RYJ-fM-8f3"/>
+                                            <constraint firstAttribute="height" constant="260" id="qaF-LU-iaG"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login with your Instagram account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePd-z3-8gd">
+                                        <rect key="frame" x="0.0" y="338.5" width="263.5" height="20.5"/>
                                         <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hBH-wb-RkU">
-                                        <rect key="frame" x="42" y="28.5" width="180" height="34"/>
+                                        <rect key="frame" x="1.5" y="367" width="260.5" height="34"/>
                                         <color key="backgroundColor" red="1" green="0.7793581125449508" blue="0.28686565523942698" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="WHA-it-dXd"/>
-                                        </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <color key="tintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Login">
@@ -43,12 +58,17 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="hBH-wb-RkU" firstAttribute="trailing" secondItem="PVi-Yb-AsB" secondAttribute="trailing" id="UzL-S5-Ez3"/>
+                                    <constraint firstItem="hBH-wb-RkU" firstAttribute="leading" secondItem="PVi-Yb-AsB" secondAttribute="leading" id="pgG-Av-SdC"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.85515744140526007" green="0.95686274510000002" blue="0.85613417202570907" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="7gv-ds-Q6D" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="3BW-Eo-rUx"/>
-                            <constraint firstItem="7gv-ds-Q6D" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="H43-NP-hb5"/>
+                            <constraint firstItem="PVi-Yb-AsB" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="8ZF-SM-yuS"/>
+                            <constraint firstItem="PVi-Yb-AsB" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="F8m-Uc-KGe"/>
+                            <constraint firstItem="7gv-ds-Q6D" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="xW8-k7-LE3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -461,6 +481,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="icon_512" width="512" height="512"/>
         <image name="icons8-about-48" width="48" height="48"/>
         <image name="icons8-list-48" width="48" height="48"/>
         <image name="icons8-map-pinpoint-40" width="40" height="40"/>
