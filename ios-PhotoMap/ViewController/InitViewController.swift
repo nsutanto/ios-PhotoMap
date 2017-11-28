@@ -73,14 +73,42 @@ class InitViewController: UIViewController {
     
         // Check if user has the token already. Then no need to show the web login.
         if userToken != nil {
-                    
-            let controller = self.storyboard!.instantiateViewController(withIdentifier: "InstagramLoginViewController") as! InstagramLoginViewController
-            
-            ImageLocationUtil.sharedInstance().getUserImages(userInfo!, completionHandlerUserImages: {(images, error) in
+            validateToken()
+        }
+    }
+    
+    private func validateToken() {
+        InstagramClient.sharedInstance().getUserInfo { (userInfo, error) in
+            if (error == nil) {
+                // user token is valid
                 performUIUpdatesOnMain {
-                    self.present(controller, animated: true, completion: nil)
+                    let controller = self.storyboard!.instantiateViewController(withIdentifier: "InstagramLoginViewController") as! InstagramLoginViewController
+                    
+                    ImageLocationUtil.sharedInstance().getUserImages(userInfo!, completionHandlerUserImages: {(images, error) in
+                        
+                        self.present(controller, animated: true, completion: nil)
+                    
+                    })
                 }
-            })
+            }
+            else {
+                
+                // user token is not valid.. can be expired.. so need to login again
+                do {
+                    try self.coreDataStack?.dropAllData()
+                } catch {
+                    print("Error droping all objects in DB")
+                }
+                
+                self.userToken = nil
+                self.coreDataStack?.save()
+                InstagramClient.sharedInstance().accessToken = nil
+                
+                performUIUpdatesOnMain {
+                    self.loginButton.isHidden = false
+                    self.loginText.isHidden = false
+                }
+            }
         }
     }
 }
