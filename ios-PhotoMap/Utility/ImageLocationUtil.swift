@@ -83,32 +83,36 @@ class ImageLocationUtil {
                         let city = pm.locality
                         let state = pm.administrativeArea
                         
-                        if (!cities.contains(city!)) {
-                            cities.append(city!)
-                            let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
-                            userInfo.addToUserInfoToCity(cityEntity)
-                            cityEntity.addToCityToImage(image)
-                        } else {
-                            let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-                            let predicateCity = NSPredicate(format: "city == %@", city!)
-                            let predicateState = NSPredicate(format: "state == %@", state!)
-                            let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
-                            
-                            request.predicate = predicateCompound
-                            let cityEntity = try? self.coreDataStack?.context.fetch(request)
-                            cityEntity??.first?.addToCityToImage(image)
+                        if city != nil && state != nil {
+                            if (!cities.contains(city!)) {
+                                cities.append(city!)
+                                let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
+                                userInfo.addToUserInfoToCity(cityEntity)
+                                cityEntity.addToCityToImage(image)
+                            } else {
+                                let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+                                let predicateCity = NSPredicate(format: "city == %@", city!)
+                                let predicateState = NSPredicate(format: "state == %@", state!)
+                                let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+                                
+                                request.predicate = predicateCompound
+                                let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                                cityEntity??.first?.addToCityToImage(image)
+                            }
                         }
                         
-                        if (!countries.contains(country!)) {
-                            countries.append(country!)
-                            let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
-                            userInfo.addToUserInfoToCountry(countryEntity)
-                            countryEntity.addToCountryToImage(image)
-                        } else {
-                            let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
-                            request.predicate = NSPredicate(format: "country == %@", country!)
-                            let countryEntity = try? self.coreDataStack?.context.fetch(request)
-                            countryEntity??.first?.addToCountryToImage(image)
+                        if country != nil {
+                            if (!countries.contains(country!)) {
+                                countries.append(country!)
+                                let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
+                                userInfo.addToUserInfoToCountry(countryEntity)
+                                countryEntity.addToCountryToImage(image)
+                            } else {
+                                let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+                                request.predicate = NSPredicate(format: "country == %@", country!)
+                                let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                                countryEntity??.first?.addToCountryToImage(image)
+                            }
                         }
                         dispatchGroup.leave()
                     }
