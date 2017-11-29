@@ -54,7 +54,7 @@
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="Ph4-Cd-ZVd" kind="presentation" id="9AT-sZ-R5I"/>
+                                            <action selector="performLogin:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SLY-rG-vGN"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -75,6 +75,7 @@
                     <connections>
                         <outlet property="loginButton" destination="hBH-wb-RkU" id="Vrn-Vp-0C2"/>
                         <outlet property="loginText" destination="ePd-z3-8gd" id="Kpc-yM-HjI"/>
+                        <segue destination="Ph4-Cd-ZVd" kind="presentation" identifier="openInstagramLoginSegue" id="WA3-yb-dgk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

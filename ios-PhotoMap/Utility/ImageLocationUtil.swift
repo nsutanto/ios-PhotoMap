@@ -32,6 +32,9 @@ class ImageLocationUtil {
             if (error == nil) {
                 self.getImageLocation(userInfo, images!, completionHandlerImageLocation: { (error) in
                     if (error == nil) {
+                        // check for empty relation
+                        self.cleanUpEmptyCityAndCountry()
+                        
                         completionHandlerUserImages(images, nil)
                     }
                     else {
@@ -56,8 +59,10 @@ class ImageLocationUtil {
     private func performReverseGeoLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
         // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
         let dispatchGroup = DispatchGroup()
-        var cities = [String]()
-        var countries = [String]()
+        
+        // init city and country from core data
+        var cities = initCities()
+        var countries = initCountries()
         
         images.forEach { (image) in
             if (image.imageToCity == nil || image.imageToCountry == nil) {
@@ -83,32 +88,37 @@ class ImageLocationUtil {
                         let city = pm.locality
                         let state = pm.administrativeArea
                         
-                        if (!cities.contains(city!)) {
-                            cities.append(city!)
-                            let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
-                            userInfo.addToUserInfoToCity(cityEntity)
-                            cityEntity.addToCityToImage(image)
-                        } else {
-                            let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-                            let predicateCity = NSPredicate(format: "city == %@", city!)
-                            let predicateState = NSPredicate(format: "state == %@", state!)
-                            let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
-                            
-                            request.predicate = predicateCompound
-                            let cityEntity = try? self.coreDataStack?.context.fetch(request)
-                            cityEntity??.first?.addToCityToImage(image)
+                        if city != nil && state != nil {
+                            let citySearch = city!+state!
+                            if (!cities.contains(citySearch)) {
+                                cities.append(citySearch)
+                                let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
+                                userInfo.addToUserInfoToCity(cityEntity)
+                                cityEntity.addToCityToImage(image)
+                            } else {
+                                let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+                                let predicateCity = NSPredicate(format: "city == %@", city!)
+                                let predicateState = NSPredicate(format: "state == %@", state!)
+                                let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+                                
+                                request.predicate = predicateCompound
+                                let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                                cityEntity??.first?.addToCityToImage(image)
+                            }
                         }
                         
-                        if (!countries.contains(country!)) {
-                            countries.append(country!)
-                            let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
-                            userInfo.addToUserInfoToCountry(countryEntity)
-                            countryEntity.addToCountryToImage(image)
-                        } else {
-                            let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
-                            request.predicate = NSPredicate(format: "country == %@", country!)
-                            let countryEntity = try? self.coreDataStack?.context.fetch(request)
-                            countryEntity??.first?.addToCountryToImage(image)
+                        if country != nil {
+                            if (!countries.contains(country!)) {
+                                countries.append(country!)
+                                let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
+                                userInfo.addToUserInfoToCountry(countryEntity)
+                                countryEntity.addToCountryToImage(image)
+                            } else {
+                                let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+                                request.predicate = NSPredicate(format: "country == %@", country!)
+                                let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                                countryEntity??.first?.addToCountryToImage(image)
+                            }
                         }
                         dispatchGroup.leave()
                     }
@@ -122,6 +132,62 @@ class ImageLocationUtil {
         
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completionHandlerLocations(cities, countries, nil)
+        }
+    }
+    
+    private func initCities() -> [String] {
+        // init city and country from core data
+        var cities = [String]()
+        let requestCity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+        if let citiEntities = try? coreDataStack?.context.fetch(requestCity) {
+            for cityEntity in citiEntities! {
+                if let cityStr = cityEntity.city {
+                    if let stateStr = cityEntity.state {
+                        cities.append(cityStr+stateStr)
+                    }
+                }
+            }
+        }
+        return cities
+    }
+    
+    private func initCountries() -> [String] {
+        var countries = [String]()
+        let requestCountry: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+        if let countryEntities = try? coreDataStack?.context.fetch(requestCountry) {
+            for countryEntity in countryEntities! {
+                if let countryStr = countryEntity.country {
+                    countries.append(countryStr)
+                }
+            }
+        }
+        return countries
+    }
+    
+    private func cleanUpEmptyCityAndCountry() {
+        
+        let requestCity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+        
+        if let cities = try? coreDataStack?.context.fetch(requestCity) {
+            for cityEntity in cities! {
+                
+                if cityEntity.cityToImage?.count == 0 {
+                    coreDataStack?.context.delete(cityEntity)
+                    coreDataStack?.save()
+                }
+            }
+        }
+        
+        let requestCountry: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+        
+        if let countries = try? coreDataStack?.context.fetch(requestCountry) {
+            for countryEntity in countries! {
+                
+                if countryEntity.countryToImage?.count == 0 {
+                    coreDataStack?.context.delete(countryEntity)
+                    coreDataStack?.save()
+                }
+            }
         }
     }
 }

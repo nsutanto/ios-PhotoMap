@@ -100,6 +100,10 @@ class InstagramClient {
             
                         completionHandlerUserInfo(userInfo, nil)
                     }
+                    else {
+                        let userInfo = result?.first
+                        completionHandlerUserInfo(userInfo, nil)
+                    }
                 }
                 else {
                     sendError("User is already created")
@@ -113,7 +117,8 @@ class InstagramClient {
         var imageArray = [Image]()
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
         let methodParameters = [
-            Parameters.ACCESS_TOKEN: self.accessToken
+            Parameters.ACCESS_TOKEN: self.accessToken,
+            Parameters.COUNT: "5000" // let's do 5000 pictures for now... we need to improve using pagination
         ]
         
         let url = clientUtil.parseURLFromParameters(Constants.API_SCHEME,
@@ -229,28 +234,29 @@ class InstagramClient {
                         
                         for imageEntry in carousel_medias {
                             /* Guard: Is the "images" key in our result? */
-                            guard let images = imageEntry[MediaResponses.IMAGES] as? [String:AnyObject] else {
-                                sendError("Error when parsing result: images")
-                                return
+                            if let images = imageEntry[MediaResponses.IMAGES] as? [String:AnyObject]  {
+                                /* Guard: Is the "images - Standard Resolution" key in our result? */
+                                guard let standardResolution = images[MediaResponses.STANDARD_RESOLUTION] as? [String:AnyObject] else {
+                                    sendError("Error when parsing result: standard resolution")
+                                    return
+                                }
+                                
+                                /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
+                                guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
+                                    sendError("Error when parsing result: url")
+                                    return
+                                }
+                                
+                                let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
+                                
+                                if image != nil {
+                                    imageArray.append(image!)
+                                }
                             }
-                            
-                            /* Guard: Is the "images - Standard Resolution" key in our result? */
-                            guard let standardResolution = images[MediaResponses.STANDARD_RESOLUTION] as? [String:AnyObject] else {
-                                sendError("Error when parsing result: standard resolution")
-                                return
+                            else {
+                                // can be videos, do not care for now.
                             }
-                            
-                            /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
-                            guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
-                                sendError("Error when parsing result: url")
-                                return
-                            }
-                            
-                            let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
-                            
-                            if image != nil {
-                                imageArray.append(image!)
-                            }
+                           
                         }
                     }
                 }
@@ -274,6 +280,19 @@ class InstagramClient {
                 if (longitude != nil && latitude != nil) {
                     // let's create the image object only if there is location data. That's the purpose of the app.
                     let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                    return image
+                }
+            } else {
+                let image = result?.first
+                if image?.longitude != longitude || image?.latitude != latitude {
+                    
+                    image?.longitude = longitude!
+                    image?.latitude = latitude!
+                    
+                    // reset so that we can do reverse geo location later
+                    image?.imageToCity = nil
+                    image?.imageToCountry = nil
+                    
                     return image
                 }
             }

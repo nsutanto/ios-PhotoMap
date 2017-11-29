@@ -37,6 +37,7 @@ class InstagramLoginViewController: UIViewController {
     @IBOutlet weak var webView: UIWebView!
     
     var isLoggedIn = false
+    var isInvalidToken = false
     var userInfo : UserInfo?
     // Initialize core data stack
     var coreDataStack: CoreDataStack?
@@ -67,7 +68,10 @@ class InstagramLoginViewController: UIViewController {
             deleteAllUserData()
             
             InstagramClient.sharedInstance().accessToken = nil
-            self.dismiss(animated: true, completion: nil)
+            
+            if (!isInvalidToken) {
+                self.dismiss(animated: true, completion: nil)
+            }
         }
     }
     
