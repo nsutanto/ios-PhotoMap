@@ -48,6 +48,9 @@ extension InstagramClient {
     }
     
     struct MediaResponses {
+        static let PAGINATION = "pagination"
+        static let NEXT_MAX_ID = "next_max_id"
+        static let NEXT_URL = "next_url"
         static let DATA = "data"
         static let CAPTION = "caption"
         static let TEXT = "text"
