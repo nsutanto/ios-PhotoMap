@@ -280,6 +280,19 @@ class InstagramClient {
                     let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
                     return image
                 }
+            } else {
+                let image = result?.first
+                if image?.longitude != longitude || image?.latitude != latitude {
+                    
+                    image?.longitude = longitude!
+                    image?.latitude = latitude!
+                    
+                    // reset so that we can do reverse geo location later
+                    image?.imageToCity = nil
+                    image?.imageToCountry = nil
+                    
+                    return image
+                }
             }
         }
         return nil

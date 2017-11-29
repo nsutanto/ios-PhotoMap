@@ -59,8 +59,10 @@ class ImageLocationUtil {
     private func performReverseGeoLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
         // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
         let dispatchGroup = DispatchGroup()
-        var cities = [String]()
-        var countries = [String]()
+        
+        // init city and country from core data
+        var cities = initCities()
+        var countries = initCountries()
         
         images.forEach { (image) in
             if (image.imageToCity == nil || image.imageToCountry == nil) {
@@ -87,7 +89,8 @@ class ImageLocationUtil {
                         let state = pm.administrativeArea
                         
                         if city != nil && state != nil {
-                            if (!cities.contains(city!)) {
+                            let citySearch = city!+state!
+                            if (!cities.contains(citySearch)) {
                                 cities.append(city!)
                                 let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCity(cityEntity)
@@ -130,6 +133,35 @@ class ImageLocationUtil {
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completionHandlerLocations(cities, countries, nil)
         }
+    }
+    
+    private func initCities() -> [String] {
+        // init city and country from core data
+        var cities = [String]()
+        let requestCity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+        if let citiEntities = try? coreDataStack?.context.fetch(requestCity) {
+            for cityEntity in citiEntities! {
+                if let cityStr = cityEntity.city {
+                    if let stateStr = cityEntity.state {
+                        cities.append(cityStr+stateStr)
+                    }
+                }
+            }
+        }
+        return cities
+    }
+    
+    private func initCountries() -> [String] {
+        var countries = [String]()
+        let requestCountry: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+        if let countryEntities = try? coreDataStack?.context.fetch(requestCountry) {
+            for countryEntity in countryEntities! {
+                if let countryStr = countryEntity.country {
+                    countries.append(countryStr)
+                }
+            }
+        }
+        return countries
     }
     
     private func cleanUpEmptyCityAndCountry() {
