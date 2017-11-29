@@ -32,6 +32,9 @@ class ImageLocationUtil {
             if (error == nil) {
                 self.getImageLocation(userInfo, images!, completionHandlerImageLocation: { (error) in
                     if (error == nil) {
+                        // check for empty relation
+                        self.cleanUpEmptyCityAndCountry()
+                        
                         completionHandlerUserImages(images, nil)
                     }
                     else {
@@ -126,6 +129,33 @@ class ImageLocationUtil {
         
         dispatchGroup.notify(queue: DispatchQueue.main) {
             completionHandlerLocations(cities, countries, nil)
+        }
+    }
+    
+    private func cleanUpEmptyCityAndCountry() {
+        
+        let requestCity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+        
+        if let cities = try? coreDataStack?.context.fetch(requestCity) {
+            for cityEntity in cities! {
+                
+                if cityEntity.cityToImage?.count == 0 {
+                    coreDataStack?.context.delete(cityEntity)
+                    coreDataStack?.save()
+                }
+            }
+        }
+        
+        let requestCountry: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+        
+        if let countries = try? coreDataStack?.context.fetch(requestCountry) {
+            for countryEntity in countries! {
+                
+                if countryEntity.countryToImage?.count == 0 {
+                    coreDataStack?.context.delete(countryEntity)
+                    coreDataStack?.save()
+                }
+            }
         }
     }
 }
