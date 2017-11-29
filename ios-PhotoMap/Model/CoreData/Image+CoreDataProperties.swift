@@ -2,7 +2,7 @@
 //  Image+CoreDataProperties.swift
 //  ios-PhotoMap
 //
-//  Created by Nicholas Sutanto on 11/3/17.
+//  Created by Nicholas Sutanto on 11/29/17.
 //  Copyright © 2017 Nicholas Sutanto. All rights reserved.
 //
 //
@@ -23,6 +23,7 @@ extension Image {
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
     @NSManaged public var text: String?
+    @NSManaged public var locationName: String?
     @NSManaged public var imageToCity: CityEntity?
     @NSManaged public var imageToCountry: CountryEntity?
 

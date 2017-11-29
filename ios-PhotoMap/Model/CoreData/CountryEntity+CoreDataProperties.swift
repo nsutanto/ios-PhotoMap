@@ -2,7 +2,7 @@
 //  CountryEntity+CoreDataProperties.swift
 //  ios-PhotoMap
 //
-//  Created by Nicholas Sutanto on 11/3/17.
+//  Created by Nicholas Sutanto on 11/29/17.
 //  Copyright © 2017 Nicholas Sutanto. All rights reserved.
 //
 //
@@ -18,8 +18,10 @@ extension CountryEntity {
     }
 
     @NSManaged public var country: String?
-    @NSManaged public var countryToUserInfo: UserInfo?
+    @NSManaged public var longitude: Double
+    @NSManaged public var latitude: Double
     @NSManaged public var countryToImage: NSSet?
+    @NSManaged public var countryToUserInfo: UserInfo?
 
 }
 

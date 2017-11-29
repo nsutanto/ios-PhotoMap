@@ -2,12 +2,16 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13533" systemVersion="17B48" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="Model">
     <entity name="CityEntity" representedClassName=".CityEntity" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="cityToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToCity" inverseEntity="Image" syncable="YES"/>
         <relationship name="cityToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToCity" inverseEntity="UserInfo" syncable="YES"/>
     </entity>
     <entity name="CountryEntity" representedClassName=".CountryEntity" syncable="YES">
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="countryToImage" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="imageToCountry" inverseEntity="Image" syncable="YES"/>
         <relationship name="countryToUserInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserInfo" inverseName="userInfoToCountry" inverseEntity="UserInfo" syncable="YES"/>
     </entity>
@@ -16,6 +20,7 @@
         <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="locationName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="imageToCity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CityEntity" inverseName="cityToImage" inverseEntity="CityEntity" syncable="YES"/>
@@ -31,9 +36,9 @@
         <relationship name="userInfoToCountry" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CountryEntity" inverseName="countryToUserInfo" inverseEntity="CountryEntity" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CityEntity" positionX="108" positionY="36" width="128" height="103"/>
-        <element name="CountryEntity" positionX="108" positionY="144" width="128" height="88"/>
-        <element name="Image" positionX="367" positionY="27" width="128" height="165"/>
+        <element name="CityEntity" positionX="99" positionY="-36" width="128" height="133"/>
+        <element name="CountryEntity" positionX="108" positionY="144" width="128" height="118"/>
+        <element name="Image" positionX="367" positionY="27" width="128" height="178"/>
         <element name="UserInfo" positionX="-72" positionY="54" width="128" height="150"/>
     </elements>
 </model>
