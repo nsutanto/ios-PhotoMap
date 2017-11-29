@@ -117,7 +117,8 @@ class InstagramClient {
         var imageArray = [Image]()
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
         let methodParameters = [
-            Parameters.ACCESS_TOKEN: self.accessToken
+            Parameters.ACCESS_TOKEN: self.accessToken,
+            Parameters.COUNT: "5000" // let's do 5000 pictures for now... we need to improve using pagination
         ]
         
         let url = clientUtil.parseURLFromParameters(Constants.API_SCHEME,
@@ -233,28 +234,29 @@ class InstagramClient {
                         
                         for imageEntry in carousel_medias {
                             /* Guard: Is the "images" key in our result? */
-                            guard let images = imageEntry[MediaResponses.IMAGES] as? [String:AnyObject] else {
-                                sendError("Error when parsing result: images")
-                                return
+                            if let images = imageEntry[MediaResponses.IMAGES] as? [String:AnyObject]  {
+                                /* Guard: Is the "images - Standard Resolution" key in our result? */
+                                guard let standardResolution = images[MediaResponses.STANDARD_RESOLUTION] as? [String:AnyObject] else {
+                                    sendError("Error when parsing result: standard resolution")
+                                    return
+                                }
+                                
+                                /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
+                                guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
+                                    sendError("Error when parsing result: url")
+                                    return
+                                }
+                                
+                                let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
+                                
+                                if image != nil {
+                                    imageArray.append(image!)
+                                }
                             }
-                            
-                            /* Guard: Is the "images - Standard Resolution" key in our result? */
-                            guard let standardResolution = images[MediaResponses.STANDARD_RESOLUTION] as? [String:AnyObject] else {
-                                sendError("Error when parsing result: standard resolution")
-                                return
+                            else {
+                                // can be videos, do not care for now.
                             }
-                            
-                            /* Guard: Is the "images - Standard Resolution - URL" key in our result? */
-                            guard let imageURL = standardResolution[MediaResponses.URL] as? String else {
-                                sendError("Error when parsing result: url")
-                                return
-                            }
-                            
-                            let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
-                            
-                            if image != nil {
-                                imageArray.append(image!)
-                            }
+                           
                         }
                     }
                 }

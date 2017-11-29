@@ -37,7 +37,8 @@ extension InstagramClient {
     }
     
     struct Parameters {
-        static let ACCESS_TOKEN =  "access_token"
+        static let ACCESS_TOKEN = "access_token"
+        static let COUNT = "count"
     }
     
     struct SelfResponses {
