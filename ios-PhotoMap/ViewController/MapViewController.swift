@@ -258,7 +258,7 @@ class MapViewController: UIViewController {
             }
             else {
                 // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
-                self.alertError("Error getting location. Please wait 1 minute before refreshing the map.")
+                self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app.")
             }
         }
     }
