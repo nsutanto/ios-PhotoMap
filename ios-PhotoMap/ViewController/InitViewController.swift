@@ -14,6 +14,7 @@ class InitViewController: UIViewController {
     var coreDataStack: CoreDataStack?
     var userToken: String?
     var userInfo: UserInfo?
+    var needToLogout: Bool?
     
     @IBOutlet weak var loginText: UILabel!
     @IBOutlet weak var loginButton: UIButton!
@@ -25,6 +26,8 @@ class InitViewController: UIViewController {
         coreDataStack = delegate.stack
     
         performUIStyle()
+        
+        needToLogout = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,6 +80,14 @@ class InitViewController: UIViewController {
         }
     }
     
+    @IBAction func performLogin(_ sender: Any) {
+        let instagramLoginViewController = self.storyboard!.instantiateViewController(withIdentifier: "InstagramLoginViewController") as! InstagramLoginViewController
+        instagramLoginViewController.isLoggedIn = needToLogout!
+        instagramLoginViewController.isInvalidToken = needToLogout!
+        self.present(instagramLoginViewController, animated: true, completion: nil)
+    }
+    
+    
     private func validateToken() {
         InstagramClient.sharedInstance().getUserInfo { (userInfo, error) in
             if (error == nil) {
@@ -92,7 +103,6 @@ class InitViewController: UIViewController {
                 }
             }
             else {
-                
                 // user token is not valid.. can be expired.. so need to login again
                 do {
                     try self.coreDataStack?.dropAllData()
@@ -103,6 +113,7 @@ class InitViewController: UIViewController {
                 self.userToken = nil
                 self.coreDataStack?.save()
                 InstagramClient.sharedInstance().accessToken = nil
+                self.needToLogout = true
                 
                 performUIUpdatesOnMain {
                     self.loginButton.isHidden = false
