@@ -91,7 +91,7 @@ class ImageLocationUtil {
                         if city != nil && state != nil {
                             let citySearch = city!+state!
                             if (!cities.contains(citySearch)) {
-                                cities.append(city!)
+                                cities.append(citySearch)
                                 let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCity(cityEntity)
                                 cityEntity.addToCityToImage(image)
