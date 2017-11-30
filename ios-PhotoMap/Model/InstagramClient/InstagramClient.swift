@@ -14,7 +14,8 @@ class InstagramClient {
     
     let clientUtil = ClientUtil()
     var accessToken: String?
-   
+    var globalImages = [Image]()
+    
     // Initialize core data stack
     let coreDataStack: CoreDataStack?
     
@@ -112,14 +113,42 @@ class InstagramClient {
         }
     }
     
-    func getImages(completionHandlerGetImages: @escaping (_ images: [Image]?, _ error: NSError?) -> Void) {
-        
+    func getAllImages(_ maxID: String?, completionHandlerGetImages: @escaping (_ images: [Image]?, _ error: NSError?) -> Void) {
+        // get the first image, no max id
+        getImages(maxID) { (images, nextMaxID, error) in
+            if (images != nil) {
+                for image in images! {
+                    self.globalImages.append(image)
+                }
+                
+                if let nextMaxID = nextMaxID {
+                    self.getAllImages(nextMaxID) { (images2, error2) in
+                        completionHandlerGetImages(images2, error2)
+                    }
+                }
+                else {
+                    // add images to global images
+                    completionHandlerGetImages(self.globalImages, error)
+                }
+            }
+            else {
+                print("***** images is nil")
+            }
+        }
+    }
+
+    
+    func getImages(_ maxID: String?, completionHandlerGetImages: @escaping (_ images: [Image]?, _ nextMaxID: String?,  _ error: NSError?) -> Void) {
+        var nextMaxID: String?
         var imageArray = [Image]()
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
-        let methodParameters = [
+        var methodParameters = [
             Parameters.ACCESS_TOKEN: self.accessToken,
             Parameters.COUNT: "5000" // let's do 5000 pictures for now... we need to improve using pagination
         ]
+        if let maxID = maxID {
+            methodParameters[Parameters.MAX_ID] = maxID
+        }
         
         let url = clientUtil.parseURLFromParameters(Constants.API_SCHEME,
                                                     Constants.API_HOST,
@@ -132,13 +161,22 @@ class InstagramClient {
             
             func sendError(_ error: String) {
                 let errorInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerGetImages(nil, NSError(domain: "getImages", code: 1, userInfo: errorInfo))
+                completionHandlerGetImages(nil, nil, NSError(domain: "getImages", code: 1, userInfo: errorInfo))
             }
             
             /* 3. Send the desired value(s) to completion handler */
             if let error = error {
                 sendError("\(error)")
             } else {
+                guard let paginationDictionary = parsedResult?[MediaResponses.PAGINATION] as? [String:AnyObject] else {
+                    sendError("Error when parsing result: pagination")
+                    return
+                }
+                
+                if let next_max_id = paginationDictionary[MediaResponses.NEXT_MAX_ID] as? String {
+                    nextMaxID = next_max_id
+                }
+                
                 
                 /* GUARD: Is the "data" key in our result? */
                 guard let dataDictionary = parsedResult?[MediaResponses.DATA] as? [[String:AnyObject]] else {
@@ -260,7 +298,7 @@ class InstagramClient {
                         }
                     }
                 }
-                completionHandlerGetImages(imageArray, nil)
+                completionHandlerGetImages(imageArray, nextMaxID, nil)
             }
         }
     }
@@ -281,6 +319,7 @@ class InstagramClient {
                     // let's create the image object only if there is location data. That's the purpose of the app.
                     let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
                     return image
+                } else {
                 }
             } else {
                 let image = result?.first

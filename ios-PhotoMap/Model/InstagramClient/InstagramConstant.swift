@@ -39,6 +39,7 @@ extension InstagramClient {
     struct Parameters {
         static let ACCESS_TOKEN = "access_token"
         static let COUNT = "count"
+        static let MAX_ID = "max_id"
     }
     
     struct SelfResponses {
