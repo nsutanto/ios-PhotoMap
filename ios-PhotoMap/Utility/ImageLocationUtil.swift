@@ -28,7 +28,7 @@ class ImageLocationUtil {
     }
     
     func getUserImages(_ userInfo: UserInfo, completionHandlerUserImages: @escaping (_ images : [Image]?, _ error: NSError?) -> Void ) {
-        InstagramClient.sharedInstance().getImages(completionHandlerGetImages: { (images, error) in
+        InstagramClient.sharedInstance().getAllImages(nil, completionHandlerGetImages: { (images, error) in
             if (error == nil) {
                 self.getImageLocation(userInfo, images!, completionHandlerImageLocation: { (error) in
                     if (error == nil) {
@@ -76,56 +76,61 @@ class ImageLocationUtil {
                 
                 CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
                     if error != nil {
-                        let error = "Reverse geocoder failed with error" + (error?.localizedDescription)!
-                        let errorInfo = [NSLocalizedDescriptionKey : error]
-                        completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
-                        return
-                    }
-                    if placemarks!.count > 0 {
-                        let pm = placemarks![0]
-                        
-                        let country = pm.country
-                        let city = pm.locality
-                        let state = pm.administrativeArea
-                        
-                        if city != nil && state != nil {
-                            let citySearch = city!+state!
-                            if (!cities.contains(citySearch)) {
-                                cities.append(citySearch)
-                                let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
-                                userInfo.addToUserInfoToCity(cityEntity)
-                                cityEntity.addToCityToImage(image)
-                            } else {
-                                let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-                                let predicateCity = NSPredicate(format: "city == %@", city!)
-                                let predicateState = NSPredicate(format: "state == %@", state!)
-                                let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
-                                
-                                request.predicate = predicateCompound
-                                let cityEntity = try? self.coreDataStack?.context.fetch(request)
-                                cityEntity??.first?.addToCityToImage(image)
-                            }
-                        }
-                        
-                        if country != nil {
-                            if (!countries.contains(country!)) {
-                                countries.append(country!)
-                                let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
-                                userInfo.addToUserInfoToCountry(countryEntity)
-                                countryEntity.addToCountryToImage(image)
-                            } else {
-                                let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
-                                request.predicate = NSPredicate(format: "country == %@", country!)
-                                let countryEntity = try? self.coreDataStack?.context.fetch(request)
-                                countryEntity??.first?.addToCountryToImage(image)
-                            }
-                        }
+                        //let error = "Reverse geocoder failed with error" + (error?.localizedDescription)!
+                        //let errorInfo = [NSLocalizedDescriptionKey : error]
+                        //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
+                        //return
                         dispatchGroup.leave()
                     }
                     else {
-                        let errorInfo = [NSLocalizedDescriptionKey : "Fail to perform reverse geo location"]
-                        completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
+                        if placemarks!.count > 0 {
+                            let pm = placemarks![0]
+                            
+                            let country = pm.country
+                            let city = pm.locality
+                            let state = pm.administrativeArea
+                            
+                            if city != nil && state != nil {
+                                let citySearch = city!+state!
+                                if (!cities.contains(citySearch)) {
+                                    cities.append(citySearch)
+                                    let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
+                                    userInfo.addToUserInfoToCity(cityEntity)
+                                    cityEntity.addToCityToImage(image)
+                                } else {
+                                    let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+                                    let predicateCity = NSPredicate(format: "city == %@", city!)
+                                    let predicateState = NSPredicate(format: "state == %@", state!)
+                                    let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+                                    
+                                    request.predicate = predicateCompound
+                                    let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                                    cityEntity??.first?.addToCityToImage(image)
+                                }
+                            }
+                            
+                            if country != nil {
+                                if (!countries.contains(country!)) {
+                                    countries.append(country!)
+                                    let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
+                                    userInfo.addToUserInfoToCountry(countryEntity)
+                                    countryEntity.addToCountryToImage(image)
+                                } else {
+                                    let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+                                    request.predicate = NSPredicate(format: "country == %@", country!)
+                                    let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                                    countryEntity??.first?.addToCountryToImage(image)
+                                }
+                            }
+                            dispatchGroup.leave()
+                        }
                     }
+                    //else do {
+                     //   dispatchGroup.leave()
+                        // do nothing
+                        //let errorInfo = [NSLocalizedDescriptionKey : "Fail to perform reverse geo location"]
+                        //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
+                    //}
                 })
             }
         }
