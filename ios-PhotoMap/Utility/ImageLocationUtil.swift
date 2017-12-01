@@ -37,7 +37,6 @@ class ImageLocationUtil {
                 self.getImageLocation(userInfo, images!, completionHandlerImageLocation: { (error) in
                     if (error == nil) {
                         // check for empty relation
-                        print("****** NO ERROR")
                         self.cleanUpEmptyCityAndCountry()
                         
                         completionHandlerUserImages(images, nil)
@@ -57,13 +56,9 @@ class ImageLocationUtil {
     
     private func getImageLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerImageLocation: @escaping (_ error: NSError?) -> Void ) {
         totalImages = images.count
-        cities = initCities()
-        countries = initCountries()
         DispatchQueue.main.async {
             self.performReverseGeoLocation(userInfo, images, completionHandlerLocations: { (cities, countries, error) in
                 self.coreDataStack?.save()
-                print("****** City count : \(cities?.count)")
-                print("****** Country count : \(countries?.count)")
                 completionHandlerImageLocation(error)
             })
         }
@@ -71,29 +66,100 @@ class ImageLocationUtil {
     
     private func performReverseGeoLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
         // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
-        //let dispatchGroup = DispatchGroup()
+        let dispatchGroup = DispatchGroup()
         
         // init city and country from core data
-        //var cities = initCities()
-        //var countries = initCountries()
+        var cities = initCities()
+        var countries = initCountries()
         
         print("***** images count : \(images.count)")
         
         images.forEach { (image) in
             if (image.imageToCity == nil || image.imageToCountry == nil) {
-                //dispatchGroup.enter()
+                dispatchGroup.enter()
                
                 let longitude = image.longitude
                 let latitude = image.latitude
                 
-                //let location = CLLocation(latitude: latitude, longitude: longitude)
+                let location = CLLocation(latitude: latitude, longitude: longitude)
                 
-                /*
-                GoogleClient.sharedInstance().performReverseGeoLocation(19.017615, 72.856164) { (country, state, city, error) in
-                    if (error == nil) {
+                CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+                    if error != nil {
+                        //let error = "Reverse geocoder failed with error" + (error?.localizedDescription)!
+                        //let errorInfo = [NSLocalizedDescriptionKey : error]
+                        //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
+                        //return
+                        dispatchGroup.leave()
                     }
-                }
-                */
+                    else {
+                        let pm = placemarks![0]
+                        
+                        let country = pm.country
+                        let city = pm.locality
+                        let state = pm.administrativeArea
+                        
+                        if city != nil && state != nil {
+                            let citySearch = city!+state!
+                            if (!cities.contains(citySearch)) {
+                                cities.append(citySearch)
+                                let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
+                                userInfo.addToUserInfoToCity(cityEntity)
+                                cityEntity.addToCityToImage(image)
+                            } else {
+                                let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+                                let predicateCity = NSPredicate(format: "city == %@", city!)
+                                let predicateState = NSPredicate(format: "state == %@", state!)
+                                let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+                                
+                                request.predicate = predicateCompound
+                                let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                                cityEntity??.first?.addToCityToImage(image)
+                            }
+                        }
+                        
+                        if country != nil {
+                            if (!countries.contains(country!)) {
+                                countries.append(country!)
+                                let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
+                                userInfo.addToUserInfoToCountry(countryEntity)
+                                countryEntity.addToCountryToImage(image)
+                            } else {
+                                let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+                                request.predicate = NSPredicate(format: "country == %@", country!)
+                                let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                                countryEntity??.first?.addToCountryToImage(image)
+                            }
+                        }
+                        dispatchGroup.leave()
+                    }
+                })
+            }
+        }
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) {
+            completionHandlerLocations(cities, countries, nil)
+        }
+    }
+    /*
+    private func performReverseGeoLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
+        // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
+        let dispatchGroup = DispatchGroup()
+        
+        // init city and country from core data
+        var cities = initCities()
+        var countries = initCountries()
+        
+        print("***** images count : \(images.count)")
+        
+        images.forEach { (image) in
+            if (image.imageToCity == nil || image.imageToCountry == nil) {
+                dispatchGroup.enter()
+                
+                let longitude = image.longitude
+                let latitude = image.latitude
+                
+                let location = CLLocation(latitude: latitude, longitude: longitude)
+                
                 //CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
                 GoogleClient.sharedInstance().performReverseGeoLocation(latitude, longitude) { (country, state, city, error) in
                     if error != nil {
@@ -112,8 +178,8 @@ class ImageLocationUtil {
                         
                         if city != nil && state != nil {
                             let citySearch = city!+state!
-                            if (!self.cities.contains(citySearch)) {
-                                self.cities.append(citySearch)
+                            if (!cities.contains(citySearch)) {
+                                cities.append(citySearch)
                                 let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCity(cityEntity)
                                 cityEntity.addToCityToImage(image)
@@ -130,8 +196,8 @@ class ImageLocationUtil {
                         }
                         
                         if country != nil {
-                            if (!self.countries.contains(country!)) {
-                                self.countries.append(country!)
+                            if (!countries.contains(country!)) {
+                                countries.append(country!)
                                 let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCountry(countryEntity)
                                 countryEntity.addToCountryToImage(image)
@@ -148,10 +214,10 @@ class ImageLocationUtil {
                         
                     }
                     //else do {
-                     //   dispatchGroup.leave()
-                        // do nothing
-                        //let errorInfo = [NSLocalizedDescriptionKey : "Fail to perform reverse geo location"]
-                        //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
+                    //   dispatchGroup.leave()
+                    // do nothing
+                    //let errorInfo = [NSLocalizedDescriptionKey : "Fail to perform reverse geo location"]
+                    //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
                     //}
                 }
             }
@@ -163,6 +229,7 @@ class ImageLocationUtil {
             completionHandlerLocations(cities, countries, nil)
         }
     }
+ */
     
     private func initCities() -> [String] {
         // init city and country from core data
@@ -201,7 +268,6 @@ class ImageLocationUtil {
             for cityEntity in cities! {
                 
                 if cityEntity.cityToImage?.count == 0 {
-                    print("***** Delete city : \(cityEntity.city)")
                     coreDataStack?.context.delete(cityEntity)
                     coreDataStack?.save()
                 }
@@ -214,7 +280,6 @@ class ImageLocationUtil {
             for countryEntity in countries! {
                 
                 if countryEntity.countryToImage?.count == 0 {
-                    print("***** Delete country : \(countryEntity.country)")
                     coreDataStack?.context.delete(countryEntity)
                     coreDataStack?.save()
                 }
