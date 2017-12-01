@@ -72,7 +72,6 @@ class GoogleClient {
                         if types.contains("locality") {
                             if (city == nil) {
                                 city = short_name
-                                print("\(city)")
                             }
                         }
                         
@@ -85,7 +84,6 @@ class GoogleClient {
                         if types.contains("country") {
                             if country == nil {
                                 country = long_name
-                                print("\(country)")
                             }
                         }
      
@@ -95,7 +93,6 @@ class GoogleClient {
                         }
                     }
                     if (isAllFound) {
-                        completionHandlerGeoLocation(country, state, city, nil)
                         break
                     }
                 }
