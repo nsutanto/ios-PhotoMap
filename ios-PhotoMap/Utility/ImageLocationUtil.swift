@@ -16,8 +16,6 @@ class ImageLocationUtil {
     let coreDataStack: CoreDataStack?
     var cities = [String]()
     var countries = [String]()
-    var counter = 0
-    var totalImages = 0
     
     class func sharedInstance() -> ImageLocationUtil {
         struct Singleton {
@@ -55,13 +53,17 @@ class ImageLocationUtil {
     }
     
     private func getImageLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerImageLocation: @escaping (_ error: NSError?) -> Void ) {
-        totalImages = images.count
-        DispatchQueue.main.async {
-            self.performReverseGeoLocation(userInfo, images, completionHandlerLocations: { (cities, countries, error) in
-                self.coreDataStack?.save()
-                completionHandlerImageLocation(error)
-            })
-        }
+        
+        self.performReverseGeoLocation(userInfo, images, completionHandlerLocations: { (cities, countries, error) in
+            self.coreDataStack?.save()
+        
+            DispatchQueue.main.async {
+                self.performReverseGeoLocationGoogle(userInfo, images, completionHandlerLocations: { (cities, countries, error) in
+                    self.coreDataStack?.save()
+                    completionHandlerImageLocation(error)
+                })
+            }
+        })
     }
     
     private func performReverseGeoLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
@@ -71,10 +73,9 @@ class ImageLocationUtil {
         // init city and country from core data
         var cities = initCities()
         var countries = initCountries()
+        let imagesLocal = getImagesFromCoreData()
         
-        print("***** images count : \(images.count)")
-        
-        images.forEach { (image) in
+        imagesLocal?.forEach { (image) in
             if (image.imageToCity == nil || image.imageToCountry == nil) {
                 dispatchGroup.enter()
                
@@ -85,10 +86,6 @@ class ImageLocationUtil {
                 
                 CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
                     if error != nil {
-                        //let error = "Reverse geocoder failed with error" + (error?.localizedDescription)!
-                        //let errorInfo = [NSLocalizedDescriptionKey : error]
-                        //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
-                        //return
                         dispatchGroup.leave()
                     }
                     else {
@@ -105,6 +102,7 @@ class ImageLocationUtil {
                                 let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCity(cityEntity)
                                 cityEntity.addToCityToImage(image)
+                                image.imageToCity = cityEntity
                             } else {
                                 let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
                                 let predicateCity = NSPredicate(format: "city == %@", city!)
@@ -114,6 +112,7 @@ class ImageLocationUtil {
                                 request.predicate = predicateCompound
                                 let cityEntity = try? self.coreDataStack?.context.fetch(request)
                                 cityEntity??.first?.addToCityToImage(image)
+                                image.imageToCity = cityEntity??.first
                             }
                         }
                         
@@ -123,11 +122,13 @@ class ImageLocationUtil {
                                 let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCountry(countryEntity)
                                 countryEntity.addToCountryToImage(image)
+                                image.imageToCountry = countryEntity
                             } else {
                                 let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
                                 request.predicate = NSPredicate(format: "country == %@", country!)
                                 let countryEntity = try? self.coreDataStack?.context.fetch(request)
                                 countryEntity??.first?.addToCountryToImage(image)
+                                image.imageToCountry = countryEntity??.first
                             }
                         }
                         dispatchGroup.leave()
@@ -140,42 +141,28 @@ class ImageLocationUtil {
             completionHandlerLocations(cities, countries, nil)
         }
     }
-    /*
-    private func performReverseGeoLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
+    
+    private func performReverseGeoLocationGoogle(_ userInfo: UserInfo, _ images: [Image], completionHandlerLocations: @escaping(_ cities: [String]?, _ countries: [String]?, _ error: NSError?) -> Void) {
         // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
         let dispatchGroup = DispatchGroup()
         
         // init city and country from core data
         var cities = initCities()
         var countries = initCountries()
+        let imagesLocal = getImagesFromCoreData()
         
-        print("***** images count : \(images.count)")
-        
-        images.forEach { (image) in
+        imagesLocal?.forEach { (image) in
             if (image.imageToCity == nil || image.imageToCountry == nil) {
                 dispatchGroup.enter()
                 
                 let longitude = image.longitude
                 let latitude = image.latitude
-                
-                let location = CLLocation(latitude: latitude, longitude: longitude)
-                
-                //CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+            
                 GoogleClient.sharedInstance().performReverseGeoLocation(latitude, longitude) { (country, state, city, error) in
                     if error != nil {
-                        //let error = "Reverse geocoder failed with error" + (error?.localizedDescription)!
-                        //let errorInfo = [NSLocalizedDescriptionKey : error]
-                        //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
-                        //return
-                        print("***** Google error")
+                        dispatchGroup.leave()
                     }
                     else {
-                        //let pm = placemarks![0]
-                        
-                        //let country = pm.country
-                        //let city = pm.locality
-                        //let state = pm.administrativeArea
-                        
                         if city != nil && state != nil {
                             let citySearch = city!+state!
                             if (!cities.contains(citySearch)) {
@@ -183,6 +170,7 @@ class ImageLocationUtil {
                                 let cityEntity = CityEntity(city: city!, state: state!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCity(cityEntity)
                                 cityEntity.addToCityToImage(image)
+                                image.imageToCity = cityEntity
                             } else {
                                 let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
                                 let predicateCity = NSPredicate(format: "city == %@", city!)
@@ -192,6 +180,7 @@ class ImageLocationUtil {
                                 request.predicate = predicateCompound
                                 let cityEntity = try? self.coreDataStack?.context.fetch(request)
                                 cityEntity??.first?.addToCityToImage(image)
+                                image.imageToCity = cityEntity??.first
                             }
                         }
                         
@@ -201,35 +190,33 @@ class ImageLocationUtil {
                                 let countryEntity = CountryEntity(country: country!, context: (self.coreDataStack?.context)!)
                                 userInfo.addToUserInfoToCountry(countryEntity)
                                 countryEntity.addToCountryToImage(image)
+                                image.imageToCountry = countryEntity
                             } else {
                                 let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
                                 request.predicate = NSPredicate(format: "country == %@", country!)
                                 let countryEntity = try? self.coreDataStack?.context.fetch(request)
                                 countryEntity??.first?.addToCountryToImage(image)
+                                image.imageToCountry = countryEntity??.first
                             }
                         }
-                        //dispatchGroup.leave()
-                        self.counter = self.counter + 1
-                        print("***** Counter : \(self.counter)")
-                        
+                        dispatchGroup.leave()
                     }
-                    //else do {
-                    //   dispatchGroup.leave()
-                    // do nothing
-                    //let errorInfo = [NSLocalizedDescriptionKey : "Fail to perform reverse geo location"]
-                    //completionHandlerLocations(nil, nil, NSError(domain: "performReverseGeoLocation", code: 1, userInfo: errorInfo))
-                    //}
                 }
             }
         }
         
-        //dispatchGroup.notify(queue: DispatchQueue.main) {
-        if (self.counter == self.totalImages) {
-            print("***** Dispatch Group")
+        dispatchGroup.notify(queue: DispatchQueue.main) {
             completionHandlerLocations(cities, countries, nil)
         }
     }
- */
+
+    private func getImagesFromCoreData() -> [Image]? {
+        let requestImage: NSFetchRequest<Image> = Image.fetchRequest()
+        if let images = try? coreDataStack?.context.fetch(requestImage) {
+            return images!
+        }
+        return nil
+    }
     
     private func initCities() -> [String] {
         // init city and country from core data
