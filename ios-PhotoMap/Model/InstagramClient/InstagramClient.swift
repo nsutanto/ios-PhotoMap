@@ -319,12 +319,11 @@ class InstagramClient {
                     // let's create the image object only if there is location data. That's the purpose of the app.
                     let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
                     return image
-                } else {
                 }
             } else {
                 let image = result?.first
                 if image?.longitude != longitude || image?.latitude != latitude {
-                    
+                     
                     image?.longitude = longitude!
                     image?.latitude = latitude!
                     
