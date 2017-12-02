@@ -81,7 +81,18 @@ extension MapViewController: MKMapViewDelegate {
 
 extension MapViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        loadMap()
+        DispatchQueue.main.async {
+            self.loadMap()
+        }
+    }
+}
+
+extension MapViewController : ImageLocationUtilDelegate {
+    func didFetchImage() {
+        print("********* DELEGATE FETCH IMAGE WORK MAP VIEW")
+        performUIUpdatesOnMain {
+            self.loadMap()
+        }
     }
 }
 
@@ -94,8 +105,10 @@ class MapViewController: UIViewController {
     let STRING_LONGITUDE_DELTA = "LongitudeDelta"
     let STRING_FIRST_LAUNCH = "FirstLaunch"
     var images = [Image]()
-    var userInfo : UserInfo?
+    //var userInfo : UserInfo?
     var annotatedLocations = [String:MKPointAnnotation]()
+    
+    let serialQueue = DispatchQueue(label: "com.nsutanto.PhotoMap", qos: .utility)
     
     @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
@@ -145,44 +158,51 @@ class MapViewController: UIViewController {
  
     override func viewDidLoad() {
         super.viewDidLoad()
+        ImageLocationUtil.sharedInstance().imageLocationDelegate = self
+        
         // Initialize core data stack
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
         
         mapView.delegate = self
-        fetchedResultsControllerCity.delegate = self
-        fetchedResultsControllerCountry.delegate = self
+        //fetchedResultsControllerCity.delegate = self
+        //fetchedResultsControllerCountry.delegate = self
         
-        let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
+        //let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
         
-        if let result = try? coreDataStack?.context.fetch(request) {
-            self.userInfo = result?.first
-        }
-        
-        loadMap()
+        //if let result = try? coreDataStack?.context.fetch(request) {
+        //    self.userInfo = result?.first
+        //}
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        initMapSetting()
+        performUIUpdatesOnMain {
+            self.initMapSetting()
+            self.loadMap()
+        }
     }
     
     func loadMap() {
-        performUIUpdatesOnMain {
-            self.mapView.removeAnnotations(self.mapView.annotations)
-        }
+        
+        print("****** loadMap Start")
         switch segmentationControl.selectedSegmentIndex
         {
         case 0:
-            performFetchCountry()
-            loadCountries()
+            //serialQueue.async {
+            //performFetchCountry()
+                self.loadCountries()
+            //}
         case 1:
-            performFetchCity()
-            loadCities()
+            //serialQueue.async {
+           // performFetchCity()
+                self.loadCities()
+            //}
         default:
             break
         }
+        print("****** loadMapDone")
     }
     
     private func loadCountries() {
@@ -258,7 +278,7 @@ class MapViewController: UIViewController {
             }
             else {
                 // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
-                //self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app.")
+                self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app.")
             }
         }
     }
@@ -272,7 +292,10 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func onSegControlValueChanged(_ sender: Any) {
-        loadMap()
+        performUIUpdatesOnMain {
+            self.mapView.removeAnnotations(self.mapView.annotations)
+            self.loadMap()
+        }
     }
 
     private func getCityEntity(latitude: Double, longitude: Double, completionHandlerLocations: @escaping(_ cityEntity: CityEntity?) -> Void) {
