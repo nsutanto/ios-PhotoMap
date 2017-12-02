@@ -203,6 +203,7 @@ class TableViewController: UIViewController {
         super.viewWillAppear(animated)
         performUIUpdatesOnMain {
             self.loadTable()
+            self.tableView.reloadData()
         }
     }
     
