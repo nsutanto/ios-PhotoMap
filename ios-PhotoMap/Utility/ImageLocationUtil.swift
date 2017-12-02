@@ -58,6 +58,41 @@ class ImageLocationUtil {
         })
     }
     
+    func getCountryEntity(_ countryString: String, completionHandlerLocations: @escaping(_ countryEntity: CountryEntity?) -> Void) {
+        
+        self.coreDataStack?.context.perform {
+            let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "country == %@", countryString)
+            if let countryEntityResult = try? self.coreDataStack?.context.fetch(request) {
+                let countryEntity = countryEntityResult?.first
+                completionHandlerLocations(countryEntity)
+            }
+            else {
+                completionHandlerLocations(nil)
+            }
+        }
+    }
+    
+    func getCityEntity(_ cityString: String, _ stateString: String, completionHandlerLocations: @escaping(_ cityEntity: CityEntity?) -> Void) {
+        
+        self.coreDataStack?.context.perform {
+            let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
+            let predicateCity = NSPredicate(format: "city == %@", cityString)
+            //let predicateState = NSPredicate(format: "state == %@", stateString)
+            //let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+            
+            //request.predicate = predicateCompound
+            request.predicate = predicateCity
+            if let cityEntityResult = try? self.coreDataStack?.context.fetch(request) {
+                let cityEntity = cityEntityResult?.first
+                completionHandlerLocations(cityEntity)
+            }
+            else {
+                completionHandlerLocations(nil)
+            }
+        }
+    }
+    
     private func getImageLocation(_ userInfo: UserInfo, _ images: [Image], completionHandlerImageLocation: @escaping (_ error: NSError?) -> Void ) {
         
         self.performReverseGeoLocation(userInfo, images, completionHandlerLocations: { (cities, countries, error) in
@@ -77,9 +112,6 @@ class ImageLocationUtil {
         let dispatchGroup = DispatchGroup()
         
         // init city and country from core data
-        //var cities = initCities()
-        //var countries = initCountries()
-        //let imagesLocal = getImagesFromCoreData()
         getSavedData { (savedImages, savedCities, savedCountries) in
             var cities = savedCities
             var countries = savedCountries
