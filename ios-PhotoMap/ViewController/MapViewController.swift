@@ -68,7 +68,10 @@ extension MapViewController: MKMapViewDelegate {
                     let annotationTitle = annotation.title!
                     let locationArray = annotationTitle?.components(separatedBy: ",")
                     let city: String = locationArray![0]
-                    let state: String = locationArray![1]
+                    var state: String = locationArray![1]
+                    // remove space
+                    state.remove(at: state.startIndex)
+                 
                     ImageLocationUtil.sharedInstance().getCityEntity(city, state, completionHandlerLocations: { (cityEntity) in
                         if (cityEntity == nil) {
                             self.alertError("Fail to get city")
@@ -208,9 +211,11 @@ class MapViewController: UIViewController {
                 
                 let keyExists = annotatedLocations[countryEntity.country!] != nil
                 if (!keyExists) {
+                    print("****** country Call update map view")
                     updateMapView(countryEntity.country!)
                 }
                 else {
+                    print("***** country key exist already")
                     let annotation = annotatedLocations[countryEntity.country!]
                     performUIUpdatesOnMain {
                         self.mapView.addAnnotation(annotation!)
@@ -228,10 +233,12 @@ class MapViewController: UIViewController {
                 let location = cityEntity.city! + ", " + cityEntity.state!
                 let keyExists = annotatedLocations[location] != nil
                 if (!keyExists) {
+                    print("****** city Call update map view")
                     updateMapView(location)
                 }
                 else {
                     let annotation = annotatedLocations[location]
+                    print("****** city key exist already")
                     performUIUpdatesOnMain {
                         self.mapView.addAnnotation(annotation!)
                     }

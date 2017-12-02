@@ -78,11 +78,10 @@ class ImageLocationUtil {
         self.coreDataStack?.context.perform {
             let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
             let predicateCity = NSPredicate(format: "city == %@", cityString)
-            //let predicateState = NSPredicate(format: "state == %@", stateString)
-            //let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
+            let predicateState = NSPredicate(format: "state == %@", stateString)
+            let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
             
-            //request.predicate = predicateCompound
-            request.predicate = predicateCity
+            request.predicate = predicateCompound
             if let cityEntityResult = try? self.coreDataStack?.context.fetch(request) {
                 let cityEntity = cityEntityResult?.first
                 completionHandlerLocations(cityEntity)
