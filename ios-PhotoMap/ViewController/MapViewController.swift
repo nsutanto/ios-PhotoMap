@@ -119,6 +119,7 @@ class MapViewController: UIViewController {
     var filterIndex = 0 // 0 is country. 1 is city
     var countryEntities = [CountryEntity]()
     var cityEntities = [CityEntity]()
+    var isErrorDisplayed = false
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var segmentationControl: UISegmentedControl!
@@ -316,7 +317,10 @@ class MapViewController: UIViewController {
             }
             else {
                 // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
-                self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app. Sorry Apple limit # of location requests..")
+                if !self.isErrorDisplayed {
+                    self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app. Sorry Apple limit # of location requests..")
+                    self.isErrorDisplayed = true
+                }
                 completionHandler(nil, nil)
             }
         }
