@@ -72,6 +72,9 @@ extension TableViewController: UITableViewDelegate {
             let sections = fetchedResultsControllerCountry.sections
             if sections != nil {
                 let sectionInfo = sections![section]
+                if (sectionInfo.numberOfObjects > 0) {
+                    self.indicator.stopAnimating()
+                }
                 return sectionInfo.numberOfObjects
             }
             
@@ -80,6 +83,9 @@ extension TableViewController: UITableViewDelegate {
             let sections = fetchedResultsControllerCity.sections
             if sections != nil {
                 let sectionInfo = sections![section]
+                if (sectionInfo.numberOfObjects > 0) {
+                    self.indicator.stopAnimating()
+                }
                 return sectionInfo.numberOfObjects
             }
             return 0
@@ -131,6 +137,7 @@ extension TableViewController: NSFetchedResultsControllerDelegate {
 extension TableViewController : ImageLocationUtilDelegate {
     func didFetchImage() {
         performUIUpdatesOnMain {
+            self.indicator.stopAnimating()
             self.loadTable()
             self.tableView.reloadData()
         }
@@ -139,6 +146,7 @@ extension TableViewController : ImageLocationUtilDelegate {
 
 class TableViewController: UIViewController {
 
+    var indicator = UIActivityIndicatorView()
     @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     // Selected Location from previous navigation controller
@@ -186,6 +194,9 @@ class TableViewController: UIViewController {
         }
     }
     
+    
+   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         ImageLocationUtil.sharedInstance().imageLocationDelegate = self
@@ -194,6 +205,8 @@ class TableViewController: UIViewController {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
         
+        setActivityIndicator()
+        indicator.startAnimating()
         // Initialize delegate
         //fetchedResultsControllerCity.delegate = self
         //fetchedResultsControllerCountry.delegate = self
@@ -218,6 +231,13 @@ class TableViewController: UIViewController {
         default:
             break
         }
+    }
+    
+    private func setActivityIndicator() {
+        indicator.frame = CGRect(x: 0, y: 0, width: 46, height: 46)
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        indicator.center = self.view.center
+        self.view.addSubview(indicator)
     }
     
     @IBAction func onSegControlValueChanged(_ sender: Any) {
