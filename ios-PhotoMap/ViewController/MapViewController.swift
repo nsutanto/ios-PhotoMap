@@ -115,7 +115,6 @@ class MapViewController: UIViewController {
     let STRING_LATITUDE_DELTA = "LatitudeDelta"
     let STRING_LONGITUDE_DELTA = "LongitudeDelta"
     let STRING_FIRST_LAUNCH = "FirstLaunch"
-    var isLoaded = false
     var annotatedLocations = [String:MKPointAnnotation]()
     
     let serialQueue = DispatchQueue(label: "com.nsutanto.PhotoMap", qos: .utility)
@@ -177,17 +176,10 @@ class MapViewController: UIViewController {
         mapView.delegate = self
         //fetchedResultsControllerCity.delegate = self
         //fetchedResultsControllerCountry.delegate = self
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
-        if (!isLoaded) {
-            performUIUpdatesOnMain {
-                self.initMapSetting()
-                self.loadMap()
-                self.isLoaded = true
-            }
+        performUIUpdatesOnMain {
+            self.initMapSetting()
+            self.loadMap()
         }
     }
     
@@ -196,9 +188,9 @@ class MapViewController: UIViewController {
         switch segmentationControl.selectedSegmentIndex
         {
         case 0:
-            self.loadCountries()
+            loadCountries()
         case 1:
-            self.loadCities()
+            loadCities()
         default:
             break
         }
@@ -211,11 +203,9 @@ class MapViewController: UIViewController {
                 
                 let keyExists = annotatedLocations[countryEntity.country!] != nil
                 if (!keyExists) {
-                    print("****** country Call update map view")
                     updateMapView(countryEntity.country!)
                 }
                 else {
-                    print("***** country key exist already")
                     let annotation = annotatedLocations[countryEntity.country!]
                     performUIUpdatesOnMain {
                         self.mapView.addAnnotation(annotation!)
@@ -233,12 +223,10 @@ class MapViewController: UIViewController {
                 let location = cityEntity.city! + ", " + cityEntity.state!
                 let keyExists = annotatedLocations[location] != nil
                 if (!keyExists) {
-                    print("****** city Call update map view")
                     updateMapView(location)
                 }
                 else {
                     let annotation = annotatedLocations[location]
-                    print("****** city key exist already")
                     performUIUpdatesOnMain {
                         self.mapView.addAnnotation(annotation!)
                     }
@@ -258,19 +246,7 @@ class MapViewController: UIViewController {
                     let longitude = placeMark.location?.coordinate.longitude
                     let latitude = placeMark.location?.coordinate.latitude
                     
-                    // The lat and long are used to create a CLLocationCoordinates2D instance.
-                    let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
-                    
-                    // Set the annotation
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coordinate
-                    annotation.title = location
-                    
-                    self.annotatedLocations[location] = annotation
-                    
-                    performUIUpdatesOnMain {
-                        self.mapView.addAnnotation(annotation)
-                    }
+                    self.addMapAnnotation(latitude!, longitude!, location)
                 }
                 else if ((placeMarks?.count)! == 0) {
                     self.alertError("Location is not found.")
@@ -283,6 +259,22 @@ class MapViewController: UIViewController {
                 // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
                 self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app.")
             }
+        }
+    }
+    
+    private func addMapAnnotation(_ latitude: Double, _ longitude: Double, _ location: String) {
+        // The lat and long are used to create a CLLocationCoordinates2D instance.
+        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        
+        // Set the annotation
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        annotation.title = location
+        
+        self.annotatedLocations[location] = annotation
+        
+        performUIUpdatesOnMain {
+            self.mapView.addAnnotation(annotation)
         }
     }
     
