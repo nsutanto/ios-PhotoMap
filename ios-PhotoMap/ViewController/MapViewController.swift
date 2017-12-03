@@ -115,16 +115,14 @@ class MapViewController: UIViewController {
     let STRING_LATITUDE_DELTA = "LatitudeDelta"
     let STRING_LONGITUDE_DELTA = "LongitudeDelta"
     let STRING_FIRST_LAUNCH = "FirstLaunch"
+    var filterIndex = 0 // 0 is country. 1 is city
     var countryEntities = [CountryEntity]()
     var cityEntities = [CityEntity]()
-    
-    let serialQueue = DispatchQueue(label: "com.nsutanto.PhotoMap", qos: .utility)
     
     @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
     
     lazy var fetchedResultsControllerCity: NSFetchedResultsController<CityEntity> = {
-        
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CityEntity")
         request.sortDescriptors = [NSSortDescriptor(key: "city", ascending: true)]
         
@@ -189,8 +187,12 @@ class MapViewController: UIViewController {
         switch segmentationControl.selectedSegmentIndex
         {
         case 0:
+            filterIndex = 0
+            self.mapView.removeAnnotations(self.mapView.annotations)
             loadCountries()
         case 1:
+            filterIndex = 1
+            self.mapView.removeAnnotations(self.mapView.annotations)
             loadCities()
         default:
             break
@@ -199,82 +201,87 @@ class MapViewController: UIViewController {
     
     private func loadCountries() {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
-        if let result = try? self.coreDataStack?.context.fetch(request) {
-            countryEntities = result!
-            if countryEntities.count > 0 {
-                performUpdateMapCountry(0)
+        
+        self.coreDataStack?.context.perform {
+            if let result = try? self.coreDataStack?.context.fetch(request) {
+                self.countryEntities = result!
+                if self.countryEntities.count > 0 {
+                    self.performUpdateMapCountry(0)
+                }
             }
         }
     }
     
     private func loadCities() {
         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-        if let result = try? self.coreDataStack?.context.fetch(request) {
-            cityEntities = result!
-            if cityEntities.count > 0 {
-                performUpdateMapCity(0)
+        
+        self.coreDataStack?.context.perform {
+            if let result = try? self.coreDataStack?.context.fetch(request) {
+                self.cityEntities = result!
+                if self.cityEntities.count > 0 {
+                    self.performUpdateMapCity(0)
+                }
             }
         }
     }
     
     private func performUpdateMapCountry(_ index: Int) {
         
-        let countryEntity = countryEntities[index]
-        
-        if countryEntity.latitude != 0 && countryEntity.longitude != 0 {
-            print("********* Exist country : \(countryEntity.country)")
-
-            addMapAnnotation(countryEntity.latitude, countryEntity.longitude, countryEntity.country!)
+        if (filterIndex == 0) {
+            let countryEntity = countryEntities[index]
             
-            if (index < countryEntities.count - 1) {
-                let nextIndex = index + 1
-                performUpdateMapCountry(nextIndex)
-            }
-        } else {
-            print("********* Create country : \(countryEntity.country)")
-            updateMapView(countryEntity.country!) {(latitude, longitude) in
-                if (latitude != nil && longitude != nil) {
-                    self.coreDataStack?.context.perform {
-                        countryEntity.latitude = latitude!
-                        countryEntity.longitude = longitude!
-                        self.coreDataStack?.save()
-                    }
-                }
+            if countryEntity.latitude != 0 && countryEntity.longitude != 0 {
+         
+                addMapAnnotation(countryEntity.latitude, countryEntity.longitude, countryEntity.country!)
                 
-                if (index < self.countryEntities.count - 1) {
+                if (index < countryEntities.count - 1) {
                     let nextIndex = index + 1
-                    self.performUpdateMapCountry(nextIndex)
+                    performUpdateMapCountry(nextIndex)
+                }
+            } else {
+                updateMapView(countryEntity.country!) {(latitude, longitude) in
+                    if (latitude != nil && longitude != nil) {
+                        self.coreDataStack?.context.perform {
+                            countryEntity.latitude = latitude!
+                            countryEntity.longitude = longitude!
+                            self.coreDataStack?.save()
+                        }
+                    }
+                    
+                    if (index < self.countryEntities.count - 1) {
+                        let nextIndex = index + 1
+                        self.performUpdateMapCountry(nextIndex)
+                    }
                 }
             }
         }
     }
     
     func performUpdateMapCity(_ index: Int) {
-        
-        let cityEntity = cityEntities[index]
-        let location = cityEntity.city! + ", " + cityEntity.state!
-        if cityEntity.latitude != 0 && cityEntity.longitude != 0 {
-            print("********* Exist city : \(cityEntity.city)")
-            addMapAnnotation(cityEntity.latitude, cityEntity.longitude, location)
+        if filterIndex == 1 {
             
-            if (index < cityEntities.count - 1) {
-                let nextIndex = index + 1
-                performUpdateMapCity(nextIndex)
-            }
-        } else {
-            print("********* Create city : \(cityEntity.city)")
-            updateMapView(location) {(latitude, longitude) in
-                print("****** Get longitude and latitude")
-                if (latitude != nil && longitude != nil) {
-                    self.coreDataStack?.context.perform {
-                        cityEntity.latitude = latitude!
-                        cityEntity.longitude = longitude!
-                        self.coreDataStack?.save()
-                    }
-                }
-                if (index < self.cityEntities.count - 1) {
+            let cityEntity = cityEntities[index]
+            let location = cityEntity.city! + ", " + cityEntity.state!
+            if cityEntity.latitude != 0 && cityEntity.longitude != 0 {
+                addMapAnnotation(cityEntity.latitude, cityEntity.longitude, location)
+                
+                if (index < cityEntities.count - 1) {
                     let nextIndex = index + 1
-                    self.performUpdateMapCity(nextIndex)
+                    performUpdateMapCity(nextIndex)
+                }
+            } else {
+                updateMapView(location) {(latitude, longitude) in
+                    if (latitude != nil && longitude != nil) {
+                        self.coreDataStack?.context.perform {
+                            cityEntity.latitude = latitude!
+                            cityEntity.longitude = longitude!
+                            self.coreDataStack?.save()
+                        }
+                    }
+                    if (index < self.cityEntities.count - 1) {
+                        let nextIndex = index + 1
+                        self.performUpdateMapCity(nextIndex)
+                    }
                 }
             }
         }
@@ -335,7 +342,6 @@ class MapViewController: UIViewController {
     
     @IBAction func onSegControlValueChanged(_ sender: Any) {
         performUIUpdatesOnMain {
-            self.mapView.removeAnnotations(self.mapView.annotations)
             self.loadMap()
         }
     }
