@@ -115,7 +115,8 @@ class MapViewController: UIViewController {
     let STRING_LATITUDE_DELTA = "LatitudeDelta"
     let STRING_LONGITUDE_DELTA = "LongitudeDelta"
     let STRING_FIRST_LAUNCH = "FirstLaunch"
-    var annotatedLocations = [String:MKPointAnnotation]()
+    var countryEntities = [CountryEntity]()
+    var cityEntities = [CityEntity]()
     
     let serialQueue = DispatchQueue(label: "com.nsutanto.PhotoMap", qos: .utility)
     
@@ -199,18 +200,9 @@ class MapViewController: UIViewController {
     private func loadCountries() {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
-            for countryEntity in result! {
-                
-                let keyExists = annotatedLocations[countryEntity.country!] != nil
-                if (!keyExists) {
-                    updateMapView(countryEntity.country!)
-                }
-                else {
-                    let annotation = annotatedLocations[countryEntity.country!]
-                    performUIUpdatesOnMain {
-                        self.mapView.addAnnotation(annotation!)
-                    }
-                }
+            countryEntities = result!
+            if countryEntities.count > 0 {
+                performUpdateMapCountry(0)
             }
         }
     }
@@ -218,24 +210,77 @@ class MapViewController: UIViewController {
     private func loadCities() {
         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
         if let result = try? self.coreDataStack?.context.fetch(request) {
+            cityEntities = result!
+            if cityEntities.count > 0 {
+                performUpdateMapCity(0)
+            }
+        }
+    }
+    
+    private func performUpdateMapCountry(_ index: Int) {
+        
+        let countryEntity = countryEntities[index]
+        
+        if countryEntity.latitude != 0 && countryEntity.longitude != 0 {
+            print("********* Exist country : \(countryEntity.country)")
+
+            addMapAnnotation(countryEntity.latitude, countryEntity.longitude, countryEntity.country!)
             
-            for cityEntity in result! {
-                let location = cityEntity.city! + ", " + cityEntity.state!
-                let keyExists = annotatedLocations[location] != nil
-                if (!keyExists) {
-                    updateMapView(location)
-                }
-                else {
-                    let annotation = annotatedLocations[location]
-                    performUIUpdatesOnMain {
-                        self.mapView.addAnnotation(annotation!)
+            if (index < countryEntities.count - 1) {
+                let nextIndex = index + 1
+                performUpdateMapCountry(nextIndex)
+            }
+        } else {
+            print("********* Create country : \(countryEntity.country)")
+            updateMapView(countryEntity.country!) {(latitude, longitude) in
+                if (latitude != nil && longitude != nil) {
+                    self.coreDataStack?.context.perform {
+                        countryEntity.latitude = latitude!
+                        countryEntity.longitude = longitude!
+                        self.coreDataStack?.save()
                     }
+                }
+                
+                if (index < self.countryEntities.count - 1) {
+                    let nextIndex = index + 1
+                    self.performUpdateMapCountry(nextIndex)
                 }
             }
         }
     }
     
-    func updateMapView(_ location: String) {
+    func performUpdateMapCity(_ index: Int) {
+        
+        let cityEntity = cityEntities[index]
+        let location = cityEntity.city! + ", " + cityEntity.state!
+        if cityEntity.latitude != 0 && cityEntity.longitude != 0 {
+            print("********* Exist city : \(cityEntity.city)")
+            addMapAnnotation(cityEntity.latitude, cityEntity.longitude, location)
+            
+            if (index < cityEntities.count - 1) {
+                let nextIndex = index + 1
+                performUpdateMapCity(nextIndex)
+            }
+        } else {
+            print("********* Create city : \(cityEntity.city)")
+            updateMapView(location) {(latitude, longitude) in
+                print("****** Get longitude and latitude")
+                if (latitude != nil && longitude != nil) {
+                    self.coreDataStack?.context.perform {
+                        cityEntity.latitude = latitude!
+                        cityEntity.longitude = longitude!
+                        self.coreDataStack?.save()
+                    }
+                }
+                if (index < self.cityEntities.count - 1) {
+                    let nextIndex = index + 1
+                    self.performUpdateMapCity(nextIndex)
+                }
+            }
+        }
+    }
+    
+    func updateMapView(_ location: String, completionHandler: @escaping (_ latitude: Double?, _ longitude: Double?) -> Void) {
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(location) { (placeMarks, error) in
             
@@ -247,17 +292,21 @@ class MapViewController: UIViewController {
                     let latitude = placeMark.location?.coordinate.latitude
                     
                     self.addMapAnnotation(latitude!, longitude!, location)
+                    completionHandler(latitude!, longitude!)
                 }
                 else if ((placeMarks?.count)! == 0) {
                     self.alertError("Location is not found.")
+                    completionHandler(nil, nil)
                 }
                 else {
                     self.alertError("Multiple locations found.")
+                    completionHandler(nil, nil)
                 }
             }
             else {
                 // https://stackoverflow.com/questions/29087660/error-domain-kclerrordomain-code-2-the-operation-couldn-t-be-completed-kclerr
-                self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app.")
+                self.alertError("Error getting location. Please wait 1 minute before refreshing the map or re-start the app. Sorry Apple limit # of location requests..")
+                completionHandler(nil, nil)
             }
         }
     }
@@ -270,8 +319,6 @@ class MapViewController: UIViewController {
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         annotation.title = location
-        
-        self.annotatedLocations[location] = annotation
         
         performUIUpdatesOnMain {
             self.mapView.addAnnotation(annotation)
