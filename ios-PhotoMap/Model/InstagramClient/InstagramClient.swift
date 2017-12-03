@@ -200,6 +200,14 @@ class InstagramClient {
                     }
                     
                     
+                    /* Guard: Is the "created_time" key in our result? */
+                    guard let created_time = data[MediaResponses.CREATED_TIME] as? String else {
+                        sendError("Error when parsing result: created_time")
+                        return
+                    }
+                    
+                    
+                    
                     /* Guard: Is the "caption" key in our result? Caption is optional, some pictures might not have captions */
                     var text : String = ""
                     if let caption = data[MediaResponses.CAPTION] as? [String:AnyObject]  {
@@ -257,7 +265,7 @@ class InstagramClient {
                             sendError("Error when parsing result: url")
                             return
                         }
-                        self.addImageToCoreData(longitude, latitude, id, imageURL, text) { (image) in
+                        self.addImageToCoreData(longitude, latitude, id, imageURL, text, created_time) { (image) in
                             if image != nil {
                                 imageArray.append(image!)
                             }
@@ -285,7 +293,7 @@ class InstagramClient {
                                     return
                                 }
                                
-                                self.addImageToCoreData(longitude, latitude, id, imageURL, text) { (image) in
+                                self.addImageToCoreData(longitude, latitude, id, imageURL, text, created_time) { (image) in
                                     if image != nil {
                                         imageArray.append(image!)
                                     }
@@ -303,7 +311,7 @@ class InstagramClient {
         }
     }
     
-    private func addImageToCoreData(_ longitude: Double?, _ latitude: Double?, _ id: String, _ imageURL: String, _ text: String, completionHandlerAddImage: @escaping (_ image: Image?) -> Void) {
+    private func addImageToCoreData(_ longitude: Double?, _ latitude: Double?, _ id: String, _ imageURL: String, _ text: String, _ createdTime: String, completionHandlerAddImage: @escaping (_ image: Image?) -> Void) {
         
         // Add to core data. It is unique ID and image URL
         let request: NSFetchRequest<Image> = Image.fetchRequest()
@@ -317,7 +325,7 @@ class InstagramClient {
                 if (result?.first) == nil {
                     if (longitude != nil && latitude != nil) {
                         // let's create the image object only if there is location data. That's the purpose of the app.
-                        let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
+                        let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, createdTime: createdTime, context: (self.coreDataStack?.context)!)
                         completionHandlerAddImage(image)
                     }
                     else {

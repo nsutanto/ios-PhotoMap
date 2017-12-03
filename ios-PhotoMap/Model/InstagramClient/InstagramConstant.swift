@@ -56,6 +56,7 @@ extension InstagramClient {
         static let DATA = "data"
         static let CAPTION = "caption"
         static let TEXT = "text"
+        static let CREATED_TIME = "created_time"
         static let IMAGES = "images"
         static let TYPE = "type"
         static let CAROUSEL_MEDIA = "carousel_media"

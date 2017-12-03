@@ -12,7 +12,7 @@ import CoreData
 
 
 public class Image: NSManagedObject {
-    convenience init(id: String, imageURL: String, imageData: NSData?, latitude: Double, longitude: Double, text: String, context: NSManagedObjectContext) {
+    convenience init(id: String, imageURL: String, imageData: NSData?, latitude: Double, longitude: Double, text: String, createdTime: String, context: NSManagedObjectContext) {
         
         // An EntityDescription is an object that has access to all
         // the information you provided in the Entity part of the model
@@ -25,6 +25,7 @@ public class Image: NSManagedObject {
             self.latitude = latitude
             self.longitude = longitude
             self.text = text
+            self.createdTime = createdTime
         } else {
             fatalError("Unable to find Image entity name!")
         }
