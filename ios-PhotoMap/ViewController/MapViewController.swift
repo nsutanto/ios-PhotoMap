@@ -94,6 +94,7 @@ extension MapViewController: MKMapViewDelegate {
 extension MapViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
             self.loadMap()
         }
     }
@@ -119,6 +120,7 @@ class MapViewController: UIViewController {
     var countryEntities = [CountryEntity]()
     var cityEntities = [CityEntity]()
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
     
@@ -206,6 +208,7 @@ class MapViewController: UIViewController {
             if let result = try? self.coreDataStack?.context.fetch(request) {
                 self.countryEntities = result!
                 if self.countryEntities.count > 0 {
+                    self.activityIndicator.stopAnimating()
                     self.performUpdateMapCountry(0)
                 }
             }
@@ -219,6 +222,7 @@ class MapViewController: UIViewController {
             if let result = try? self.coreDataStack?.context.fetch(request) {
                 self.cityEntities = result!
                 if self.cityEntities.count > 0 {
+                    self.activityIndicator.stopAnimating()
                     self.performUpdateMapCity(0)
                 }
             }

@@ -292,11 +292,16 @@
                                     <action selector="onSegControlValueChanged:" destination="zoI-kn-CGq" eventType="valueChanged" id="1Bt-5T-BZm"/>
                                 </connections>
                             </segmentedControl>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="mPF-jw-xJF">
+                                <rect key="frame" x="177" y="331" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="FSu-HV-qeE" firstAttribute="centerY" secondItem="Jcc-EH-OMx" secondAttribute="centerY" id="67I-Tu-lIA"/>
+                            <constraint firstItem="mPF-jw-xJF" firstAttribute="centerX" secondItem="Jcc-EH-OMx" secondAttribute="centerX" id="AIw-39-wQC"/>
                             <constraint firstItem="asL-TU-UKI" firstAttribute="centerX" secondItem="Jcc-EH-OMx" secondAttribute="centerX" id="bXn-rb-fCt"/>
+                            <constraint firstItem="mPF-jw-xJF" firstAttribute="centerY" secondItem="Jcc-EH-OMx" secondAttribute="centerY" id="cH3-NY-8T2"/>
                             <constraint firstItem="FSu-HV-qeE" firstAttribute="top" secondItem="Jcc-EH-OMx" secondAttribute="top" id="dN7-qL-cpk"/>
                             <constraint firstItem="Jcc-EH-OMx" firstAttribute="trailing" secondItem="FSu-HV-qeE" secondAttribute="trailing" id="kfF-n9-Ni2"/>
                             <constraint firstItem="asL-TU-UKI" firstAttribute="top" secondItem="Jcc-EH-OMx" secondAttribute="top" constant="8" id="nHg-BD-3zT"/>
@@ -307,6 +312,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="icons8-map-pinpoint-40" id="DsU-tx-Jf6"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="mPF-jw-xJF" id="64J-Gc-OzA"/>
                         <outlet property="mapView" destination="FSu-HV-qeE" id="WwB-th-TeJ"/>
                         <outlet property="segmentationControl" destination="asL-TU-UKI" id="6AJ-xy-VT7"/>
                         <segue destination="37d-mv-0z4" kind="show" identifier="segueMapToMedia" id="721-Ge-zX4"/>
@@ -488,6 +494,6 @@
         <image name="icons8-map-pinpoint-40" width="40" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="nWr-r6-3DK"/>
+        <segue reference="721-Ge-zX4"/>
     </inferredMetricsTieBreakers>
 </document>
