@@ -178,7 +178,10 @@ class MapViewController: UIViewController {
         mapView.delegate = self
         //fetchedResultsControllerCity.delegate = self
         //fetchedResultsControllerCountry.delegate = self
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         performUIUpdatesOnMain {
             self.initMapSetting()
             self.loadMap()
