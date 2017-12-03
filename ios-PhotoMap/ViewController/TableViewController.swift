@@ -38,20 +38,24 @@ extension TableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
         
-        
         switch segmentationControl.selectedSegmentIndex
         {
         case 0:
             let countryEntity = fetchedResultsControllerCountry.object(at: indexPath)
             
             // Configure Cell
-            cell.textLabel?.text = countryEntity.country
+            performUIUpdatesOnMain {
+                cell.textLabel?.text = countryEntity.country
+            }
+            
         case 1:
             
             let cityEntity = fetchedResultsControllerCity.object(at: indexPath)
             
             // Configure Cell
-            cell.textLabel?.text = cityEntity.city! + ", " + cityEntity.state!
+            performUIUpdatesOnMain {
+                cell.textLabel?.text = cityEntity.city! + ", " + cityEntity.state!
+            }
         default:
             break
         }
@@ -66,12 +70,25 @@ extension TableViewController: UITableViewDelegate {
         {
         case 0:
             let sections = fetchedResultsControllerCountry.sections
-            let sectionInfo = sections![section]
-            return sectionInfo.numberOfObjects
+            if sections != nil {
+                let sectionInfo = sections![section]
+                if (sectionInfo.numberOfObjects > 0) {
+                    self.indicator.stopAnimating()
+                }
+                return sectionInfo.numberOfObjects
+            }
+            
+            return 0
         case 1:
             let sections = fetchedResultsControllerCity.sections
-            let sectionInfo = sections![section]
-            return sectionInfo.numberOfObjects
+            if sections != nil {
+                let sectionInfo = sections![section]
+                if (sectionInfo.numberOfObjects > 0) {
+                    self.indicator.stopAnimating()
+                }
+                return sectionInfo.numberOfObjects
+            }
+            return 0
         default:
             break
         }
@@ -79,6 +96,7 @@ extension TableViewController: UITableViewDelegate {
     }
 }
 
+/*
 extension TableViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
@@ -114,9 +132,21 @@ extension TableViewController: NSFetchedResultsControllerDelegate {
         tableView.endUpdates()
     }
 }
+*/
+
+extension TableViewController : ImageLocationUtilDelegate {
+    func didFetchImage() {
+        performUIUpdatesOnMain {
+            self.indicator.stopAnimating()
+            self.loadTable()
+            self.tableView.reloadData()
+        }
+    }
+}
 
 class TableViewController: UIViewController {
 
+    var indicator = UIActivityIndicatorView()
     @IBOutlet weak var segmentationControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     // Selected Location from previous navigation controller
@@ -164,23 +194,34 @@ class TableViewController: UIViewController {
         }
     }
     
+    
+   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        ImageLocationUtil.sharedInstance().imageLocationDelegate = self
         
         // Initialize core data stack
         let delegate = UIApplication.shared.delegate as! AppDelegate
         coreDataStack = delegate.stack
         
+        setActivityIndicator()
+        indicator.startAnimating()
         // Initialize delegate
-        fetchedResultsControllerCity.delegate = self
-        fetchedResultsControllerCountry.delegate = self
-        
-        loadTable()
+        //fetchedResultsControllerCity.delegate = self
+        //fetchedResultsControllerCountry.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        performUIUpdatesOnMain {
+            self.loadTable()
+            self.tableView.reloadData()
+        }
     }
     
     func loadTable() {
         
-        //tableView.reloadData()
         switch segmentationControl.selectedSegmentIndex
         {
         case 0:
@@ -192,10 +233,18 @@ class TableViewController: UIViewController {
         }
     }
     
-    
+    private func setActivityIndicator() {
+        indicator.frame = CGRect(x: 0, y: 0, width: 46, height: 46)
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        indicator.center = self.view.center
+        self.view.addSubview(indicator)
+    }
     
     @IBAction func onSegControlValueChanged(_ sender: Any) {
-        loadTable()
-        tableView.reloadData()
+        performUIUpdatesOnMain {
+            self.loadTable()
+            self.tableView.reloadData()
+        }
+        
     }
 }

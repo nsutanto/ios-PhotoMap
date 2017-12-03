@@ -14,7 +14,8 @@ class InstagramClient {
     
     let clientUtil = ClientUtil()
     var accessToken: String?
-   
+    var globalImages = [Image]()
+    
     // Initialize core data stack
     let coreDataStack: CoreDataStack?
     
@@ -91,35 +92,64 @@ class InstagramClient {
                     return
                 }
                 
-                let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
-                request.predicate = NSPredicate(format: "userName == %@", userName)
-                if let result = try? self.coreDataStack?.context.fetch(request) {
-                    if (result?.first) == nil {
-                        
-                        let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, token: self.accessToken, context: (self.coreDataStack?.context)!)
-            
-                        completionHandlerUserInfo(userInfo, nil)
+                self.coreDataStack?.context.perform {
+                
+                    let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
+                    request.predicate = NSPredicate(format: "userName == %@", userName)
+                    if let result = try? self.coreDataStack?.context.fetch(request) {
+                        if (result?.first) == nil {
+                            let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, token: self.accessToken, context: (self.coreDataStack?.context)!)
+                            completionHandlerUserInfo(userInfo, nil)
+                        }
+                        else {
+                            let userInfo = result?.first
+                            completionHandlerUserInfo(userInfo, nil)
+                        }
                     }
                     else {
-                        let userInfo = result?.first
-                        completionHandlerUserInfo(userInfo, nil)
+                        sendError("User is already created")
                     }
-                }
-                else {
-                    sendError("User is already created")
                 }
             }
         }
     }
     
-    func getImages(completionHandlerGetImages: @escaping (_ images: [Image]?, _ error: NSError?) -> Void) {
-        
+    func getAllImages(_ maxID: String?, completionHandlerGetImages: @escaping (_ images: [Image]?, _ error: NSError?) -> Void) {
+        // get the first image, no max id
+        getImages(maxID) { (images, nextMaxID, error) in
+            if (images != nil) {
+                for image in images! {
+                    self.globalImages.append(image)
+                }
+                
+                if let nextMaxID = nextMaxID {
+                    self.getAllImages(nextMaxID) { (images2, error2) in
+                        completionHandlerGetImages(images2, error2)
+                    }
+                }
+                else {
+                    // add images to global images
+                    completionHandlerGetImages(self.globalImages, error)
+                }
+            }
+            else {
+                print("***** images is nil")
+            }
+        }
+    }
+
+    
+    func getImages(_ maxID: String?, completionHandlerGetImages: @escaping (_ images: [Image]?, _ nextMaxID: String?,  _ error: NSError?) -> Void) {
+        var nextMaxID: String?
         var imageArray = [Image]()
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
-        let methodParameters = [
+        var methodParameters = [
             Parameters.ACCESS_TOKEN: self.accessToken,
             Parameters.COUNT: "5000" // let's do 5000 pictures for now... we need to improve using pagination
         ]
+        if let maxID = maxID {
+            methodParameters[Parameters.MAX_ID] = maxID
+        }
         
         let url = clientUtil.parseURLFromParameters(Constants.API_SCHEME,
                                                     Constants.API_HOST,
@@ -132,13 +162,22 @@ class InstagramClient {
             
             func sendError(_ error: String) {
                 let errorInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerGetImages(nil, NSError(domain: "getImages", code: 1, userInfo: errorInfo))
+                completionHandlerGetImages(nil, nil, NSError(domain: "getImages", code: 1, userInfo: errorInfo))
             }
             
             /* 3. Send the desired value(s) to completion handler */
             if let error = error {
                 sendError("\(error)")
             } else {
+                guard let paginationDictionary = parsedResult?[MediaResponses.PAGINATION] as? [String:AnyObject] else {
+                    sendError("Error when parsing result: pagination")
+                    return
+                }
+                
+                if let next_max_id = paginationDictionary[MediaResponses.NEXT_MAX_ID] as? String {
+                    nextMaxID = next_max_id
+                }
+                
                 
                 /* GUARD: Is the "data" key in our result? */
                 guard let dataDictionary = parsedResult?[MediaResponses.DATA] as? [[String:AnyObject]] else {
@@ -159,6 +198,14 @@ class InstagramClient {
                         sendError("Error when parsing result: type")
                         return
                     }
+                    
+                    
+                    /* Guard: Is the "created_time" key in our result? */
+                    guard let created_time = data[MediaResponses.CREATED_TIME] as? String else {
+                        sendError("Error when parsing result: created_time")
+                        return
+                    }
+                    
                     
                     
                     /* Guard: Is the "caption" key in our result? Caption is optional, some pictures might not have captions */
@@ -218,11 +265,10 @@ class InstagramClient {
                             sendError("Error when parsing result: url")
                             return
                         }
-                        
-                        let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
-                        
-                        if image != nil {
-                            imageArray.append(image!)
+                        self.addImageToCoreData(longitude, latitude, id, imageURL, text, created_time) { (image) in
+                            if image != nil {
+                                imageArray.append(image!)
+                            }
                         }
                     }
                     else if (type == "carousel") {
@@ -246,11 +292,11 @@ class InstagramClient {
                                     sendError("Error when parsing result: url")
                                     return
                                 }
-                                
-                                let image = self.addImageToCoreData(longitude, latitude, id, imageURL, text)
-                                
-                                if image != nil {
-                                    imageArray.append(image!)
+                               
+                                self.addImageToCoreData(longitude, latitude, id, imageURL, text, created_time) { (image) in
+                                    if image != nil {
+                                        imageArray.append(image!)
+                                    }
                                 }
                             }
                             else {
@@ -260,12 +306,12 @@ class InstagramClient {
                         }
                     }
                 }
-                completionHandlerGetImages(imageArray, nil)
+                completionHandlerGetImages(imageArray, nextMaxID, nil)
             }
         }
     }
     
-    private func addImageToCoreData(_ longitude: Double?, _ latitude: Double?, _ id: String, _ imageURL: String, _ text: String) -> Image? {
+    private func addImageToCoreData(_ longitude: Double?, _ latitude: Double?, _ id: String, _ imageURL: String, _ text: String, _ createdTime: String, completionHandlerAddImage: @escaping (_ image: Image?) -> Void) {
         
         // Add to core data. It is unique ID and image URL
         let request: NSFetchRequest<Image> = Image.fetchRequest()
@@ -274,29 +320,37 @@ class InstagramClient {
         
         let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateID,predicateURL])
         request.predicate = predicateCompound
-        
-        if let result = try? self.coreDataStack?.context.fetch(request) {
-            if (result?.first) == nil {
-                if (longitude != nil && latitude != nil) {
-                    // let's create the image object only if there is location data. That's the purpose of the app.
-                    let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, context: (self.coreDataStack?.context)!)
-                    return image
+        self.coreDataStack?.context.perform {
+            if let result = try? self.coreDataStack?.context.fetch(request) {
+                if (result?.first) == nil {
+                    if (longitude != nil && latitude != nil) {
+                        // let's create the image object only if there is location data. That's the purpose of the app.
+                        let image = Image(id: id, imageURL: imageURL, imageData: nil, latitude: latitude!, longitude: longitude!, text: text, createdTime: createdTime, context: (self.coreDataStack?.context)!)
+                        completionHandlerAddImage(image)
+                    }
+                    else {
+                        completionHandlerAddImage(nil)
+                    }
+                } else {
+                    let image = result?.first
+                    if image?.longitude != longitude || image?.latitude != latitude {
+                        
+                        image?.longitude = longitude!
+                        image?.latitude = latitude!
+                        
+                        // reset so that we can do reverse geo location later
+                        image?.imageToCity = nil
+                        image?.imageToCountry = nil
+                        
+                        completionHandlerAddImage(image)
+                    }
+                    else {
+                        completionHandlerAddImage(nil)
+                    }
                 }
             } else {
-                let image = result?.first
-                if image?.longitude != longitude || image?.latitude != latitude {
-                    
-                    image?.longitude = longitude!
-                    image?.latitude = latitude!
-                    
-                    // reset so that we can do reverse geo location later
-                    image?.imageToCity = nil
-                    image?.imageToCountry = nil
-                    
-                    return image
-                }
+                completionHandlerAddImage(nil)
             }
         }
-        return nil
     }
 }

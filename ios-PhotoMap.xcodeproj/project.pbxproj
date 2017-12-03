@@ -14,6 +14,7 @@
 		6BA078A01FB2BAF70016CD58 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA0789F1FB2BAF70016CD58 /* DetailViewController.swift */; };
 		6BA078A21FB3D4280016CD58 /* PictureCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA078A11FB3D4280016CD58 /* PictureCollectionViewCell.swift */; };
 		6BA078A41FB3D45F0016CD58 /* CellCancelTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA078A31FB3D45F0016CD58 /* CellCancelTask.swift */; };
+		6BAC3A951FCF8F960042AFDD /* GoogleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC3A941FCF8F960042AFDD /* GoogleClient.swift */; };
 		6BAFF6BB1FB5434C0025221F /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAFF6BA1FB5434C0025221F /* TableViewController.swift */; };
 		6BE4B3901FA295A800662403 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B38F1FA295A800662403 /* AppDelegate.swift */; };
 		6BE4B3921FA295A800662403 /* InitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B3911FA295A800662403 /* InitViewController.swift */; };
@@ -45,6 +46,7 @@
 		6BA0789F1FB2BAF70016CD58 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		6BA078A11FB3D4280016CD58 /* PictureCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCollectionViewCell.swift; sourceTree = "<group>"; };
 		6BA078A31FB3D45F0016CD58 /* CellCancelTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellCancelTask.swift; sourceTree = "<group>"; };
+		6BAC3A941FCF8F960042AFDD /* GoogleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleClient.swift; sourceTree = "<group>"; };
 		6BAFF6BA1FB5434C0025221F /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		6BE4B38C1FA295A800662403 /* ios-PhotoMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-PhotoMap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BE4B38F1FA295A800662403 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -109,6 +111,14 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		6BAC3A931FCF8F4D0042AFDD /* GoogleClient */ = {
+			isa = PBXGroup;
+			children = (
+				6BAC3A941FCF8F960042AFDD /* GoogleClient.swift */,
+			);
+			path = GoogleClient;
+			sourceTree = "<group>";
+		};
 		6BE4B3831FA295A800662403 = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				6B6B0F801FAA8F530036757A /* CoreData */,
+				6BAC3A931FCF8F4D0042AFDD /* GoogleClient */,
 				6BE4B3A31FA2C48D00662403 /* InstagramClient */,
 			);
 			path = Model;
@@ -263,6 +274,7 @@
 				6BA0789E1FB2B8050016CD58 /* PictureViewController.swift in Sources */,
 				6BE4B3AF1FA4292500662403 /* AboutViewController.swift in Sources */,
 				6B6EEC851FC459E100CB3B02 /* ImageLocationUtil.swift in Sources */,
+				6BAC3A951FCF8F960042AFDD /* GoogleClient.swift in Sources */,
 				6B6B0F821FAA8F6A0036757A /* GCDBlackBox.swift in Sources */,
 				6BF7FC161FAD59C800C3CA41 /* Image+CoreDataProperties.swift in Sources */,
 				6BF7FBF11FAD369300C3CA41 /* Model.xcdatamodeld in Sources */,

@@ -133,7 +133,7 @@ class PictureViewController: UIViewController {
     lazy var fetchedResultsController: NSFetchedResultsController<Image> = {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Image")
-        request.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
+        request.sortDescriptors = [NSSortDescriptor(key: "createdTime", ascending: false)]
         
         if (selectedCity != nil) {
             request.predicate = NSPredicate(format: "imageToCity == %@", self.selectedCity!)

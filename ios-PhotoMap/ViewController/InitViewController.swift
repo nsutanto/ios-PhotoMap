@@ -97,9 +97,8 @@ class InitViewController: UIViewController {
                     
                     ImageLocationUtil.sharedInstance().getUserImages(userInfo!, completionHandlerUserImages: {(images, error) in
                         
-                        self.present(controller, animated: true, completion: nil)
-                    
                     })
+                    self.present(controller, animated: true, completion: nil)
                 }
             }
             else {

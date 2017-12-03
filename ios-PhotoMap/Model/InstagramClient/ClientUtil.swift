@@ -58,7 +58,7 @@ class ClientUtil {
                     sendError("No data was returned by the request!")
                     return
                 }
-                
+                //print("********************************************************")
                 //print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
                 self.convertDataWithCompletionHandler(data, completionHandlerConvertData: completionHandlerRequest)
             }
@@ -68,7 +68,7 @@ class ClientUtil {
     }
     
     // given raw JSON, return a usable Foundation object
-    func convertDataWithCompletionHandler(_ data: Data, completionHandlerConvertData: (_ result: AnyObject?, _ error: NSError?) -> Void) {
+    func convertDataWithCompletionHandler(_ data: Data, completionHandlerConvertData: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) {
         
         var parsedResult: AnyObject! = nil
         do {
