@@ -195,11 +195,6 @@ class ImageLocationUtil {
         // https://stackoverflow.com/questions/47129345/swift-how-to-perform-task-completion/47130196#47130196
         let dispatchGroup = DispatchGroup()
         
-        // init city and country from core data
-        //var cities = initCities()
-        //var countries = initCountries()
-        //let imagesLocal = getImagesFromCoreData()
-        
         getSavedData { (savedImages, savedCities, savedCountries) in
             var cities = savedCities
             var countries = savedCountries
