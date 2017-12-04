@@ -24,6 +24,6 @@ Store media on the device file system Use Core Data for local persistence of an 
 <img src="https://media.giphy.com/media/26FeYG8EQVWtE3hZK/giphy.gif" width="300">
 
 ## Swipe images left and right
+<img src="https://media.giphy.com/media/xT1R9AwmTC380a4iQw/giphy.gif" width="300">
 
 ## Re-share your image
-<img src="https://media.giphy.com/media/l4Ep3KjU767Xzv11C/giphy.gif" width="300">
