@@ -15,13 +15,10 @@ Store media on the device file system Use Core Data for local persistence of an 
 
 ## Display Table View as Countries and Cities
 
-## Populate images based on country pin
+## Populate images based on country
 
-## Populate images based on city pin
-
-## Populate images based on country table cell
-
-## Populate images based on city table cell
+## Populate images based on city
+<img src="https://media.giphy.com/media/26FeYG8EQVWtE3hZK/giphy.gif" width="300">
 
 ## Swipe images left and right
 
