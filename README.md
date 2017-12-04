@@ -18,7 +18,7 @@ Store media on the device file system Use Core Data for local persistence of an 
 <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/DisplayListCountry.PNG" width="300"> <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/DisplayListCity.PNG" width="300">
 
 ## Populate images based on country
-<img src="https://media.giphy.com/media/xT1R9Fe27wUDYeKpZC/giphy.gif" width="300">
+<img src="https://media.giphy.com/media/l4EoTQPQRIgVl4oHC/giphy.gif" width="300">
 
 ## Populate images based on city
 <img src="https://media.giphy.com/media/26FeYG8EQVWtE3hZK/giphy.gif" width="300">
