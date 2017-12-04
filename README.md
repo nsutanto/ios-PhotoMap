@@ -9,7 +9,9 @@ Use NSURLSessions to interact with a public restful API
 Create a user interface that intuitively communicates network activity and download progress
 Store media on the device file system Use Core Data for local persistence of an object structure
 
-## Loading Map Data
+## Requirements
+- XCode 9.1
+- Swift 4
 
 ## Display Map Pin as Countries and Cities
 <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/DisplayCountryPin.PNG" width="300"> <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/DisplayCityPin.PNG" width="300">
