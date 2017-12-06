@@ -83,7 +83,7 @@ class InitViewController: UIViewController {
     @IBAction func performLogin(_ sender: Any) {
         let instagramLoginViewController = self.storyboard!.instantiateViewController(withIdentifier: "InstagramLoginViewController") as! InstagramLoginViewController
         instagramLoginViewController.isLoggedIn = needToLogout!
-        instagramLoginViewController.isInvalidToken = needToLogout!
+        instagramLoginViewController.isValidToken = !needToLogout!
         self.present(instagramLoginViewController, animated: true, completion: nil)
     }
     
@@ -118,7 +118,6 @@ class InitViewController: UIViewController {
                 // user token is not valid.. can be expired.. so need to login again
                 let errorMessage = ((error?.userInfo.description)!)
                 if errorMessage.range(of:"-1009") != nil {
-                    
                     performUIUpdatesOnMain {
                         self.alertError("Internet connection is not available. The app might not be able to get the Instagram images and their locations.")
                     }
