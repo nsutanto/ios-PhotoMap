@@ -87,6 +87,19 @@ class InitViewController: UIViewController {
         self.present(instagramLoginViewController, animated: true, completion: nil)
     }
     
+    private func alertError(_ alertMessage: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler:
+                {(alert: UIAlertAction!) in
+                    let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
+                    self.present(controller, animated: true, completion: nil)
+                    
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
     
     private func validateToken() {
         InstagramClient.sharedInstance().getUserInfo { (userInfo, error) in
@@ -103,20 +116,30 @@ class InitViewController: UIViewController {
             }
             else {
                 // user token is not valid.. can be expired.. so need to login again
-                do {
-                    try self.coreDataStack?.dropAllData()
-                } catch {
-                    print("Error droping all objects in DB")
+                let errorMessage = ((error?.userInfo.description)!)
+                if errorMessage.range(of:"-1009") != nil {
+                    
+                    performUIUpdatesOnMain {
+                        self.alertError("Internet connection is not available. The app might not be able to get the Instagram images and their locations.")
+                    }
                 }
+                else {
                 
-                self.userToken = nil
-                self.coreDataStack?.save()
-                InstagramClient.sharedInstance().accessToken = nil
-                self.needToLogout = true
-                
-                performUIUpdatesOnMain {
-                    self.loginButton.isHidden = false
-                    self.loginText.isHidden = false
+                    do {
+                        try self.coreDataStack?.dropAllData()
+                    } catch {
+                        print("Error droping all objects in DB")
+                    }
+                    
+                    self.userToken = nil
+                    self.coreDataStack?.save()
+                    InstagramClient.sharedInstance().accessToken = nil
+                    self.needToLogout = true
+                    
+                    performUIUpdatesOnMain {
+                        self.loginButton.isHidden = false
+                        self.loginText.isHidden = false
+                    }
                 }
             }
         }
