@@ -76,6 +76,16 @@ class AboutViewController: UIViewController {
     }
     
     @IBAction func performLogout(_ sender: Any) {
+        
+        self.coreDataStack?.context.perform {
+            let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
+            
+            if let result = try? self.coreDataStack?.context.fetch(request) {
+                let userInfo = result?.first
+                userInfo?.token = nil
+            }
+        }
+        
         self.dismiss(animated: true, completion: nil)
     }
     

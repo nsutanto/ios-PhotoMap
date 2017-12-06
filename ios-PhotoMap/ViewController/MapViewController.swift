@@ -176,8 +176,6 @@ class MapViewController: UIViewController {
         coreDataStack = delegate.stack
         
         mapView.delegate = self
-        //fetchedResultsControllerCity.delegate = self
-        //fetchedResultsControllerCountry.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
