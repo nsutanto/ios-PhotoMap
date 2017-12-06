@@ -26,7 +26,7 @@ extension InstagramLoginViewController: UIWebViewDelegate {
             
             showMainTabController()
             // return false, we do not want to show the web. We just need to get the token
-            return false;
+            return false
         }
         return true
     }
@@ -37,7 +37,7 @@ class InstagramLoginViewController: UIViewController {
     @IBOutlet weak var webView: UIWebView!
     
     var isLoggedIn = false
-    var isInvalidToken = false
+    var isValidToken = true
     var userInfo : UserInfo?
     // Initialize core data stack
     var coreDataStack: CoreDataStack?
@@ -61,15 +61,18 @@ class InstagramLoginViewController: UIViewController {
             isLoggedIn = true
         }
         else {
+            print("***** Set token to nil")
+            InstagramClient.sharedInstance().accessToken = nil
+            
+            // Delete all data
+            print("**** Delete all user data")
+            deleteAllUserData()
+            
             let logoutRequest = URLRequest(url: URL(string: "https://instagram.com/accounts/logout")! as URL)
             webView.loadRequest(logoutRequest)
             
-            // Delete all data
-            deleteAllUserData()
-            
-            InstagramClient.sharedInstance().accessToken = nil
-            
-            if (!isInvalidToken) {
+            if (isValidToken) {
+                print("***** Dismiss")
                 self.dismiss(animated: true, completion: nil)
             }
         }
