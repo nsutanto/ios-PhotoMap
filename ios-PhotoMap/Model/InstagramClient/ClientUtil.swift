@@ -20,6 +20,7 @@ class ClientUtil {
         let task = session.dataTask(with: request) {data, response, downloadError in
             
             if downloadError != nil {
+                completionHandler(nil, downloadError! as NSError)
                 // Do nothing. Task is cancelled.
             } else {
                 completionHandler(data, nil)
