@@ -10,7 +10,7 @@ Create a user interface that intuitively communicates network activity and downl
 Store media on the device file system Use Core Data for local persistence of an object structure
 
 ## Requirements
-- XCode 9.1
+- XCode 9.2
 - Swift 4
 
 ## Instagram Login
