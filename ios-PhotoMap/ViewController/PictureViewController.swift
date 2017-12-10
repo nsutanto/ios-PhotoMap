@@ -53,7 +53,7 @@ extension PictureViewController: UICollectionViewDataSource {
                 } else {
                     performUIUpdatesOnMain {
                         cell.activityIndicator.stopAnimating()
-                        self.alertError("Fail to download image")
+                        //self.alertError("Fail to download image")
                     }
                     
                 }
