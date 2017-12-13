@@ -3,7 +3,7 @@
 <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/App-Store-Icon.png" width="200">
 https://itunes.apple.com/us/app/photo-map-for-travelers/id1323810074?ls=1&mt=8
 
-![Alt text](https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/App-Store-Icon.png "Optional title")
+![https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/App-Store-Icon.png](https://itunes.apple.com/us/app/photo-map-for-travelers/id1323810074?ls=1&mt=8 "Optional title")
 
 
 
