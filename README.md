@@ -1,4 +1,4 @@
-# <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ios-PhotoMap/Assets.xcassets/icon_1024.png" width="50"> Photo Map for Instagram User
+# <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ios-PhotoMap/Assets.xcassets/icon_1024.png" width="50" align="center"> Photo Map for Instagram User
 
 <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/App-Store-Icon.png" width="200"> https://itunes.apple.com/us/app/photo-map-for-travelers/id1323810074?ls=1&mt=8
 
