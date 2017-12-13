@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ios-PhotoMap/Assets.xcassets/icon_1024.png" width="50">
+<img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ios-PhotoMap/Assets.xcassets/icon_1024.png" width="100">
 </p>
 
 # Photo Map for Instagram User
