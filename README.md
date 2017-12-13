@@ -1,5 +1,7 @@
 # <img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ios-PhotoMap/Assets.xcassets/icon_1024.png" width="50"> Photo Map for Instagram User
 
+<img src="https://github.com/nsutanto/ios-PhotoMap/blob/master/ImageAndMedia/App-Store-Icon.png">
+
 The Photo Map app downloads and stores user images and their data from user's instagram account. The app will parse image information, especially location data (longitude and latitude) where the photo is taken. The app then will perform reverse geo location to find out the country and city where the photo is taken. The app can display the photo location as map view or table view. The user will able to display the location based on country or city.
 
 API used : Instagram, Google
