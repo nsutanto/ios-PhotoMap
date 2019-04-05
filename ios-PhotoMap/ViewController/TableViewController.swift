@@ -194,7 +194,7 @@ class TableViewController: UIViewController {
     
     private func setActivityIndicator() {
         indicator.frame = CGRect(x: 0, y: 0, width: 46, height: 46)
-        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        indicator.style = UIActivityIndicatorView.Style.gray
         indicator.center = self.view.center
         self.view.addSubview(indicator)
     }

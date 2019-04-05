@@ -47,11 +47,11 @@ class DetailViewController: UIViewController {
     
     private func initSwipeGesture() {
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.performSwipeGesture))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         self.view.addGestureRecognizer(swipeRight)
         
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.performSwipeGesture))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
         self.view.addGestureRecognizer(swipeLeft)
     }
     
@@ -82,8 +82,8 @@ class DetailViewController: UIViewController {
     
     private func alertError(_ alertMessage: String) {
         performUIUpdatesOnMain {
-            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -91,7 +91,7 @@ class DetailViewController: UIViewController {
     @IBAction func performSwipeGesture(_ recognizer: UIGestureRecognizer) {
         if let swipeGesture = recognizer as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.right:
+            case UISwipeGestureRecognizer.Direction.right:
                
                 if (curentIndex > 0) {
                     let index = curentIndex - 1
@@ -99,7 +99,7 @@ class DetailViewController: UIViewController {
                     let imageEntity = images[index]
                     setImage(imageEntity)
                 }
-            case UISwipeGestureRecognizerDirection.left:
+            case UISwipeGestureRecognizer.Direction.left:
                 
                 if (curentIndex < images.count - 1) {
                     let index = curentIndex + 1

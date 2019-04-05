@@ -63,7 +63,7 @@ class ImageLocationUtil {
         self.coreDataStack?.context.perform {
             let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
             request.predicate = NSPredicate(format: "country == %@", countryString)
-            if let countryEntityResult = try? self.coreDataStack?.context.fetch(request) {
+            if let countryEntityResult = ((try? self.coreDataStack?.context.fetch(request)) as [CountryEntity]??) {
                 let countryEntity = countryEntityResult?.first
                 completionHandlerLocations(countryEntity)
             }
@@ -82,7 +82,7 @@ class ImageLocationUtil {
             let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
             
             request.predicate = predicateCompound
-            if let cityEntityResult = try? self.coreDataStack?.context.fetch(request) {
+            if let cityEntityResult = ((try? self.coreDataStack?.context.fetch(request)) as [CityEntity]??) {
                 let cityEntity = cityEntityResult?.first
                 completionHandlerLocations(cityEntity)
             }
@@ -151,7 +151,7 @@ class ImageLocationUtil {
                                     let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateCity,predicateState])
                                     
                                     request.predicate = predicateCompound
-                                    let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                                    let cityEntity = ((try? self.coreDataStack?.context.fetch(request)) as [CityEntity]??)
                                     self.coreDataStack?.context.perform {
                                         cityEntity??.first?.addToCityToImage(image)
                                         image.imageToCity = cityEntity??.first
@@ -173,7 +173,7 @@ class ImageLocationUtil {
                                     let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
                                     request.predicate = NSPredicate(format: "country == %@", country!)
                                     self.coreDataStack?.context.perform {
-                                        let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                                        let countryEntity = ((try? self.coreDataStack?.context.fetch(request)) as [CountryEntity]??)
                                         countryEntity??.first?.addToCountryToImage(image)
                                         image.imageToCountry = countryEntity??.first
                                     }
@@ -229,7 +229,7 @@ class ImageLocationUtil {
                                     
                                     request.predicate = predicateCompound
                                     self.coreDataStack?.context.perform {
-                                        let cityEntity = try? self.coreDataStack?.context.fetch(request)
+                                        let cityEntity = ((try? self.coreDataStack?.context.fetch(request)) as [CityEntity]??)
                                         cityEntity??.first?.addToCityToImage(image)
                                         image.imageToCity = cityEntity??.first
                                     }
@@ -249,7 +249,7 @@ class ImageLocationUtil {
                                     let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
                                     request.predicate = NSPredicate(format: "country == %@", country!)
                                     self.coreDataStack?.context.perform {
-                                        let countryEntity = try? self.coreDataStack?.context.fetch(request)
+                                        let countryEntity = ((try? self.coreDataStack?.context.fetch(request)) as [CountryEntity]??)
                                         countryEntity??.first?.addToCountryToImage(image)
                                         image.imageToCountry = countryEntity??.first
                                     }
@@ -275,11 +275,11 @@ class ImageLocationUtil {
         let requestCountry: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         self.coreDataStack?.context.perform {
             // Get images
-            let images = try? self.coreDataStack?.context.fetch(requestImage)
+            let images = ((try? self.coreDataStack?.context.fetch(requestImage)) as [Image]??)
             
             // Get cities string
             var cities = [String]()
-            let citiEntities = try? self.coreDataStack?.context.fetch(requestCity)
+            let citiEntities = ((try? self.coreDataStack?.context.fetch(requestCity)) as [CityEntity]??)
             if (citiEntities != nil) {
                 for cityEntity in citiEntities!! {
                     if let cityStr = cityEntity.city {
@@ -292,7 +292,7 @@ class ImageLocationUtil {
             
             // Get country string
             var countries = [String]()
-            let countryEntities = try? self.coreDataStack?.context.fetch(requestCountry)
+            let countryEntities = ((try? self.coreDataStack?.context.fetch(requestCountry)) as [CountryEntity]??)
             for countryEntity in countryEntities!! {
                 if let countryStr = countryEntity.country {
                     countries.append(countryStr)
@@ -307,7 +307,7 @@ class ImageLocationUtil {
         
         let requestCity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
         
-        if let cities = try? coreDataStack?.context.fetch(requestCity) {
+        if let cities = ((try? coreDataStack?.context.fetch(requestCity)) as [CityEntity]??) {
             for cityEntity in cities! {
                 self.coreDataStack?.context.perform {
                     if cityEntity.cityToImage?.count == 0 {
@@ -320,7 +320,7 @@ class ImageLocationUtil {
         
         let requestCountry: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         
-        if let countries = try? coreDataStack?.context.fetch(requestCountry) {
+        if let countries = ((try? coreDataStack?.context.fetch(requestCountry)) as [CountryEntity]??) {
             for countryEntity in countries! {
                 
                 if countryEntity.countryToImage?.count == 0 {

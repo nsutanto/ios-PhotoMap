@@ -96,7 +96,7 @@ class InstagramClient {
                 
                     let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
                     request.predicate = NSPredicate(format: "userName == %@", userName)
-                    if let result = try? self.coreDataStack?.context.fetch(request) {
+                    if let result = ((try? self.coreDataStack?.context.fetch(request)) as [UserInfo]??) {
                         if (result?.first) == nil {
                             let userInfo = UserInfo(userName: userName, fullName: fullName, profilePictureURL: profilePictureURL, profilePictureData: nil, token: self.accessToken, context: (self.coreDataStack?.context)!)
                             completionHandlerUserInfo(userInfo, nil)
@@ -321,7 +321,7 @@ class InstagramClient {
         let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateID,predicateURL])
         request.predicate = predicateCompound
         self.coreDataStack?.context.perform {
-            if let result = try? self.coreDataStack?.context.fetch(request) {
+            if let result = ((try? self.coreDataStack?.context.fetch(request)) as [Image]??) {
                 if (result?.first) == nil {
                     if (longitude != nil && latitude != nil) {
                         // let's create the image object only if there is location data. That's the purpose of the app.

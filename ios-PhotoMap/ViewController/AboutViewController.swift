@@ -44,7 +44,7 @@ class AboutViewController: UIViewController {
     private func loadUserInfo() {
         let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
         
-        if let result = try? coreDataStack?.context.fetch(request) {
+        if let result = ((try? coreDataStack?.context.fetch(request)) as [UserInfo]??) {
             let userInfo = result?.first
             
             labelFullName.text = userInfo?.fullName
@@ -80,7 +80,7 @@ class AboutViewController: UIViewController {
         self.coreDataStack?.context.perform {
             let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
             
-            if let result = try? self.coreDataStack?.context.fetch(request) {
+            if let result = ((try? self.coreDataStack?.context.fetch(request)) as [UserInfo]??) {
                 let userInfo = result?.first
                 userInfo?.token = nil
             }
@@ -91,8 +91,8 @@ class AboutViewController: UIViewController {
     
     private func alertError(_ alertMessage: String) {
         performUIUpdatesOnMain {
-            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }

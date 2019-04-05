@@ -207,7 +207,7 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
         
         self.coreDataStack?.context.perform {
-            if let result = try? self.coreDataStack?.context.fetch(request) {
+            if let result = ((try? self.coreDataStack?.context.fetch(request)) as [CountryEntity]??) {
                 self.countryEntities = result!
                 if self.countryEntities.count > 0 {
                     self.activityIndicator.stopAnimating()
@@ -221,7 +221,7 @@ class MapViewController: UIViewController {
         let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
         
         self.coreDataStack?.context.perform {
-            if let result = try? self.coreDataStack?.context.fetch(request) {
+            if let result = ((try? self.coreDataStack?.context.fetch(request)) as [CityEntity]??) {
                 self.cityEntities = result!
                 if self.cityEntities.count > 0 {
                     self.activityIndicator.stopAnimating()
@@ -343,8 +343,8 @@ class MapViewController: UIViewController {
     
     private func alertError(_ alertMessage: String) {
         performUIUpdatesOnMain {
-            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }

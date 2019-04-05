@@ -13,7 +13,7 @@ import MapKit
 import CoreData
 extension InstagramLoginViewController: UIWebViewDelegate {
     
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
         let requestURLString = (request.url?.absoluteString)! as String
         
         if requestURLString.hasPrefix(InstagramClient.Constants.REDIRECT_URI) {
@@ -127,21 +127,21 @@ class InstagramLoginViewController: UIViewController {
     
     private func deleteAllUserData() {
         let requestImage: NSFetchRequest<Image> = Image.fetchRequest()
-        if let result = try? coreDataStack?.context.fetch(requestImage) {
+        if let result = ((try? coreDataStack?.context.fetch(requestImage)) as [Image]??) {
             for image in result! {
                 coreDataStack?.context.delete(image)
             }
         }
         
         let requestCityEntity: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-        if let result = try? coreDataStack?.context.fetch(requestCityEntity) {
+        if let result = ((try? coreDataStack?.context.fetch(requestCityEntity)) as [CityEntity]??) {
             for cityEntity in result! {
                 coreDataStack?.context.delete(cityEntity)
             }
         }
         
         let requestCountryEntity: NSFetchRequest<CountryEntity> = CountryEntity.fetchRequest()
-        if let result = try? coreDataStack?.context.fetch(requestCountryEntity) {
+        if let result = ((try? coreDataStack?.context.fetch(requestCountryEntity)) as [CountryEntity]??) {
             for countryEntity in result! {
                 coreDataStack?.context.delete(countryEntity)
             }
@@ -149,7 +149,7 @@ class InstagramLoginViewController: UIViewController {
         
         
         let requestUserInfo: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
-        if let result = try? coreDataStack?.context.fetch(requestUserInfo) {
+        if let result = ((try? coreDataStack?.context.fetch(requestUserInfo)) as [UserInfo]??) {
             for userInfo in result! {
                 coreDataStack?.context.delete(userInfo)
             }
@@ -160,8 +160,8 @@ class InstagramLoginViewController: UIViewController {
     
     private func alertError(_ alertMessage: String) {
         performUIUpdatesOnMain {
-            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }

@@ -54,7 +54,7 @@ class InitViewController: UIViewController {
         // Check if user has the token already. Then no need to show the web login.
         let request: NSFetchRequest<UserInfo> = UserInfo.fetchRequest()
         
-        if let result = try? coreDataStack?.context.fetch(request) {
+        if let result = ((try? coreDataStack?.context.fetch(request)) as [UserInfo]??) {
             userInfo = result?.first
             if let userInfo = userInfo {
                 if userInfo.token != nil {
@@ -89,8 +89,8 @@ class InitViewController: UIViewController {
     
     private func alertError(_ alertMessage: String) {
         performUIUpdatesOnMain {
-            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler:
+            let alert = UIAlertController(title: "Alert", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:
                 {(alert: UIAlertAction!) in
                     let controller = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
                     self.present(controller, animated: true, completion: nil)
