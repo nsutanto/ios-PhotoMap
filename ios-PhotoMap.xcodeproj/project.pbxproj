@@ -425,9 +425,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = K82HW7D2BX;
+				CURRENT_PROJECT_VERSION = 110;
+				DEVELOPMENT_TEAM = DK6CXBL486;
 				INFOPLIST_FILE = "ios-PhotoMap/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "nsutanto.ios-PhotoMap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -440,9 +442,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = K82HW7D2BX;
+				CURRENT_PROJECT_VERSION = 110;
+				DEVELOPMENT_TEAM = DK6CXBL486;
 				INFOPLIST_FILE = "ios-PhotoMap/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "nsutanto.ios-PhotoMap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
